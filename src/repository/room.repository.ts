@@ -31,7 +31,7 @@ export class RoomRepository extends Repository<Room> {
     if (cursorId) {
       query += ` AND id < ${cursorId}`;
     }
-    query += ` ORDER BY id DESC LIMIT ${limit}`;
+    query += ` ORDER BY created_at DESC LIMIT ${limit}`;
     return await this.query(query);
   }
 }
