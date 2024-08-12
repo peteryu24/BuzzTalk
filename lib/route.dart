@@ -8,5 +8,5 @@ import 'package:go_router/go_router.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
-final goRouter = GoRouter(
-);
+final goRouter = GoRouter();
+//
