@@ -6,8 +6,4 @@ import 'package:alarm_app/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-
-class InfoManager {
-
-
-}
+class DeviceInfoService {}

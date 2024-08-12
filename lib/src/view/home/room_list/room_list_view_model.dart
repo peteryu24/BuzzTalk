@@ -5,6 +5,4 @@ import 'package:http/http.dart' as http;
 import 'package:alarm_app/model/room_model.dart';
 import 'package:flutter/cupertino.dart';
 
-class RoomListNotifier extends ChangeNotifier {
-
-}
+class RoomListViewModel extends ChangeNotifier {}
