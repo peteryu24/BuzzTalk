@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-
+import { Room } from './dto/room.entity';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -17,9 +17,9 @@ export class AppController {
 
   @Post('/player')
   async getOrCreatePlayer(@Body() body): Promise<any> {
-    const uuid: string = body.uuid;
+    const playerId: string = body.playerId;
 
-    return await this.appService.getOrCratePlayer(uuid);
+    return await this.appService.getOrCreatePlayer(playerId);
   }
 
   @Post('/room/list')
@@ -33,16 +33,16 @@ export class AppController {
 
   @Post('/room/create')
   async createRoom(@Body() body): Promise<any> {
-    const topicId: number = body.topicId;
     const roomName: string = body.roomName;
-    const playerId: number = body.playerId;
+    const topicId: number = body.topicId;
+    const playerId: string = body.playerId;
     const startTime: Date = new Date(body.startTime);
     const endTime: Date = new Date(body.endTime);
 
     try {
       await this.appService.createRoom(
-        topicId,
         roomName,
+        topicId,
         playerId,
         startTime,
         endTime,
@@ -58,7 +58,7 @@ export class AppController {
   }
 
   @Post('/room/ids')
-  async getRooms(@Body() body): Promise<any> {
+  async getRooms(@Body() body: { roomIds: string[] }): Promise<Room[]> {
     const roomIds = body.roomIds;
     return await this.appService.getRoomListByIds(roomIds);
   }
