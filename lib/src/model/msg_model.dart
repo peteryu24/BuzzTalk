@@ -1,4 +1,5 @@
 class MsgModel {
+<<<<<<< lib/src/model/msg_model.dart
   final int id;
   final String uuid;
   final DateTime createdAt;

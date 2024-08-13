@@ -1,4 +1,5 @@
 class RoomModel {
+<<<<<<< lib/src/model/room_model.dart
   final int id;
   final String name;
   final DateTime startTime;
