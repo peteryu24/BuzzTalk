@@ -1,30 +1,20 @@
 class TopicModel {
-  final int id;
-  final String name;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final int topicId;
+  final String topicName;
 
-  TopicModel(
-      {required this.id,
-      required this.name,
-      required this.createdAt,
-      required this.updatedAt});
+  TopicModel({
+    required this.topicId,
+    required this.topicName,
+  });
 
   factory TopicModel.fromJson(Map<String, dynamic> json) {
     return TopicModel(
-      id: json['id'],
-      name: json['name'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+      topicId: json['topicId'],
+      topicName: json['topicName'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
+    return {'topicId': topicId, 'topicName': topicName};
   }
 }

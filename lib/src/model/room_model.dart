@@ -1,16 +1,14 @@
 class RoomModel {
-  final int id;
-  final String name;
+  final String roomId;
   final DateTime startTime;
   final DateTime endTime;
   final int topicId;
-  final int playerId;
+  final String playerId;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   RoomModel(
-      {required this.id,
-      required this.name,
+      {required this.roomId,
       required this.startTime,
       required this.endTime,
       required this.topicId,
@@ -20,8 +18,7 @@ class RoomModel {
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
     return RoomModel(
-      id: json['id'],
-      name: json['name'],
+      roomId: json['roomId'],
       startTime: json['startTime'],
       endTime: json['endTime'],
       topicId: json['topicId'],
@@ -33,8 +30,7 @@ class RoomModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
+      'roomId': roomId,
       'startTime': startTime.toIso8601String(),
       'endTime': startTime.toIso8601String(),
       'topicId': topicId,
