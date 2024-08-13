@@ -57,7 +57,7 @@ class LocalNotificationService {
     }
 
     tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('UTC'));
+    tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
   }
 
   ///예약 알람 기능
@@ -101,6 +101,8 @@ class LocalNotificationService {
             UILocalNotificationDateInterpretation.wallClockTime,
         matchDateTimeComponents: DateTimeComponents.time,
         payload: payload);
+
+    print(scheduledDate);
   }
 
   ///예약 취소
