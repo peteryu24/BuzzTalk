@@ -9,7 +9,7 @@ class MsgModel {
       required this.uuid,
       required this.createdAt,
       required this.updatedAt});
-
+//s
   factory MsgModel.fromJson(Map<String, dynamic> json) {
     return MsgModel(
       id: json['id'],
