@@ -8,12 +8,12 @@ class ResetPasswordViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  Future<void> resetPassword() async {
+  Future<void> changePassword() async {
     _isLoading = true;
     notifyListeners();
 
     UserModel user = UserModel(player_id: '', password: '');
-    bool success = await user.resetPassword(emailController.text);
+    bool success = await user.changePassword(emailController.text);
 
     _isLoading = false;
     notifyListeners();

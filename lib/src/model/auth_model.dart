@@ -15,7 +15,7 @@ class UserModel {
   }
 
   // TODO: 비밀번호 변경 로직
-  Future<bool> resetPassword(String email) async {
+  Future<bool> changePassword(String email) async {
     return true;
   }
 }
