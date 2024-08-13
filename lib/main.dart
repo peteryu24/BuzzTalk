@@ -1,9 +1,7 @@
 import 'package:alarm_app/util/helper/route.dart';
-import 'package:alarm_app/service/device_info_service.dart';
-import 'package:alarm_app/service/local_notification_service.dart';
-import 'package:alarm_app/service/my_room_service.dart';
-import 'package:alarm_app/service/my_room_view_model.dart';
-import 'package:alarm_app/service/topic_service.dart';
+import 'package:alarm_app/src/service/local_notification_service.dart';
+import 'package:alarm_app/src/service/my_room_service.dart';
+import 'package:alarm_app/src/service/topic_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,4 +16,10 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp();
+  }
 }

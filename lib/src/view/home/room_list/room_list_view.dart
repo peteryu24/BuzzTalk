@@ -1,9 +1,8 @@
-import 'package:alarm_app/model/room_model.dart';
-import 'package:alarm_app/service/my_room_service.dart';
-import 'package:alarm_app/service/my_room_view_model.dart';
-import 'package:alarm_app/service/room_list_view_model.dart';
-import 'package:alarm_app/widgets/infinite_scroll_mixin.dart';
-import 'package:alarm_app/widgets/room_item.dart';
+import 'package:alarm_app/src/model/room_model.dart';
+import 'package:alarm_app/src/service/my_room_service.dart';
+import 'package:alarm_app/src/view/home/room_list/room_list_view_model.dart';
+import 'package:alarm_app/util/helper/infinite_scroll_mixin.dart';
+import 'package:alarm_app/src/view/home/room_item.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,4 +14,10 @@ class RoomListView extends StatefulWidget {
 }
 
 class _RoomListViewState extends State<RoomListView>
-    with InfiniteScrollMixin, WidgetsBindingObserver {}
+    with InfiniteScrollMixin, WidgetsBindingObserver {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}

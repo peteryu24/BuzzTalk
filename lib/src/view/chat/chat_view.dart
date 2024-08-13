@@ -1,6 +1,5 @@
-import 'package:alarm_app/model/msg_model.dart';
-import 'package:alarm_app/service/device_info_service.dart';
-import 'package:alarm_app/service/socket_repository.dart';
+import 'package:alarm_app/src/model/msg_model.dart';
+import 'package:alarm_app/src/repository/socket_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -14,4 +13,10 @@ class ChatView extends StatefulWidget {
   State<ChatView> createState() => _ChatViewState();
 }
 
-class _ChatViewState extends State<ChatView> with WidgetsBindingObserver {}
+class _ChatViewState extends State<ChatView> with WidgetsBindingObserver {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
