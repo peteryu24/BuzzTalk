@@ -1,5 +1,4 @@
 class TopicModel {
-<<<<<<< lib/src/model/topic_model.dart
   final int id;
   final String name;
   final DateTime createdAt;

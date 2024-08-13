@@ -1,10 +1,9 @@
 class MsgModel {
-<<<<<<< lib/src/model/msg_model.dart
   final int id;
   final String uuid;
   final DateTime createdAt;
   final DateTime updatedAt;
-//dd
+
   MsgModel(
       {required this.id,
       required this.uuid,
