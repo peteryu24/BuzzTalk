@@ -9,31 +9,63 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class RoomListView extends StatelessWidget {
+class RoomListView extends StatefulWidget {
   const RoomListView({super.key});
+
+  @override
+  State<RoomListView> createState() => _RoomListViewState();
+}
+
+class _RoomListViewState extends State<RoomListView> {
+  late final RoomListViewModel roomListViewModel =
+      RoomListViewModel(roomRepository: context.read());
+
+  @override
+  void initState() {
+    super.initState();
+    roomListViewModel.roomListFetch();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BaseView(
-        viewModel: RoomListViewModel(),
+        viewModel: roomListViewModel,
         builder: (context, viewModel) => Scaffold(
-              body: ListView.builder(
-                itemCount: _mockRoomData().length,
-                itemBuilder: (context, index) {
-                  final RoomModel room = _mockRoomData()[index];
-                  return RoomItem(
-                      room: room,
-                      onReserve: () {
-                        context
-                            .read<LocalNotificationService>()
-                            .scheduleNotification(
-                              id: room.id,
-                              title: room.name,
-                              body: '채팅이 시작되었습니다.',
-                              scheduledDateTime: room.startTime,
-                            );
-                      });
-                },
+              body: Column(
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        viewModel.roomListFetch();
+                        print(viewModel.roomList);
+                      },
+                      child: Text('fetch')),
+                  ElevatedButton(
+                      onPressed: () {
+                        viewModel.createRoom();
+                        print(viewModel.roomList);
+                      },
+                      child: Text('create')),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: viewModel.roomList.length,
+                      itemBuilder: (context, index) {
+                        final room = viewModel.roomList[index];
+                        return RoomItem(
+                            room: room,
+                            onReserve: () {
+                              context
+                                  .read<LocalNotificationService>()
+                                  .scheduleNotification(
+                                    id: room.topicId,
+                                    title: room.roomId,
+                                    body: '채팅이 시작되었습니다.',
+                                    scheduledDateTime: room.startTime,
+                                  );
+                            });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ));
   }
@@ -41,22 +73,20 @@ class RoomListView extends StatelessWidget {
   List<RoomModel> _mockRoomData() {
     return [
       RoomModel(
-        id: 1,
-        name: '테스트 방 1',
+        roomId: '테스트 방 1',
         startTime: DateTime.now().add(Duration(seconds: 30)),
         endTime: DateTime.now(),
         topicId: 101,
-        playerId: 1,
+        playerId: '1',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
       RoomModel(
-        id: 2,
-        name: '테스트 방 2',
+        roomId: '테스트 방 2',
         startTime: DateTime.now(),
         endTime: DateTime.now(),
         topicId: 102,
-        playerId: 2,
+        playerId: '2',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),

@@ -7,13 +7,25 @@ import 'package:alarm_app/src/view/home/room_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MyRoomView extends StatelessWidget {
+class MyRoomView extends StatefulWidget {
   const MyRoomView({super.key});
+
+  @override
+  State<MyRoomView> createState() => _MyRoomViewState();
+}
+
+class _MyRoomViewState extends State<MyRoomView> {
+  final MyRoomViewModel myRoomViewModel = MyRoomViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BaseView(
-        viewModel: MyRoomViewModel(),
+        viewModel: myRoomViewModel,
         builder: (context, viewModel) => Scaffold(
               body: ListView.builder(
                 itemCount: _mockRoomData().length,
@@ -26,8 +38,8 @@ class MyRoomView extends StatelessWidget {
                           context
                               .read<LocalNotificationService>()
                               .scheduleNotification(
-                                id: room.id,
-                                title: room.name,
+                                id: room.topicId,
+                                title: room.roomId,
                                 body: '채팅이 시작되었습니다.',
                                 scheduledDateTime: room.startTime,
                               );
@@ -41,22 +53,20 @@ class MyRoomView extends StatelessWidget {
   List<RoomModel> _mockRoomData() {
     return [
       RoomModel(
-        id: 1,
-        name: '테스트 방 1',
+        roomId: '테스트 방 1',
         startTime: DateTime.now().add(Duration(seconds: 30)),
         endTime: DateTime.now(),
         topicId: 101,
-        playerId: 1,
+        playerId: '1',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
       RoomModel(
-        id: 2,
-        name: '테스트 방 2',
+        roomId: '테스트 방 2',
         startTime: DateTime.now(),
         endTime: DateTime.now(),
         topicId: 102,
-        playerId: 2,
+        playerId: '2',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
