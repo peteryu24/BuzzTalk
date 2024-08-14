@@ -18,7 +18,7 @@ export class TopicRepository extends Repository<Topic> {
                COALESCE(a.room_count, 0) AS room_count
         FROM topic t
                  LEFT JOIN (SELECT topic_id,
-                                   COUNT(id) AS room_count
+                                   COUNT(room_id) AS room_count
                             FROM room
                             WHERE end_time > NOW()
                             GROUP BY topic_id) a ON t.id = a.topic_id

@@ -10,14 +10,8 @@ import {
 @Entity('topic')
 export class Topic extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  topicId: number;
 
   @Column()
-  name: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  topicName: string;
 }
