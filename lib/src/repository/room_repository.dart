@@ -8,7 +8,7 @@ class RoomRepository {
 
   RoomRepository(this.httpRequest);
 
-  //cursorID: data를 몇 개나 불러올건지? limit: 한 번에 가져오는 최대 방의 갯수 제한 설정
+  //cursorID: data를 몇 개나 불러올건지? limit: 한 번에 가져오는 최대 방의 갯수 제한 설정 //
   Future<List<RoomModel>> getRoomList(
       int? topicId, String? cursorId, int limit) async {
     final response = await httpRequest.post('/room/list', {
@@ -22,7 +22,7 @@ class RoomRepository {
   Future<bool> createRoom(String roomName, int topicId, String playerId,
       DateTime startTime, DateTime endTime) async {
     final response = await httpRequest.post('/room/create', {
-      'roomId': roomName,
+      'roomName': roomName,
       'topicId': topicId,
       'playerId': playerId,
       'startTime': startTime.toIso8601String(),
@@ -31,6 +31,7 @@ class RoomRepository {
     return response['success'] as bool;
   }
 
+  //수정
   Future<List<RoomModel>> getRoomListByIds(List<String> roomIds) async {
     final response = await httpRequest.post('/room/ids', {'roomIds': roomIds});
     return (response as List).map((json) => RoomModel.fromJson(json)).toList();
