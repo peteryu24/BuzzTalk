@@ -3,17 +3,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('room')
 export class Room extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  name: string;
+  @PrimaryColumn('varchar')
+  roomId: string;
 
   @Column({ type: 'timestamp with time zone' })
   startTime: Date;
@@ -21,11 +18,11 @@ export class Room extends BaseEntity {
   @Column({ type: 'timestamp with time zone' })
   endTime: Date;
 
-  @Column()
+  @Column({ type: 'integer', nullable: false })
   topicId: number;
 
-  @Column()
-  playerId: number;
+  @Column({ type: 'uuid', nullable: false })
+  playerId: string;
 
   @CreateDateColumn()
   createdAt: Date;

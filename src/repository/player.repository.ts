@@ -8,13 +8,15 @@ export class PlayerRepository extends Repository<Player> {
     super(Player, datasource.createEntityManager());
   }
 
-  async getPlayerByUuid(uuid: string): Promise<Player | undefined> {
-    return await this.findOneBy({ uuid });
+  async getPlayerByPlayerId(playerId: string): Promise<Player | undefined> {
+    return await this.findOneBy({ playerId });
   }
 
-  async createPlayer(uuid: string): Promise<Player> {
+  async createPlayer(playerId: string, password: string): Promise<Player> {
     const player = new Player();
-    player.uuid = uuid;
+    player.playerId = playerId;
+    player.password = password;
     return await this.save(player);
   }
+  
 }

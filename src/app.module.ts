@@ -21,11 +21,11 @@ config();
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_DATABASE'),
+        host: configService.get<string>('DB_HOST', 'localhost'),  // 환경 변수 DB_HOST에서 값 가져오기, 기본값 'localhost'
+        port: configService.get<number>('DB_PORT', 3000),          // 환경 변수 DB_PORT에서 값 가져오기, 기본값 5432
+        username: configService.get<string>('DB_USERNAME', 'postgres'), // 환경 변수 DB_USERNAME에서 값 가져오기
+        password: configService.get<string>('DB_PASSWORD', '1234'), // 환경 변수 DB_PASSWORD에서 값 가져오기
+        database: configService.get<string>('DB_DATABASE', 'test'),
         entities: [Room, Topic, Player],
         synchronize: true,
         namingStrategy: new SnakeNamingStrategy(),

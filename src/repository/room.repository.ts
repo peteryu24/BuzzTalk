@@ -11,27 +11,34 @@ export class RoomRepository extends Repository<Room> {
   async createRoom(room: Room): Promise<Room> {
     return await this.save(room);
   }
-
-  async getRoomsByIds(ids: number[]): Promise<Room[]> {
-    return await this.query(
-      `SELECT * FROM room WHERE id IN (${ids.join(',')}) AND end_time > NOW()`,
-    );
+ //여러개의 룸id를 한 번에 찾고싶을때 ...ids로 쓴다고 함.
+  async getRoomsByIds(ids: string[]): Promise<Room[]> {
+    return await this.createQueryBuilder('room')
+      .where('room.room_id IN (:...ids)', { ids })
+      .andWhere('room.end_time > NOW()')
+      .getMany();
   }
 
   async getRooms(
     topicId: number | undefined,
     cursorId: string | undefined,
     limit: number,
-  ): Promise<Room[] | undefined> {
-    let query = `SELECT * FROM room`;
-    query += ` WHERE end_time > NOW()`;
-    if (topicId) {
-      query += ` AND topic_id = ${topicId}`;
+  ): Promise<Room[]> {
+    const query = this.createQueryBuilder('room')
+      .where('room.end_time > NOW()');
+
+    if (topicId !== undefined) {
+      query.andWhere('room.topic_id = :topic_id', { topicId });
     }
-    if (cursorId) {
-      query += ` AND id < ${cursorId}`;
+
+    if (cursorId !== undefined) {
+      query.andWhere('room.room_id < :cursorId', { cursorId });
     }
-    query += ` ORDER BY created_at DESC LIMIT ${limit}`;
-    return await this.query(query);
+
+    query.orderBy('room.created_at', 'DESC')
+      .limit(limit);
+
+    return await query.getMany();
   }
 }
+
