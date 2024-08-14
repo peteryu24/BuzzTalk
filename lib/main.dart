@@ -1,3 +1,4 @@
+import 'package:alarm_app/src/view/chat/chat_view.dart';
 import 'package:alarm_app/util/helper/route.dart';
 import 'package:alarm_app/src/service/local_notification_service.dart';
 import 'package:alarm_app/src/service/my_room_service.dart';
@@ -29,8 +30,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ,
+    return const MaterialApp(
+      home: ChatView(),
     );
   }
 }

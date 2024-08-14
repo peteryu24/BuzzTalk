@@ -2,10 +2,6 @@ import 'package:alarm_app/src/view/chat/chat_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const ChatView());
-}
-
 class ChatView extends StatelessWidget {
   const ChatView({super.key});
 
@@ -39,6 +35,10 @@ class ChatView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 const Text('사용자'), // 사용자 이름
+                                SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.005,
+                                ),
                                 Container(
                                   padding: const EdgeInsets.all(10.0),
                                   decoration: BoxDecoration(
