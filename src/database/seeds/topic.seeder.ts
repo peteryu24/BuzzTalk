@@ -7,12 +7,12 @@ export default class TopicSeeder implements Seeder {
     const repository = dataSource.getRepository(Topic);
     await repository.insert([
       {
-        id: 0,
-        name: '토픽1',
+        topicId: 0,
+        topicName: '토픽1',
       },
       {
-        id: 1,
-        name: '토픽3',
+        topicId: 1,
+        topicName: '토픽3',
       },
     ]);
   }
