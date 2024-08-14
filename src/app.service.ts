@@ -13,7 +13,7 @@ export class AppService {
   ) {}
   
   async getOrCreatePlayer(playerId: string,password:string): Promise<any> {
-    let player = await this.playerRepository.getPlayerByPlayerId(playerId);
+    let player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player) {
       player = await this.playerRepository.createPlayer(playerId,password);
     }
@@ -64,14 +64,23 @@ export class AppService {
   }
 
   async createRoom(
-    roomId: string,
+    roomName: string,
     topicId: number,
     playerId: string,
     startTime: Date,
     endTime: Date,
   ): Promise<Room> {
+    //playerId가 존재하는지 확인하는 단계
+    const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
+    if (!existingPlayer) {
+      throw new Error('Player Id not exist.');
+    }
+    const existingTopic = await this.topicRepository.getTopicIdByTopic(topicId);
+    if(!existingPlayer){
+      throw new Error('Player Id not exist.');
+    }
     const room = new Room();
-    room.roomId = roomId;
+    room.roomName = roomName;
     room.topicId = topicId;
     room.playerId = playerId;
     room.startTime = startTime;
@@ -82,7 +91,7 @@ export class AppService {
   //새로만든거
    // 회원가입
    async register(playerId: string, password: string): Promise<any> {
-    const existingPlayer = await this.playerRepository.getPlayerByPlayerId(playerId);
+    const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (existingPlayer) {
       throw new Error('Player with this ID already exists');
     }
@@ -94,7 +103,7 @@ export class AppService {
 
   // 로그인
   async login(playerId: string, password: string): Promise<any> {
-    const player = await this.playerRepository.getPlayerByPlayerId(playerId);
+    const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player || player.password !== password) {
       return('Error'); //int형식으로 나중에 수정 할거임
     }
@@ -105,7 +114,7 @@ export class AppService {
   // 비밀번호 변경
   async changePassword(playerId: string,oldPassword: string, newPassword: string): Promise<void> 
   {
-    const player = await this.playerRepository.getPlayerByPlayerId(playerId);
+    const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player || player.password !== oldPassword) {
       throw new Error('Invalid credentials');
     }
@@ -116,7 +125,7 @@ export class AppService {
 
   // 회원 탈퇴
   async deletePlayer(playerId: string, password: string): Promise<void> {
-    const player = await this.playerRepository.getPlayerByPlayerId(playerId);
+    const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player) {
       throw new Error('Player not found');
     }

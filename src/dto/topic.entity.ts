@@ -14,7 +14,7 @@ export class Topic extends BaseEntity {
 
   @Column({ type: 'varchar', name: 'topic_name', nullable: false })
   topicName: string;
-  //하나의 토픽이 여러개의 룸을 나타낼 수 있음. 일대다 관계
-  @OneToMany(() => Room, (room) => room.topic)
+
+  @OneToMany(() => Room, (room) => room.topic, { onDelete: 'CASCADE' })
   rooms: Room[];
 }

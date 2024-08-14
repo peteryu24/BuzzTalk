@@ -14,8 +14,7 @@ export class Player extends BaseEntity {
 
   @Column({ type: 'varchar', name: 'password', nullable: false })
   password: string;
-  //하나의 플레이어가 여러개의 룸을 나타낼 수 있음. 다대일 관계
-  @OneToMany(() => Room, (room) => room.player)
+
+  @OneToMany(() => Room, (room) => room.player, { onDelete: 'CASCADE' })
   rooms: Room[];
 }
-

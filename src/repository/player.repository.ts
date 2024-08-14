@@ -8,7 +8,7 @@ export class PlayerRepository extends Repository<Player> {
     super(Player, datasource.createEntityManager());
   }
 
-  async getPlayerByPlayerId(playerId: string): Promise<Player | undefined> {
+  async getPlayerIdByPlayer(playerId: string): Promise<Player | undefined> {
     return await this.findOneBy({ playerId });
   }
 
