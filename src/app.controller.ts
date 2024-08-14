@@ -69,7 +69,7 @@ export class AppController {
 
   @Post('/room/create')
   async createRoom(@Body() body): Promise<any> {
-    const roomName: string = body.roomName;
+    const roomId: string = body.roomId;
     const topicId: number = body.topicId;
     const playerId: string = body.playerId;
     const startTime: Date = new Date(body.startTime);
@@ -77,7 +77,7 @@ export class AppController {
 
     try {
       await this.appService.createRoom(
-        roomName,
+        roomId,
         topicId,
         playerId,
         startTime,
@@ -87,6 +87,7 @@ export class AppController {
         success: true,
       };
     } catch (e) {
+      console.log('error creating room:',e);
       return {
         success: false,
       };

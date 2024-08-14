@@ -24,7 +24,7 @@ export class AppService {
     return await this.topicRepository.getTopicList();
   }
 
-  //room 갯수가 몇개인지
+  
   async getRoomCountByTopic(): Promise<any> {
     return await this.topicRepository.getTopicListWithCount();
   }
@@ -64,14 +64,14 @@ export class AppService {
   }
 
   async createRoom(
-    roomName: string,
+    roomId: string,
     topicId: number,
     playerId: string,
     startTime: Date,
     endTime: Date,
   ): Promise<Room> {
     const room = new Room();
-    room.roomId = roomName;
+    room.roomId = roomId;
     room.topicId = topicId;
     room.playerId = playerId;
     room.startTime = startTime;
@@ -87,11 +87,9 @@ export class AppService {
       throw new Error('Player with this ID already exists');
     }
 
-    let player = await this.playerRepository.getPlayerByPlayerId(playerId);
-    //만약 아이디가 존재 하지 않을경우 생성
-    if (!player) {
-      player = await this.playerRepository.createPlayer(playerId,password);
-    }
+    const player = await this.playerRepository.createPlayer(playerId, password);
+    
+    return player;
   }
 
   // 로그인
