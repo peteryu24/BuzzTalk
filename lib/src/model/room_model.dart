@@ -1,5 +1,6 @@
+// TODO: 제거 변경
 class RoomModel {
-  final int roomId;
+  //final int roomId;
   final String roomName;
   final DateTime startTime;
   final DateTime endTime;
@@ -9,7 +10,7 @@ class RoomModel {
   final DateTime updatedAt;
 
   RoomModel(
-      {required this.roomId,
+      { //required this.roomId,
       required this.roomName,
       required this.startTime,
       required this.endTime,
@@ -20,7 +21,7 @@ class RoomModel {
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
     return RoomModel(
-      roomId: json['roomId'],
+      //roomId: json['roomId'],
       roomName: json['roomName'],
       startTime: json['startTime'],
       endTime: json['endTime'],
@@ -33,7 +34,7 @@ class RoomModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'roomId': roomId,
+      //'roomId': roomId,
       'roomName': roomName,
       'startTime': startTime,
       'endTime': startTime,
