@@ -1,30 +1,23 @@
 class MsgModel {
-  final int id;
-  final String uuid;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
-  MsgModel(
-      {required this.id,
-      required this.uuid,
-      required this.createdAt,
-      required this.updatedAt});
+  final String playerId;
+  final String password;
+//여기 패스워드는 나중에 지울거
+  MsgModel({
+    required this.playerId,
+    required this.password,
+  });
 
   factory MsgModel.fromJson(Map<String, dynamic> json) {
     return MsgModel(
-      id: json['id'],
-      uuid: json['uuid'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+      playerId: json['playerId'],
+      password: json['password'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'uuid': uuid,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'playerId': playerId,
+      'password': password,
     };
   }
 }
