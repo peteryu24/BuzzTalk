@@ -1,21 +1,23 @@
-class UserModel {
-  String player_id;
-  String password;
+class AuthModel {
+  final String playerId;
+  final String password;
 
-  UserModel({required this.player_id, required this.password});
+  AuthModel({
+    required this.playerId,
+    required this.password,
+  });
 
-  // TODO: 로그인 로직
-  Future<bool> signIn() async {
-    return true;
+  factory AuthModel.fromJson(Map<String, dynamic> json) {
+    return AuthModel(
+      playerId: json['playerId'],
+      password: json['password'],
+    );
   }
 
-  // TODO: 회원가입 로직
-  Future<bool> signUp() async {
-    return true;
-  }
-
-  // TODO: 비밀번호 변경 로직
-  Future<bool> changePassword(String email) async {
-    return true;
+  Map<String, dynamic> toJson() {
+    return {
+      'playerId': playerId,
+      'password': password,
+    };
   }
 }
