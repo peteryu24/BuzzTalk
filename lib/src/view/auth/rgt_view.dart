@@ -1,12 +1,16 @@
-// TODO: 임시
-// TODO: 프론트에서도 아이디와 비밀번호 유효성 검증하기(특수문자, sql injection 방지, 아이디 중복, etc)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:alarm_app/src/view/auth/rgt_view_model.dart';
+import 'package:alarm_app/src/repository/auth_repository.dart';
+import 'package:alarm_app/src/repository/http_request.dart';
 
 class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // 여기서 Http와 AuthRepository를 생성합니다.
+    final httpRequest = Http('https://your-api-url.com');
+    final authRepository = AuthRepository(httpRequest);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -20,10 +24,11 @@ class SignUp extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) => SignUpViewModel(),
+        create: (_) =>
+            RgtViewModel(authRepository), // RgtViewModel에 AuthRepository 전달
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Consumer<SignUpViewModel>(
+          child: Consumer<RgtViewModel>(
             builder: (context, viewModel, child) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +47,7 @@ class SignUp extends StatelessWidget {
                     child: ListView(
                       children: [
                         _buildInputField(
-                          icon: Icons.person, // 여전히 사용할 수 있음
+                          icon: Icons.person,
                           hintText: 'Username',
                           onChanged: viewModel.updatePlayerId,
                         ),
@@ -59,8 +64,7 @@ class SignUp extends StatelessWidget {
                           icon: Icons.lock,
                           hintText: 'Confirm password',
                           obscureText: viewModel.obscureConfirmText,
-                          onChanged:
-                              viewModel.updatePassword, // 비밀번호 확인도 동일하게 업데이트
+                          onChanged: viewModel.updatePassword,
                           onToggle: viewModel.toggleObscureConfirmText,
                         ),
                         SizedBox(height: 60),

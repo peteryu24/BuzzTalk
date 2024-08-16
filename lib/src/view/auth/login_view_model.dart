@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:alarm_app/src/model/auth_model.dart';
+import 'package:alarm_app/src/repository/auth_repository.dart';
 
-class SignInViewModel extends ChangeNotifier {
+class LoginViewModel extends ChangeNotifier {
   String _player_id = '';
   String _password = '';
   bool _isLoading = false;
   bool _isObscureText = true;
-  bool _rememberMe = false;
+  //bool _rememberMe = false;
+  String? _playerIdError;
+  String? _passwordError;
+
+  final AuthRepository _authRepository;
+
+  LoginViewModel(this._authRepository);
 
   String get player_id => _player_id;
   String get password => _password;
   bool get isLoading => _isLoading;
   bool get isObscureText => _isObscureText;
-  bool get isRememberMe => _rememberMe;
+  //bool get isRememberMe => _isRememberMe;
+  String? get playerIdError => _playerIdError;
+  String? get passwordError => _passwordError;
 
-  void updateEmail(String email) {
-    _player_id = player_id;
+  void updatePlayerId(String playerId) {
+    _player_id = playerId;
     notifyListeners();
   }
 
@@ -29,25 +37,56 @@ class SignInViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+/*
   void toggleRememberMe(bool value) {
     _rememberMe = value;
     notifyListeners();
   }
+  */
+
+  bool isValidPlayerId(String playerId) {
+    return RegExp(r'^[a-z0-9]{3,15}$').hasMatch(playerId);
+  }
+
+  bool isValidPassword(String password) {
+    return password.length >= 8 &&
+        RegExp(r'[A-Z]').hasMatch(password) &&
+        RegExp(r'[a-z]').hasMatch(password) &&
+        RegExp(r'[0-9]').hasMatch(password) &&
+        RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
+  }
 
   Future<void> signIn() async {
     _isLoading = true;
+    _playerIdError = null;
+    _passwordError = null;
     notifyListeners();
 
-    UserModel user = UserModel(player_id: _player_id, password: _password);
-    bool success = await user.signIn();
+    if (!isValidPlayerId(_player_id)) {
+      _playerIdError = '아이디 형식 불일치 다시 시도하세요';
+    }
+    if (!isValidPassword(_password)) {
+      _passwordError = '비번 형식 불일치 다시 시도하세요';
+    }
+    if (_playerIdError != null || _passwordError != null) {
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
 
-    _isLoading = false;
-    notifyListeners();
+    try {
+      bool success = await _authRepository.login(_player_id, _password);
 
-    if (success) {
-      // 로그인 성공 시 처리 로직
-    } else {
-      // 로그인 실패 시 처리 로직
+      _isLoading = false;
+      notifyListeners();
+
+      if (!success) {
+        _playerIdError = 'Login failed';
+      }
+    } catch (e) {
+      _isLoading = false;
+      _playerIdError = 'An error occurred';
+      notifyListeners();
     }
   }
 }

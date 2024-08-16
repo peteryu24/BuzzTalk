@@ -1,5 +1,5 @@
-// TODO: 임시
-// TODO: Remember me : SharedPreferences?
+import 'package:alarm_app/src/repository/auth_repository.dart';
+import 'package:alarm_app/src/repository/http_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:alarm_app/src/view/auth/login_view_model.dart';
@@ -9,86 +9,23 @@ import 'package:alarm_app/src/view/auth/chg_pwd_view.dart';
 class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final httpRequest = Http('https://your-api-url.com');
+    final authRepository = AuthRepository(httpRequest);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ChangeNotifierProvider(
-        create: (_) => SignInViewModel(),
+        create: (_) => LoginViewModel(authRepository),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Consumer<SignInViewModel>(
+          child: Consumer<LoginViewModel>(
             builder: (context, viewModel, child) {
               return Column(
                 children: [
                   Expanded(
                     child: Stack(
                       children: [
-                        Positioned(
-                          left: 29,
-                          top: 270,
-                          child: Text(
-                            'Sign in',
-                            style: TextStyle(
-                              color: Color(0xFF110C26),
-                              fontSize: 24,
-                              fontFamily: 'Airbnb Cereal App',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 28,
-                          top: 400,
-                          right: 28,
-                          child: Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Transform.scale(
-                                    scale: 0.8,
-                                    child: Switch.adaptive(
-                                      value: viewModel.isRememberMe,
-                                      onChanged: (value) {
-                                        viewModel.toggleRememberMe(value);
-                                      },
-                                      activeColor: Color(0xFF5668FF),
-                                    ),
-                                  ),
-                                  Text(
-                                    'Remember Me',
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: Color(0xFF110C26),
-                                      fontSize: 14,
-                                      fontFamily: 'Airbnb Cereal App',
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChangePassword()), // ResetPassword 화면으로 이동
-                                  );
-                                },
-                                child: Text(
-                                  'Forgot Password?',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    color: Color(0xFF110C26),
-                                    fontSize: 14,
-                                    fontFamily: 'Airbnb Cereal App',
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // 'Sign in' 텍스트를 삭제한 부분
                         Positioned(
                           left: 50,
                           top: 500,
@@ -139,8 +76,7 @@ class SignIn extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            SignUp()), // SignUp 화면으로 이동
+                                        builder: (context) => SignUp()),
                                   );
                                 },
                                 child: DonTHaveAnAccountSignUp(),
@@ -150,90 +86,125 @@ class SignIn extends StatelessWidget {
                         ),
                         Positioned(
                           left: 28,
-                          top: 269,
-                          child: Container(
-                            width: 317,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Color(0xFFE4DEDE)),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.email, color: Color(0xFF747688)),
-                                  SizedBox(width: 16),
-                                  Expanded(
-                                    child: TextField(
-                                      onChanged: (value) =>
-                                          viewModel.updateEmail(value),
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'abc@email.com',
-                                        hintStyle: TextStyle(
-                                          color: Color(0xFF747688),
-                                          fontSize: 14,
-                                          fontFamily: 'Airbnb Cereal App',
-                                          fontWeight: FontWeight.w400,
+                          top: 250,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 317,
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: Color(0xFFE4DEDE)),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.person,
+                                          color: Color(0xFF747688)),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: TextField(
+                                          onChanged: (value) =>
+                                              viewModel.updatePlayerId(value),
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'ID',
+                                            hintStyle: TextStyle(
+                                              color: Color(0xFF747688),
+                                              fontSize: 14,
+                                              fontFamily: 'Airbnb Cereal App',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              if (viewModel.playerIdError != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    viewModel.playerIdError!,
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                            ],
                           ),
                         ),
                         Positioned(
                           left: 28,
                           top: 344,
-                          child: Container(
-                            width: 317,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Color(0xFFE4DEDE)),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.lock, color: Color(0xFF747688)),
-                                  SizedBox(width: 16),
-                                  Expanded(
-                                    child: TextField(
-                                      obscureText: viewModel.isObscureText,
-                                      onChanged: (value) =>
-                                          viewModel.updatePassword(value),
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Your password',
-                                        hintStyle: TextStyle(
-                                          color: Color(0xFF747688),
-                                          fontSize: 14,
-                                          fontFamily: 'Airbnb Cereal App',
-                                          fontWeight: FontWeight.w400,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 317,
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: Color(0xFFE4DEDE)),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.lock,
+                                          color: Color(0xFF747688)),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: TextField(
+                                          obscureText: viewModel.isObscureText,
+                                          onChanged: (value) =>
+                                              viewModel.updatePassword(value),
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'PW',
+                                            hintStyle: TextStyle(
+                                              color: Color(0xFF747688),
+                                              fontSize: 14,
+                                              fontFamily: 'Airbnb Cereal App',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      GestureDetector(
+                                        onTap: () =>
+                                            viewModel.toggleObscureText(),
+                                        child: Icon(
+                                          viewModel.isObscureText
+                                              ? Icons.visibility_off
+                                              : Icons.visibility,
+                                          color: Color(0xFF747688),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  GestureDetector(
-                                    onTap: () => viewModel.toggleObscureText(),
-                                    child: Icon(
-                                      viewModel.isObscureText
-                                          ? Icons.visibility_off
-                                          : Icons.visibility,
-                                      color: Color(0xFF747688),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
+                              if (viewModel.passwordError != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    viewModel.passwordError!,
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       ],

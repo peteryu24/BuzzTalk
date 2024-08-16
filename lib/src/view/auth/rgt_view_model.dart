@@ -1,13 +1,17 @@
-// TODO: 임시
 import 'package:flutter/material.dart';
-import 'package:alarm_app/src/model/auth_model.dart';
+import 'package:alarm_app/src/repository/auth_repository.dart';
+import 'package:alarm_app/src/repository/http_request.dart';
 
-class SignUpViewModel extends ChangeNotifier {
+class RgtViewModel extends ChangeNotifier {
   String _player_id = ''; // playerId 필드
   String _password = ''; // password 필드
   bool _isLoading = false;
   bool _obscureText = true;
   bool _obscureConfirmText = true;
+
+  final AuthRepository _authRepository;
+
+  RgtViewModel(this._authRepository);
 
   String get player_id => _player_id;
   String get password => _password;
@@ -39,16 +43,15 @@ class SignUpViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    UserModel user = UserModel(player_id: _player_id, password: _password);
-    bool success = await user.signUp();
-
-    _isLoading = false;
-    notifyListeners();
-
-    if (success) {
+    try {
+      await _authRepository.register(_player_id, _password);
       // 회원가입 성공 시 처리 로직
-    } else {
+    } catch (e) {
       // 회원가입 실패 시 처리 로직
+      print('회원가입 실패: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }
