@@ -21,7 +21,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider(create: (context) => Http(serverUrl)),
+        Provider(create: (context) => Http()),
         Provider(create: (context) => LocalNotificationService()),
         Provider(create: (context) => RoomRepository(context.read<Http>())),
       ],

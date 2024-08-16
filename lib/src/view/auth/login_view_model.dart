@@ -11,6 +11,7 @@ class LoginViewModel extends ChangeNotifier {
   String? _passwordError;
 
   final AuthRepository _authRepository;
+
   // 영어 소문자와 숫자만 포함된 패턴, 최소 3자 이상, 최대 15자 이하
   // 최소 8자, 대문자, 소문자, 숫자, 특수문자를 각각 최소 하나씩 포함
   final _validator = AuthUtils();

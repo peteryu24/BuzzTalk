@@ -40,29 +40,46 @@ class SignUp extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 30),
                   Expanded(
                     child: ListView(
                       children: [
+                        _buildLabel('ID'),
                         _buildInputField(
                           icon: Icons.person,
                           hintText: 'Username',
                           onChanged: viewModel.updatePlayerId,
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 30),
+                        _buildLabel('Password'),
                         _buildPasswordField(
+                          controller:
+                              viewModel.passwordController, // Controller 사용
                           icon: Icons.lock,
                           hintText: 'Password',
                           obscureText: viewModel.obscureText,
                           onChanged: viewModel.updatePassword,
                           onToggle: viewModel.toggleObscureText,
                         ),
+                        if (viewModel.passwordError != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              viewModel.passwordError!,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
                         SizedBox(height: 20),
                         _buildPasswordField(
+                          controller: viewModel
+                              .confirmPasswordController, // Controller 사용
                           icon: Icons.lock,
                           hintText: 'Confirm password',
                           obscureText: viewModel.obscureConfirmText,
-                          onChanged: viewModel.updatePassword,
+                          onChanged: viewModel.updateConfirmPassword,
                           onToggle: viewModel.toggleObscureConfirmText,
                         ),
                         SizedBox(height: 60),
@@ -74,7 +91,7 @@ class SignUp extends StatelessWidget {
                           onPressed: viewModel.isLoading
                               ? null
                               : () {
-                                  viewModel.signUp();
+                                  viewModel.signUp(context);
                                 },
                         ),
                         SizedBox(height: 20),
@@ -124,6 +141,21 @@ class SignUp extends StatelessWidget {
     );
   }
 
+  Widget _buildLabel(String labelText) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0, left: 16.0), // Padding 추가
+      child: Text(
+        labelText,
+        style: TextStyle(
+          color: Color(0xFF110C26),
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.left,
+      ),
+    );
+  }
+
   Widget _buildInputField({
     required IconData icon,
     required String hintText,
@@ -167,6 +199,7 @@ class SignUp extends StatelessWidget {
   }
 
   Widget _buildPasswordField({
+    required TextEditingController controller, // Controller 매개변수 추가
     required IconData icon,
     required String hintText,
     required bool obscureText,
@@ -190,6 +223,7 @@ class SignUp extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 child: TextField(
+                  controller: controller, // Controller 할당
                   onChanged: onChanged,
                   obscureText: obscureText,
                   decoration: InputDecoration(
