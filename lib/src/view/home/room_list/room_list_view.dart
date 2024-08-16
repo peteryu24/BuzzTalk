@@ -20,6 +20,7 @@ class _RoomListViewState extends State<RoomListView> {
   late final RoomListViewModel roomListViewModel = RoomListViewModel(
     roomRepository: context.read(),
     localNotificationService: context.read(),
+    sharedPreferencesRepository: context.read(),
   );
 
   @override
