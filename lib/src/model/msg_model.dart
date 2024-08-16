@@ -9,7 +9,7 @@ class MsgModel {
 
   factory MsgModel.fromJson(Map<String, dynamic> json) {
     return MsgModel(
-      playerId: json['playerId'],
+      playerId: json['player_id'],
       password: json['password'],
     );
   }
