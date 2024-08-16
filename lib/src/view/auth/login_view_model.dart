@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  String _player_id = '';
+  String _playerId = '';
   String _password = '';
   bool _isLoading = false;
   bool _isObscureText = true;
-  //bool _rememberMe = false;
   String? _playerIdError;
   String? _passwordError;
 
@@ -14,16 +13,15 @@ class LoginViewModel extends ChangeNotifier {
 
   LoginViewModel(this._authRepository);
 
-  String get player_id => _player_id;
+  String get playerId => _playerId;
   String get password => _password;
   bool get isLoading => _isLoading;
   bool get isObscureText => _isObscureText;
-  //bool get isRememberMe => _isRememberMe;
   String? get playerIdError => _playerIdError;
   String? get passwordError => _passwordError;
 
   void updatePlayerId(String playerId) {
-    _player_id = playerId;
+    _playerId = playerId;
     notifyListeners();
   }
 
@@ -37,17 +35,12 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-/*
-  void toggleRememberMe(bool value) {
-    _rememberMe = value;
-    notifyListeners();
-  }
-  */
-
+  // 영어 소문자와 숫자만 포함된 패턴, 최소 3자 이상, 최대 15자 이하
   bool isValidPlayerId(String playerId) {
     return RegExp(r'^[a-z0-9]{3,15}$').hasMatch(playerId);
   }
 
+  // 최소 8자, 대문자, 소문자, 숫자, 특수문자를 각각 최소 하나씩 포함
   bool isValidPassword(String password) {
     return password.length >= 8 &&
         RegExp(r'[A-Z]').hasMatch(password) &&
@@ -62,7 +55,7 @@ class LoginViewModel extends ChangeNotifier {
     _passwordError = null;
     notifyListeners();
 
-    if (!isValidPlayerId(_player_id)) {
+    if (!isValidPlayerId(_playerId)) {
       _playerIdError = '아이디 형식 불일치 다시 시도하세요';
     }
     if (!isValidPassword(_password)) {
@@ -75,7 +68,7 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     try {
-      bool success = await _authRepository.login(_player_id, _password);
+      bool success = await _authRepository.login(_playerId, _password);
 
       _isLoading = false;
       notifyListeners();

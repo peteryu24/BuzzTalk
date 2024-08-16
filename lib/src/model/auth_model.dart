@@ -1,22 +1,22 @@
 class AuthModel {
-  final String player_id;
+  final String playerId;
   final String password;
 
   AuthModel({
-    required this.player_id,
+    required this.playerId,
     required this.password,
   });
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
     return AuthModel(
-      player_id: json['player_id'],
+      playerId: json['playerId'],
       password: json['password'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'player_id': player_id,
+      'playerId': playerId,
       'password': password,
     };
   }

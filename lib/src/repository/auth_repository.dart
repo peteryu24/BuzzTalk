@@ -8,9 +8,9 @@ class AuthRepository {
   AuthRepository(this.httpRequest);
 
   // 회원가입
-  Future<void> register(String player_id, String password) async {
+  Future<void> register(String playerId, String password) async {
     final response = await httpRequest.post('/player/register', {
-      'player_id': player_id,
+      'playerId': playerId,
       'password': password,
     });
 
@@ -20,9 +20,9 @@ class AuthRepository {
   }
 
   // 로그인
-  Future<bool> login(String player_id, String password) async {
+  Future<bool> login(String playerId, String password) async {
     final response = await httpRequest.post('/player/login', {
-      'player_id': player_id,
+      'playerId': playerId,
       'password': password,
     });
 
@@ -36,9 +36,9 @@ class AuthRepository {
 
   // 비밀번호 변경
   Future<void> changePassword(
-      String player_id, String oldPassword, String newPassword) async {
+      String playerId, String oldPassword, String newPassword) async {
     final response = await httpRequest.post('/player/change-password', {
-      'player_id': player_id,
+      'playerId': playerId,
       'oldPassword': oldPassword,
       'newPassword': newPassword,
     });
@@ -49,10 +49,9 @@ class AuthRepository {
   }
 
   // 회원 탈퇴
-  Future<void> deletePlayer(String player_id, String password) async {
+  Future<void> deletePlayer(String playerId) async {
     final response = await httpRequest.post('/player/delete', {
-      'player_id': player_id,
-      'password': password,
+      'playerId': playerId,
     });
 
     if (response['status'] != 'success') {

@@ -9,7 +9,7 @@ import 'package:alarm_app/src/view/auth/chg_pwd_view.dart';
 class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final httpRequest = Http('https://your-api-url.com');
+    final httpRequest = Http('my api url');
     final authRepository = AuthRepository(httpRequest);
 
     return Scaffold(
@@ -25,7 +25,6 @@ class SignIn extends StatelessWidget {
                   Expanded(
                     child: Stack(
                       children: [
-                        // 'Sign in' 텍스트를 삭제한 부분
                         Positioned(
                           left: 50,
                           top: 500,
