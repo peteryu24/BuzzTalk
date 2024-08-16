@@ -18,8 +18,8 @@ class ChatView extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
-              title:
-                  Text(viewModel.roomModel.roomId), // ViewModel에서 roomId를 가져옴
+              title: Text(viewModel.roomModel.roomId
+                  as String), // ViewModel에서 roomId를 가져옴
             ),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.end,
