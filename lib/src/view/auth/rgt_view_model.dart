@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/util/auth_utils.dart';
+import 'package:alarm_app/src/view/auth/login_view.dart';
 
 class RgtViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -104,7 +105,11 @@ class RgtViewModel extends ChangeNotifier {
 
     try {
       await _authRepository.register(_playerId, _password);
-      // 회원가입 성공 시 처리 로직
+      // 회원가입 성공 시 로그인 화면으로 이동
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
     } catch (e) {
       _showErrorDialog(context, '회원가입 실패', '다시 시도하세요');
     } finally {

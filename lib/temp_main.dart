@@ -15,7 +15,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => LoginViewModel(authRepository)),
       ],
       child: MaterialApp(
-        home: SignIn(), // CreateRoomView를 SignIn 뷰로 변경
+        home: Login(), // CreateRoomView를 SignIn 뷰로 변경
       ),
     ),
   );

@@ -27,11 +27,13 @@ class LoginViewModel extends ChangeNotifier {
 
   void updatePlayerId(String playerId) {
     _playerId = playerId;
+    _playerIdError = null; // 에러 메시지 초기화
     notifyListeners();
   }
 
   void updatePassword(String password) {
     _password = password;
+    _passwordError = null; // 에러 메시지 초기화
     notifyListeners();
   }
 
@@ -46,18 +48,23 @@ class LoginViewModel extends ChangeNotifier {
     _passwordError = null;
     notifyListeners();
 
+    // 1순위: 아이디 형식 불일치 처리
     if (!_validator.isValidPlayerId(_playerId)) {
-      _playerIdError = '아이디 형식 불일치 다시 시도하세요';
-    }
-    if (!_validator.isValidPassword(_password)) {
-      _passwordError = '비번 형식 불일치 다시 시도하세요';
-    }
-    if (_playerIdError != null || _passwordError != null) {
       _isLoading = false;
+      _playerIdError = '아이디 형식이 맞지 않습니다.';
       notifyListeners();
       return;
     }
 
+    // 2순위: 비밀번호 형식 불일치 처리
+    if (!_validator.isValidPassword(_password)) {
+      _isLoading = false;
+      _passwordError = '비밀번호 형식이 맞지 않습니다.';
+      notifyListeners();
+      return;
+    }
+
+    // 형식 체크가 모두 통과된 경우 로그인 시도
     try {
       bool success = await _authRepository.login(_playerId, _password);
 
@@ -65,11 +72,12 @@ class LoginViewModel extends ChangeNotifier {
       notifyListeners();
 
       if (!success) {
-        _playerIdError = 'Login failed';
+        _playerIdError = '로그인 실패';
+        notifyListeners();
       }
     } catch (e) {
       _isLoading = false;
-      _playerIdError = 'An error occurred';
+      _playerIdError = '오류가 발생했습니다';
       notifyListeners();
     }
   }

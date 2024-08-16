@@ -6,7 +6,7 @@ import 'package:alarm_app/src/view/auth/login_view_model.dart';
 import 'package:alarm_app/src/view/auth/rgt_view.dart';
 import 'package:alarm_app/src/view/auth/chg_pwd_view.dart';
 
-class SignIn extends StatelessWidget {
+class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final httpRequest = Http();
