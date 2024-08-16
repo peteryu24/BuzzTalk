@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 import 'package:alarm_app/src/repository/http_request.dart';
 import 'package:alarm_app/src/repository/room_repository.dart';
 import 'package:alarm_app/src/repository/shared_preferences_repository.dart';
 import 'package:alarm_app/src/view/home/home_view.dart';
+=======
+import 'package:alarm_app/src/view/chat/chat_view.dart';
+>>>>>>> feature/chat
 import 'package:alarm_app/util/helper/route.dart';
 import 'package:alarm_app/src/service/local_notification_service.dart';
 import 'package:alarm_app/src/service/my_room_service.dart';
