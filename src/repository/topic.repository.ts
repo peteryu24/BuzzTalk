@@ -17,6 +17,7 @@ export class TopicRepository extends Repository<Topic> {
     return await this.find();
   }
 
+  //만약 room_count가 NULL이면 0 반환
   async getTopicListWithCount(): Promise<any> {
     return await this.query(`
         SELECT t.topic_id,

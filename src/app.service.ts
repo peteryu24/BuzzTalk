@@ -11,6 +11,37 @@ export class AppService {
     private topicRepository: TopicRepository,
     private playerRepository: PlayerRepository,
   ) {}
+  //아래 2개는 playerId, password 검증 로직을 하는 로직. typescript도 정규표현식 사용 가능
+  private validatePlayerId(playerId: string): void {
+    const idRegex = /^[a-z0-9]{3,15}$/;
+    if (!idRegex.test(playerId)) {
+      throw new Error('아이디는 영어 소문자와 숫자만 포함되어 있고, 3~15자 사이로 입력해야 합니다.');
+    }
+  }
+
+  private validatePassword(password: string): void {
+    const minLength = 8;
+    const upperCaseRegex = /[A-Z]/;
+    const lowerCaseRegex = /[a-z]/;
+    const numberRegex = /[0-9]/;
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+    if (password.length < minLength) {
+      throw new Error('패스워드는 8자 이상이어야 합니다.');
+    }
+    if (!upperCaseRegex.test(password)) {
+      throw new Error('비밀번호엔 적어도 1개 이상의 대문자가 포함되어 있어야 합니다.');
+    }
+    if (!lowerCaseRegex.test(password)) {
+      throw new Error('비밀번호엔 적어도 1개 이상의 소문자가 포함되어 있어야 합니다.');
+    }
+    if (!numberRegex.test(password)) {
+      throw new Error('비밀번호엔 적어도 1개 이상의 숫자가 포함되어 있어야 합니다.');
+    }
+    if (!specialCharRegex.test(password)) {
+      throw new Error('비밀번호엔 적어도 1개 이상의 특수문자가 포함되어 있어야 합니다.');
+    }
+  }
   
   async getOrCreatePlayer(playerId: string,password:string): Promise<any> {
     let player = await this.playerRepository.getPlayerIdByPlayer(playerId);
@@ -36,32 +67,11 @@ export class AppService {
   //
   async getRoomList(
     topicId: number | undefined,
-    cursorId: string | undefined,
-    limit: number,
   ): Promise<any> {
-    const res: Room[] | undefined = await this.roomRepository.getRooms(
-      topicId,
-      cursorId,
-      limit,
-    );
-
-    if (!res) {
-      return {
-        rooms: [],
-        cursorId: undefined,
-      };
-    }
-
-    let nextCursorId: string | undefined = undefined;
-    if (res.length === limit) {
-      nextCursorId = res[res.length - 1].roomId.toString();
-    }
-
-    return {
-      rooms: res,
-      cursorId: nextCursorId,
-    };
+    const res: Room[] | undefined = await this.roomRepository.getRooms(topicId);
+    return res;
   }
+  
 
   async createRoom(
     roomName: string,
@@ -75,9 +85,10 @@ export class AppService {
     if (!existingPlayer) {
       throw new Error('Player Id not exist.');
     }
+
     const existingTopic = await this.topicRepository.getTopicIdByTopic(topicId);
     if(!existingPlayer){
-      throw new Error('Player Id not exist.');
+      throw new Error('Topic Id not exist.');
     }
     const room = new Room();
     room.roomName = roomName;
@@ -91,6 +102,10 @@ export class AppService {
   //새로만든거
    // 회원가입
    async register(playerId: string, password: string): Promise<any> {
+
+    this.validatePlayerId(playerId);
+    this.validatePassword(password);
+
     const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (existingPlayer) {
       throw new Error('Player with this ID already exists');
@@ -103,6 +118,10 @@ export class AppService {
 
   // 로그인
   async login(playerId: string, password: string): Promise<any> {
+
+    this.validatePlayerId(playerId);
+    this.validatePassword(password);
+
     const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player || player.password !== password) {
       return('Error'); //int형식으로 나중에 수정 할거임
@@ -114,6 +133,10 @@ export class AppService {
   // 비밀번호 변경
   async changePassword(playerId: string,oldPassword: string, newPassword: string): Promise<void> 
   {
+
+    this.validatePlayerId(playerId);
+    this.validatePassword(newPassword);
+
     const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player || player.password !== oldPassword) {
       throw new Error('Invalid credentials');

@@ -19,10 +19,10 @@ export class Room extends BaseEntity {
   @Column({type:'varchar', name: 'room_name', nullable: false })
   roomName: string;
 
-  @Column({ type: 'timestamptz', name: 'start_time', nullable: false })
+  @Column({ type: 'timestamp', name: 'start_time', nullable: false })
   startTime: Date;
 
-  @Column({ type: 'timestamptz', name: 'end_time', nullable: false })
+  @Column({ type: 'timestamp', name: 'end_time', nullable: false })
   endTime: Date;
 
   @Column({ type: 'integer', name: 'topic_id', nullable: false })
@@ -30,6 +30,9 @@ export class Room extends BaseEntity {
 
   @Column({ type: 'varchar', name: 'player_id', nullable: false })
   playerId: string;
+
+  @Column({type:'boolean', name:'book', nullable: false, default:false})
+  book: boolean;
 
   @ManyToOne(() => Topic, (topic) => topic.rooms, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'topic_id' })
