@@ -5,6 +5,7 @@ class RoomModel {
   final DateTime endTime;
   final int topicId;
   final String playerId;
+  final bool book;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -15,19 +16,21 @@ class RoomModel {
       required this.endTime,
       required this.topicId,
       required this.playerId,
+      required this.book,
       required this.createdAt,
       required this.updatedAt});
 
   factory RoomModel.fromJson(Map<String, dynamic> json) {
     return RoomModel(
-      roomId: json['roomId'],
-      roomName: json['roomName'],
-      startTime: json['startTime'],
-      endTime: json['endTime'],
-      topicId: json['topicId'],
-      playerId: json['playerId'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+      roomId: json['room_id'],
+      roomName: json['room_name'],
+      startTime: DateTime.parse(json['start_time']), // Parsing DateTime
+      endTime: DateTime.parse(json['end_time']), // Parsing DateTime
+      topicId: json['topic_id'],
+      playerId: json['player_id'],
+      book: json['book'],
+      createdAt: DateTime.parse(json['created_at']), // Parsing DateTime
+      updatedAt: DateTime.parse(json['updated_at']), // Parsing DateTime
     );
   }
 
@@ -35,12 +38,13 @@ class RoomModel {
     return {
       'roomId': roomId,
       'roomName': roomName,
-      'startTime': startTime,
-      'endTime': startTime,
+      'startTime': startTime.toIso8601String(), // Converting DateTime to String
+      'endTime': endTime.toIso8601String(), // Converting DateTime to String
       'topicId': topicId,
       'playerId': playerId,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'book': book,
+      'createdAt': createdAt.toIso8601String(), // Converting DateTime to String
+      'updatedAt': updatedAt.toIso8601String(), // Converting DateTime to String
     };
   }
 }

@@ -9,8 +9,8 @@ class TopicModel {
 
   factory TopicModel.fromJson(Map<String, dynamic> json) {
     return TopicModel(
-      topicId: json['topicId'],
-      topicName: json['topicName'],
+      topicId: json['topic_id'],
+      topicName: json['topic_name'],
     );
   }
 
