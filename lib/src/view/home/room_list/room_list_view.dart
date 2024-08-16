@@ -4,7 +4,7 @@ import 'package:alarm_app/src/service/my_room_service.dart';
 import 'package:alarm_app/src/view/base_view.dart';
 import 'package:alarm_app/src/view/home/room_list/room_list_view_model.dart';
 import 'package:alarm_app/util/helper/infinite_scroll_mixin.dart';
-import 'package:alarm_app/src/view/home/room_item.dart';
+import 'package:alarm_app/src/view/home/room_list/widget/room_item.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +41,7 @@ class _RoomListViewState extends State<RoomListView> {
                   return RoomItem(
                     room: room,
                     onReserve: () => viewModel.bookScheduleChat(room),
+                    onCancel: () => viewModel.cancleScheduleChat(room),
                   );
                 },
               ),

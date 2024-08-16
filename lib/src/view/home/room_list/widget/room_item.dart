@@ -11,11 +11,13 @@ import 'package:alarm_app/src/model/room_model.dart';
 class RoomItem extends StatelessWidget {
   final RoomModel room;
   final VoidCallback onReserve;
+  final VoidCallback onCancel;
 
   const RoomItem({
     super.key,
     required this.room,
     required this.onReserve,
+    required this.onCancel,
   });
 
   @override
@@ -45,8 +47,8 @@ class RoomItem extends StatelessWidget {
 
               ///현재 시간보다 빠름
               ? ElevatedButton(
-                  onPressed: onReserve,
-                  child: const Text('예약'),
+                  onPressed: room.isReserved ? onReserve : onCancel,
+                  child: room.isReserved ? Text('예약') : Text('취소'),
                 )
 
               ///현재 시간보다 느림
@@ -62,6 +64,7 @@ class RoomItem extends StatelessWidget {
                     SizedBox(
                       width: 10,
                     ),
+                    //이 부분이 있을 필요가 있나? 방이 열렸는데 굳이 취소를?
                     ElevatedButton(
                       onPressed: () {
                         print('예약 취소');
