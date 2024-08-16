@@ -6,8 +6,9 @@ class Http {
   Http(this.baseUrl);
 
   //연결 설정
-  Future<Map<String, dynamic>> get(String endpoint) async {
+  Future<dynamic> get(String endpoint) async {
     final response = await http.get(Uri.parse('$baseUrl$endpoint'));
+    print(response.body);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -22,10 +23,19 @@ class Http {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(data),
     );
-    if (response.statusCode == 200) {
+
+    if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to post data');
+      // 서버 오류 메시지를 처리
+      Map<String, dynamic> errorResponse;
+      try {
+        errorResponse = jsonDecode(response.body);
+      } catch (e) {
+        errorResponse = {'error': 'An unexpected error occurred'};
+      }
+      String errorMessage = errorResponse['message'] ?? 'error!';
+      throw Exception(errorMessage);
     }
   }
 }
