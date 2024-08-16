@@ -36,12 +36,12 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   // 영어 소문자와 숫자만 포함된 패턴, 최소 3자 이상, 최대 15자 이하
-  bool isValidPlayerId(String playerId) {
+  bool playerIdFlag(String playerId) {
     return RegExp(r'^[a-z0-9]{3,15}$').hasMatch(playerId);
   }
 
   // 최소 8자, 대문자, 소문자, 숫자, 특수문자를 각각 최소 하나씩 포함
-  bool isValidPassword(String password) {
+  bool passwordIdFlag(String password) {
     return password.length >= 8 &&
         RegExp(r'[A-Z]').hasMatch(password) &&
         RegExp(r'[a-z]').hasMatch(password) &&
@@ -55,10 +55,10 @@ class LoginViewModel extends ChangeNotifier {
     _passwordError = null;
     notifyListeners();
 
-    if (!isValidPlayerId(_playerId)) {
+    if (!playerIdFlag(_playerId)) {
       _playerIdError = '아이디 형식 불일치 다시 시도하세요';
     }
-    if (!isValidPassword(_password)) {
+    if (!passwordIdFlag(_password)) {
       _passwordError = '비번 형식 불일치 다시 시도하세요';
     }
     if (_playerIdError != null || _passwordError != null) {

@@ -9,7 +9,7 @@ import 'package:alarm_app/src/view/auth/chg_pwd_view.dart';
 class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final httpRequest = Http('my api url');
+    final httpRequest = Http();
     final authRepository = AuthRepository(httpRequest);
 
     return Scaffold(

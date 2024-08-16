@@ -7,8 +7,7 @@ import 'package:alarm_app/src/repository/http_request.dart';
 class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // 여기서 Http와 AuthRepository를 생성합니다.
-    final httpRequest = Http('https://your-api-url.com');
+    final httpRequest = Http();
     final authRepository = AuthRepository(httpRequest);
 
     return Scaffold(
@@ -24,8 +23,7 @@ class SignUp extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider(
-        create: (_) =>
-            RgtViewModel(authRepository), // RgtViewModel에 AuthRepository 전달
+        create: (_) => RgtViewModel(authRepository),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Consumer<RgtViewModel>(

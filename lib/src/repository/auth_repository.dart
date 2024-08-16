@@ -26,11 +26,10 @@ class AuthRepository {
       'password': password,
     });
 
-    // 응답 내용에 따라 성공 여부 판단
     if (response['status'] == 'success') {
-      return true; // 로그인 성공
+      return true;
     } else {
-      return false; // 로그인 실패
+      return false;
     }
   }
 
