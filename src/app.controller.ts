@@ -58,14 +58,11 @@ export class AppController {
     return await this.appService.getOrCreatePlayer(playerId,password);
   }
 
-  @Post('/room/list')
-  async getRoomList(@Body() body): Promise<any> {
-    const limit: number = body.limit;
-    const cursorId: string | undefined = body.cursorId;
-    const topicId: number | undefined = body.topicId;
-
-    return await this.appService.getRoomList(topicId, cursorId, limit);
+  @Get('/room/list')
+  async getRoomList(@Query('topicId') topicId: number | undefined): Promise<any> {
+    return await this.appService.getRoomList(topicId);
   }
+
 
   @Post('/room/create')
   async createRoom(@Body() body): Promise<any> {
@@ -94,7 +91,7 @@ export class AppController {
     }
   }
 
-  @Post('/room/ids')
+  @Get('/room/ids')
   async getRooms(@Body() body: { roomIds: string[] }): Promise<Room[]> {
     const roomIds = body.roomIds;
     return await this.appService.getRoomListByIds(roomIds);
