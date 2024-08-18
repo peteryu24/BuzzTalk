@@ -12,14 +12,14 @@ export class AppService {
     private playerRepository: PlayerRepository,
   ) {}
   //아래 2개는 playerId, password 검증 로직을 하는 로직. typescript도 정규표현식 사용 가능
-  private validatePlayerId(playerId: string): void {
+  private validatePlayerId(playerId: string): any {
     const idRegex = /^[a-z0-9]{3,15}$/;
     if (!idRegex.test(playerId)) {
-      throw new Error('아이디는 영어 소문자와 숫자만 포함되어 있고, 3~15자 사이로 입력해야 합니다.');
+      return {message:'아이디는 영어 소문자와 숫자만 포함되어 있고, 3~15자 사이로 입력해야 합니다.'};
     }
   }
-
-  private validatePassword(password: string): void {
+  //수정
+  private validatePassword(password: string): any {
     const minLength = 8;
     const upperCaseRegex = /[A-Z]/;
     const lowerCaseRegex = /[a-z]/;
@@ -27,19 +27,19 @@ export class AppService {
     const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
 
     if (password.length < minLength) {
-      throw new Error('패스워드는 8자 이상이어야 합니다.');
+      return {message:'패스워드는 8자 이상이어야 합니다.'};
     }
     if (!upperCaseRegex.test(password)) {
-      throw new Error('비밀번호엔 적어도 1개 이상의 대문자가 포함되어 있어야 합니다.');
+      return {message:'비밀번호엔 적어도 1개 이상의 대문자가 포함되어 있어야 합니다.'};
     }
     if (!lowerCaseRegex.test(password)) {
-      throw new Error('비밀번호엔 적어도 1개 이상의 소문자가 포함되어 있어야 합니다.');
+      return {message:'비밀번호엔 적어도 1개 이상의 소문자가 포함되어 있어야 합니다.'};
     }
     if (!numberRegex.test(password)) {
-      throw new Error('비밀번호엔 적어도 1개 이상의 숫자가 포함되어 있어야 합니다.');
+      return {message:'비밀번호엔 적어도 1개 이상의 숫자가 포함되어 있어야 합니다.'};
     }
     if (!specialCharRegex.test(password)) {
-      throw new Error('비밀번호엔 적어도 1개 이상의 특수문자가 포함되어 있어야 합니다.');
+      return {message:'비밀번호엔 적어도 1개 이상의 특수문자가 포함되어 있어야 합니다.'};
     }
   }
   
@@ -55,7 +55,6 @@ export class AppService {
     return await this.topicRepository.getTopicList();
   }
 
-  
   async getRoomCountByTopic(): Promise<any> {
     return await this.topicRepository.getTopicListWithCount();
   }
@@ -108,12 +107,18 @@ export class AppService {
 
     const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (existingPlayer) {
-      throw new Error('Player with this ID already exists');
+      return 0;
     }
 
     const player = await this.playerRepository.createPlayer(playerId, password);
-    
-    return player;
+    if (player)
+    {
+      return 1;
+    }
+    else
+    {
+      return 2;
+    }
   }
 
   // 로그인
@@ -124,14 +129,14 @@ export class AppService {
 
     const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player || player.password !== password) {
-      return('Error'); //int형식으로 나중에 수정 할거임
+      return 0; //int형식으로 나중에 수정 할거임
     }
     //player 객체 반환
     return player; // 나중에 세션식으로 쓸 때 수정
   }
 
   // 비밀번호 변경
-  async changePassword(playerId: string,oldPassword: string, newPassword: string): Promise<void> 
+  async changePassword(playerId: string,oldPassword: string, newPassword: string): Promise<number> 
   {
 
     this.validatePlayerId(playerId);
@@ -139,20 +144,37 @@ export class AppService {
 
     const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player || player.password !== oldPassword) {
-      throw new Error('Invalid credentials');
+      return 0;
     }
 
     player.password = newPassword;
-    await this.playerRepository.save(player);
+    const saveplayer = await this.playerRepository.save(player)
+    if(saveplayer)
+    {
+      return 1;
+    }
+    else
+    {
+      return 2;
+    }
   }
 
   // 회원 탈퇴
-  async deletePlayer(playerId: string, password: string): Promise<void> {
+  async deletePlayer(playerId: string, password: string): Promise<any> {
+    
     const player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player) {
-      throw new Error('Player not found');
+      return 0;
     }
-    await this.playerRepository.remove(player);
+    const playerdestroy = await this.playerRepository.remove(player);
+    if(playerdestroy)
+    {
+      return 1;
+    }
+    else
+    {
+      return 2;
+    }
   }
 
 }

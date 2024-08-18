@@ -18,5 +18,4 @@ export class PlayerRepository extends Repository<Player> {
     player.password = password;
     return await this.save(player);
   }
-  
 }
