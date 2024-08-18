@@ -12,6 +12,10 @@ export class RoomRepository extends Repository<Room> {
     return await this.save(room);
   }
   
+  async getRoomnameByRoom(roomName: string): Promise<Room | undefined> {
+    return await this.findOneBy({ roomName });
+  }
+
  //여러개의 룸id를 한 번에 찾고싶을때 ...ids로 쓴다고 함.
   async getRoomsByIds(ids: string[]): Promise<Room[]> {
     return await this.createQueryBuilder('room')
