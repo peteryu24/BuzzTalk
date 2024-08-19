@@ -1,10 +1,4 @@
-import 'dart:convert';
-import 'package:alarm_app/main.dart';
-import 'package:alarm_app/src/model/topic_model.dart';
-import 'package:alarm_app/src/service/topic_service.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:alarm_app/src/view/create_room/create_room_view_model.dart';
 
@@ -18,8 +12,7 @@ class CreateRoomView extends StatefulWidget {
 class _CreateRoomViewState extends State<CreateRoomView> {
   final TextEditingController _roomNameController = TextEditingController();
   int? _topicId;
-  DateTime? _selectedDate;
-  TimeOfDay? _startTime;
+  DateTime? _selectedTime;
 
   @override
   void dispose() {
@@ -36,21 +29,15 @@ class _CreateRoomViewState extends State<CreateRoomView> {
           IconButton(
             icon: Icon(Icons.check),
             onPressed: () {
-              if (_roomNameController.text.isNotEmpty &&
-                  _topicId != null &&
-                  _selectedDate != null &&
-                  _startTime != null) {
-                context.read<CreateRoomViewModel>().setRoomDetails(
+              if (_roomNameController.text.isNotEmpty && _topicId != null) {
+                context.read<CreateRoomViewModel>().createRoom(
                       roomName: _roomNameController.text,
                       topicId: _topicId!,
-                      selectedDate: _selectedDate!,
-                      startTime: _startTime!,
+                      selectedTime: _selectedTime, // 선택적
                     );
 
-                // 예를 들어, 서버에 데이터가 성공적으로 전송된 후 화면을 닫을 수 있습니다.
                 Navigator.pop(context, true);
               } else {
-                // 모든 필드가 입력되었는지 확인
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("모든 필드를 입력해주세요.")),
                 );
@@ -82,29 +69,16 @@ class _CreateRoomViewState extends State<CreateRoomView> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final selectedDate = await _selectDate(context);
-                if (selectedDate != null) {
-                  setState(() {
-                    _selectedDate = selectedDate;
-                  });
-                }
-              },
-              child: Text(_selectedDate != null
-                  ? _selectedDate!.toIso8601String()
-                  : "날짜 선택"),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final selectedTime = await _selectTime(context);
+                final selectedTime = await _selectDateTime(context);
                 if (selectedTime != null) {
                   setState(() {
-                    _startTime = selectedTime;
+                    _selectedTime = selectedTime;
                   });
                 }
               },
-              child: Text(
-                  _startTime != null ? _startTime!.format(context) : "시간 선택"),
+              child: Text(_selectedTime != null
+                  ? _selectedTime!.toIso8601String()
+                  : "시간 선택"),
             ),
           ],
         ),
@@ -140,19 +114,28 @@ class _CreateRoomViewState extends State<CreateRoomView> {
     );
   }
 
-  Future<DateTime?> _selectDate(BuildContext context) {
-    return showDatePicker(
+  Future<DateTime?> _selectDateTime(BuildContext context) async {
+    final selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-  }
-
-  Future<TimeOfDay?> _selectTime(BuildContext context) {
-    return showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
+    if (selectedDate != null) {
+      final selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (selectedTime != null) {
+        return DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+      }
+    }
+    return null;
   }
 }

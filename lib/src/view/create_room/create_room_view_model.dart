@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/model/room_model.dart';
-import 'package:alarm_app/src/service/create_room_service.dart';
+import 'package:alarm_app/src/repository/room_repository.dart';
 
 class CreateRoomViewModel extends ChangeNotifier {
-  final RoomService _roomService = RoomService();
+  final RoomRepository _roomRepository;
 
-  Future<void> setRoomDetails({
+  CreateRoomViewModel(this._roomRepository);
+
+  Future<void> createRoom({
     required String roomName,
     required int topicId,
-    required DateTime selectedDate,
-    required TimeOfDay startTime,
+    DateTime? selectedTime, // 선택적, 사용자가 입력하지 않으면 서버에서 처리
   }) async {
     RoomModel roomModel = RoomModel(
       roomName: roomName,
       topicId: topicId,
-      selectedDate: selectedDate,
-      startTime: startTime,
+      selectedTime: selectedTime,
     );
 
     try {
-      await _roomService.submitRoomDetails(roomModel);
-      // 성공
+      await _roomRepository.createRoom(roomModel);
       print("Room Created.");
     } catch (e) {
-      // 실패
       print("Failed: $e");
     }
   }
