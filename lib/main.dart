@@ -1,6 +1,7 @@
 import 'package:alarm_app/src/repository/http_request.dart';
 import 'package:alarm_app/src/repository/room_repository.dart';
 import 'package:alarm_app/src/repository/shared_preferences_repository.dart';
+import 'package:alarm_app/src/view/filter/topic_filter_view.dart';
 import 'package:alarm_app/src/view/home/home_view.dart';
 import 'package:alarm_app/src/view/chat/chat_view.dart';
 import 'package:alarm_app/util/helper/route.dart';

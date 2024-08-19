@@ -18,7 +18,7 @@ class ChatViewModel with ChangeNotifier {
     // 생성 시 소켓 연결 초기화
     socketRepository.initSocket(roomModel.playerId);
     // 방에 접속
-    socketRepository.joinRoom(roomModel.roomName, roomModel.playerId);
+    socketRepository.joinRoom(roomModel.roomId as String, roomModel.playerId);
 
     // 메시지 수신 리스너 등록
     socketRepository.socket.on('msg', (data) {
@@ -38,7 +38,7 @@ class ChatViewModel with ChangeNotifier {
     if (controller.text.isNotEmpty) {
       final message = controller.text;
       socketRepository.sendMessage(
-          roomModel.roomName, message, roomModel.playerId);
+          roomModel.roomId as String, message, roomModel.playerId);
       addMessage(message, roomModel.playerId); // 내 메시지로 추가
       controller.clear();
     }
@@ -46,7 +46,7 @@ class ChatViewModel with ChangeNotifier {
 
   // 방에서 나가기
   void exitRoom() {
-    socketRepository.exitRoom(roomModel.roomName);
+    socketRepository.exitRoom(roomModel.roomId as String);
     notifyListeners();
   }
 
