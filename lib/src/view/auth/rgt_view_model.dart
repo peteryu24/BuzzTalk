@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/src/view/auth/login_view.dart';
-import 'package:alarm_app/util/auth_utils.dart'; // AuthUtils 임포트
+import 'package:alarm_app/util/auth_utils.dart';
 
 class RgtViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -15,13 +15,14 @@ class RgtViewModel extends ChangeNotifier {
   String? _passwordError;
 
   final AuthRepository _authRepository;
-  final AuthUtils _validator = AuthUtils(); // AuthUtils 인스턴스 추가
+  final AuthUtils _validator = AuthUtils();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
   RgtViewModel(this._authRepository);
 
+  // Getter methods
   String get playerId => _playerId;
   String get password => _password;
   String get confirmPassword => _confirmPassword;
@@ -32,6 +33,7 @@ class RgtViewModel extends ChangeNotifier {
   String? get playerIdError => _playerIdError;
   String? get passwordError => _passwordError;
 
+  // Update methods
   void updatePlayerId(String playerId) {
     _playerId = playerId;
     _playerIdError = null;
@@ -63,59 +65,72 @@ class RgtViewModel extends ChangeNotifier {
     return _password == _confirmPassword;
   }
 
+  // Sign up method
   Future<void> signUp(BuildContext context) async {
-    _isLoading = true;
-    notifyListeners();
+    _setLoadingState(true);
 
-    // 1순위: 아이디 형식 체크
-    if (!_validator.isValidPlayerId(_playerId)) {
-      _isLoading = false;
-      _playerIdError = '아이디 형식이 맞지 않습니다.';
-      _clearPasswordFields();
-      notifyListeners();
-      return;
-    }
-
-    // 2순위: 비밀번호 형식 체크
-    if (!_validator.isValidPassword(_password)) {
-      _isLoading = false;
-      _passwordError = '비밀번호 형식이 맞지 않습니다.';
-      _clearPasswordFields();
-      notifyListeners();
-      return;
-    }
-
-    // 3순위: 비밀번호 일치 체크
-    if (!passwordsMatch()) {
-      _isLoading = false;
-      _clearPasswordFields();
-      _showErrorDialog(context, '비밀번호 불일치', '다시 시도하세요');
-      notifyListeners();
+    if (!_validateInputs()) {
+      _setLoadingState(false);
       return;
     }
 
     try {
       final response = await _authRepository.register(_playerId, _password);
-
-      if (response['status'] == 'success') {
-        // 회원가입 성공 시 로그인 화면으로 이동
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Login()),
-        );
-      } else if (response['status'] == 'fail') {
-        // fail 상태일 때 에러 메시지 표시
-        _showErrorDialog(context, '회원가입 실패', response['error']);
-      } else if (response['status'] == 'error') {
-        // error 상태일 때 일반 에러 메시지 표시
-        _showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
-      }
+      _handleResponse(context, response);
     } catch (e) {
       _showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _setLoadingState(false);
     }
+  }
+
+  // Helper methods
+  void _setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
+    notifyListeners();
+  }
+
+  bool _validateInputs() {
+    if (!_validator.isValidPlayerId(_playerId)) {
+      _playerIdError = '아이디 형식이 맞지 않습니다.';
+      _clearPasswordFields();
+      return false;
+    }
+
+    if (!_validator.isValidPassword(_password)) {
+      _passwordError = '비밀번호 형식이 맞지 않습니다.';
+      _clearPasswordFields();
+      return false;
+    }
+
+    if (!passwordsMatch()) {
+      _showErrorDialog(null, '비밀번호 불일치', '다시 시도하세요');
+      _clearPasswordFields();
+      return false;
+    }
+
+    return true;
+  }
+
+  void _handleResponse(BuildContext context, Map<String, dynamic> response) {
+    switch (response['status']) {
+      case 'success':
+        _navigateToLogin(context);
+        break;
+      case 'fail':
+        _showErrorDialog(context, '회원가입 실패', response['error']);
+        break;
+      case 'error':
+      default:
+        _showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
+    }
+  }
+
+  void _navigateToLogin(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
   }
 
   void _clearPasswordFields() {
@@ -128,23 +143,25 @@ class RgtViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _showErrorDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: Text('확인'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _showErrorDialog(BuildContext? context, String title, String message) {
+    if (context != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              TextButton(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }
