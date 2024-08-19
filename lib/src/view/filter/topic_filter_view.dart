@@ -21,6 +21,7 @@ class TopicFilterView extends StatelessWidget {
             leading: IconButton(
               onPressed: () {
                 //필터 창 닫기
+                Navigator.pop(context);
               },
               icon: const Icon(
                 Icons.close,
@@ -29,8 +30,9 @@ class TopicFilterView extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
+                  Navigator.pop(context, viewModel.selectedTopicIds);
                   //  selectedTopicIds에 들어가 있는 요소들만 홈 화면에 나오게 한디
-                  print('선택 topic id: $viewModel.selectedTopicIds');
+                  print('선택 topic id: ${viewModel.selectedTopicIds}');
                 },
                 icon: const Icon(
                   Icons.check,
