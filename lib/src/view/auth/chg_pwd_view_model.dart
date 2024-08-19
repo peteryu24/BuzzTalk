@@ -1,26 +1,30 @@
-/*
-// TODO: 임시
+// TODO: 에러 처리 하기
 import 'package:flutter/material.dart';
-import 'package:alarm_app/src/model/auth_model.dart';
+import 'package:alarm_app/src/repository/auth_repository.dart';
 
-class ResetPasswordViewModel extends ChangeNotifier {
-  final TextEditingController emailController = TextEditingController();
-  bool _isLoading = false;
+class ChangePasswordViewModel extends ChangeNotifier {
+  final AuthRepository _authRepository;
 
-  bool get isLoading => _isLoading;
+  ChangePasswordViewModel(this._authRepository);
 
-  Future<void> changePassword() async {
-    _isLoading = true;
-    notifyListeners();
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String newPasswordCheck,
+  }) async {
+    if (newPassword != newPasswordCheck) {
+      throw Exception("New passwords do not match");
+    }
 
-    UserModel user = UserModel(player_id: '', password: '');
-    bool success = await user.changePassword(emailController.text);
-
-    _isLoading = false;
-    notifyListeners();
-
-    if (success) {
-    } else {}
+    try {
+      await _authRepository.changePassword(
+          oldPassword, newPassword, newPasswordCheck);
+      // 성공 시 추가 작업
+      print("Password changed successfully");
+    } catch (e) {
+      // 실패 시 추가 작업
+      print("Failed to change password: $e");
+      rethrow;
+    }
   }
 }
-*/

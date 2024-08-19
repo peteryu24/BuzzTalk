@@ -28,28 +28,23 @@ class AuthRepository {
     return response;
   }
 
+//TODO: 서버 컨트롤러 수정
   // 비밀번호 변경
-  Future<void> changePassword(
-      String playerId, String oldPassword, String newPassword) async {
-    final response = await httpRequest.post('/player/change-password', {
-      'playerId': playerId,
+  Future<Map<String, dynamic>> changePassword(
+      String oldPassword, String newPassword, String newPasswordCheck) async {
+    final response = await httpRequest.post('/player/changePassword', {
       'oldPassword': oldPassword,
       'newPassword': newPassword,
+      'newPasswordCheck': newPasswordCheck,
     });
 
-    if (response['status'] != 'success') {
-      throw Exception('Failed to change password');
-    }
+    return response;
   }
 
   // 회원 탈퇴
-  Future<void> deletePlayer(String playerId) async {
-    final response = await httpRequest.post('/player/delete', {
-      'playerId': playerId,
-    });
-
-    if (response['status'] != 'success') {
-      throw Exception('Failed to delete player');
-    }
+  // TODO: DELETE 메소드 사용하기
+  Future<Map<String, dynamic>> deletePlayer(String playerId) async {
+    final response = await httpRequest.post('/player/delete', {});
+    return response;
   }
 }
