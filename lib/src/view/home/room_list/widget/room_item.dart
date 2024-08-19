@@ -47,8 +47,8 @@ class RoomItem extends StatelessWidget {
 
               ///현재 시간보다 빠름
               ? ElevatedButton(
-                  onPressed: room.isReserved ? onReserve : onCancel,
-                  child: room.isReserved ? Text('예약') : Text('취소'),
+                  onPressed: room.book ? onCancel : onReserve,
+                  child: room.book ? Text('취소') : Text('예약'),
                 )
 
               ///현재 시간보다 느림
@@ -58,19 +58,21 @@ class RoomItem extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue, // 배경색
                           foregroundColor: Colors.white),
-                      onPressed: () {},
+                      onPressed: () {
+                        print('방에 참가하는 로직');
+                      },
                       child: const Text('참여'),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    //이 부분이 있을 필요가 있나? 방이 열렸는데 굳이 취소를?
-                    ElevatedButton(
-                      onPressed: () {
-                        print('예약 취소');
-                      },
-                      child: const Text('취소'),
-                    )
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
+                    // //이 부분이 있을 필요가 있나? 방이 열렸는데 굳이 취소를?
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     print('예약 취소');
+                    //   },
+                    //   child: const Text('취소'),
+                    // )
                   ],
                 )
         ],

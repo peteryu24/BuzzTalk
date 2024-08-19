@@ -14,28 +14,7 @@ class RoomListViewModel extends BaseViewModel {
   final LocalNotificationService localNotificationService;
   final SharedPreferencesRepository sharedPreferencesRepository;
 
-  List<RoomModel> roomList = [
-    RoomModel(
-      roomId: 1,
-      startTime: DateTime.now().add(Duration(seconds: 30)),
-      endTime: DateTime.now(),
-      topicId: 101,
-      playerId: '1',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      roomName: '테스트 방 1',
-    ),
-    RoomModel(
-      roomId: 2,
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
-      topicId: 102,
-      playerId: '2',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      roomName: '테스트 방 2',
-    ),
-  ]; // 방 목록을 저장할 리스트
+  List<RoomModel> roomList = []; // 방 목록을 저장할 리스트
 
   RoomListViewModel(
       {required this.roomRepository,
@@ -46,17 +25,16 @@ class RoomListViewModel extends BaseViewModel {
 
   // 서버에서 방 목록을 가져오는 메서드
   Future<void> roomListFetch() async {
-    roomList =
-        await roomRepository.getRoomList(101, null, 20); // 서버에서 방 목록 가져오기
+    //여기서 필터로 저정한 내용을 가져와야 함.
+    roomList = await roomRepository.getRoomList(null); // 서버에서 방 목록 가져오기
 
     // 방 목록을 가져온 후 각 방에 대한 예약 정보를 로컬에서 조회하여 설정
-    for (var room in roomList) {
-      bool isReserved = sharedPreferencesRepository.isReserved(room.roomId);
+    for (RoomModel room in roomList) {
+      bool isReserved = sharedPreferencesRepository.isReserved(room);
       print('방 ${room.roomId} 예약 상태: $isReserved'); // 예약 여부 출력 (디버그용)
+      room.book = isReserved;
 
       // 각 방의 예약 정보를 처리하거나 UI에 반영
-      room.isReserved =
-          isReserved; // 예약 여부를 RoomModel에 저장 (만약 `isReserved` 필드를 추가할 경우)
     }
 
     // 데이터 변경 후 UI 업데이트
@@ -66,11 +44,12 @@ class RoomListViewModel extends BaseViewModel {
   Future<void> createRoom() async {
     await roomRepository.createRoom(
       '테스트 방 123',
-      1023,
-      '13',
+      1,
+      'player123',
       DateTime.now(),
       DateTime.now().add(Duration(seconds: 30)),
     );
+    roomListFetch();
     notifyListeners();
   }
 
@@ -81,11 +60,14 @@ class RoomListViewModel extends BaseViewModel {
       body: '채팅이 시작되었습니다.',
       scheduledDateTime: room.startTime,
     );
-    sharedPreferencesRepository.saveReservation(room.roomId);
+
+    sharedPreferencesRepository.saveReservation(room);
+    notifyListeners();
   }
 
-  void cancleScheduleChat(RoomModel room) {
+  void cancelScheduleChat(RoomModel room) {
     localNotificationService.cancelNotification(room.roomId);
-    sharedPreferencesRepository.removeReservation(room.roomId);
+    sharedPreferencesRepository.removeReservation(room);
+    notifyListeners();
   }
 }
