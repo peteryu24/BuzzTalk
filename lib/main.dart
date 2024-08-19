@@ -1,6 +1,7 @@
 import 'package:alarm_app/src/repository/http_request.dart';
 import 'package:alarm_app/src/repository/room_repository.dart';
 import 'package:alarm_app/src/repository/shared_preferences_repository.dart';
+import 'package:alarm_app/src/repository/topic_repository.dart';
 import 'package:alarm_app/src/view/filter/topic_filter_view.dart';
 import 'package:alarm_app/src/view/home/home_view.dart';
 import 'package:alarm_app/src/view/chat/chat_view.dart';
@@ -28,6 +29,7 @@ void main() async {
         Provider(create: (context) => SharedPreferencesRepository(prefs)),
         Provider(create: (context) => LocalNotificationService()),
         Provider(create: (context) => RoomRepository(context.read<Http>())),
+        Provider(create: (context) => TopicRepository(context.read<Http>())),
       ],
       child: const MyApp(),
     ),

@@ -20,7 +20,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/filter',
       name: 'filter',
-      builder: (context, state) => const TopicFilterView(),
+      builder: (context, state) => TopicFilterView(),
     ),
     GoRoute(
       path: '/chat',
