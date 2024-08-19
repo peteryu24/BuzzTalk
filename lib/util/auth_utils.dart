@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class AuthUtils {
   // 영어 소문자와 숫자만 포함된 패턴, 최소 3자 이상, 최대 15자 이하
   bool isValidPlayerId(String playerId) {
@@ -11,5 +13,26 @@ class AuthUtils {
         RegExp(r'[a-z]').hasMatch(password) &&
         RegExp(r'[0-9]').hasMatch(password) &&
         RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
+  }
+
+  // 에러 다이얼로그 표시 메서드
+  void showErrorDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

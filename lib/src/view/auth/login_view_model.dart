@@ -1,6 +1,7 @@
-import 'package:alarm_app/util/auth_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
+import 'package:alarm_app/src/view/home/home_view.dart';
+import 'package:alarm_app/util/auth_utils.dart';
 
 class LoginViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -11,10 +12,7 @@ class LoginViewModel extends ChangeNotifier {
   String? _passwordError;
 
   final AuthRepository _authRepository;
-
-  // 영어 소문자와 숫자만 포함된 패턴, 최소 3자 이상, 최대 15자 이하
-  // 최소 8자, 대문자, 소문자, 숫자, 특수문자를 각각 최소 하나씩 포함
-  final _validator = AuthUtils();
+  final AuthUtils _validator = AuthUtils(); // AuthUtils 인스턴스 생성
 
   LoginViewModel(this._authRepository);
 
@@ -27,13 +25,13 @@ class LoginViewModel extends ChangeNotifier {
 
   void updatePlayerId(String playerId) {
     _playerId = playerId;
-    _playerIdError = null; // 에러 메시지 초기화
+    _playerIdError = null;
     notifyListeners();
   }
 
   void updatePassword(String password) {
     _password = password;
-    _passwordError = null; // 에러 메시지 초기화
+    _passwordError = null;
     notifyListeners();
   }
 
@@ -42,13 +40,12 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signIn() async {
+  Future<void> signIn(BuildContext context) async {
     _isLoading = true;
     _playerIdError = null;
     _passwordError = null;
     notifyListeners();
 
-    // 1순위: 아이디 형식 불일치 처리
     if (!_validator.isValidPlayerId(_playerId)) {
       _isLoading = false;
       _playerIdError = '아이디 형식이 맞지 않습니다.';
@@ -56,7 +53,6 @@ class LoginViewModel extends ChangeNotifier {
       return;
     }
 
-    // 2순위: 비밀번호 형식 불일치 처리
     if (!_validator.isValidPassword(_password)) {
       _isLoading = false;
       _passwordError = '비밀번호 형식이 맞지 않습니다.';
@@ -64,20 +60,24 @@ class LoginViewModel extends ChangeNotifier {
       return;
     }
 
-    // 형식 체크가 모두 통과된 경우 로그인 시도
     try {
-      bool success = await _authRepository.login(_playerId, _password);
+      final response = await _authRepository.login(_playerId, _password);
 
       _isLoading = false;
       notifyListeners();
 
-      if (!success) {
-        _playerIdError = '로그인 실패';
+      if (response['status'] == 'success') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeView()),
+        );
+      } else {
+        _playerIdError = response['error'] ?? '로그인 실패';
         notifyListeners();
       }
     } catch (e) {
       _isLoading = false;
-      _playerIdError = '오류가 발생했습니다';
+      _validator.showErrorDialog(context, '오류', '오류가 발생했습니다.');
       notifyListeners();
     }
   }

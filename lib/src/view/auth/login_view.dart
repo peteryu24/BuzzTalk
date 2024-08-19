@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:alarm_app/src/view/auth/login_view_model.dart';
 import 'package:alarm_app/src/view/auth/rgt_view.dart';
-import 'package:alarm_app/src/view/auth/chg_pwd_view.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -34,7 +33,7 @@ class Login extends StatelessWidget {
                                 onPressed: viewModel.isLoading
                                     ? null
                                     : () {
-                                        viewModel.signIn();
+                                        viewModel.signIn(context); // context 전달
                                       },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF3D55F0),

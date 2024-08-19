@@ -15,14 +15,13 @@ class RgtViewModel extends ChangeNotifier {
   String? _passwordError;
 
   final AuthRepository _authRepository;
-  final AuthUtils _validator = AuthUtils();
+  final AuthUtils _validator = AuthUtils(); // AuthUtils 인스턴스 생성
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
   RgtViewModel(this._authRepository);
 
-  // Getter methods
   String get playerId => _playerId;
   String get password => _password;
   String get confirmPassword => _confirmPassword;
@@ -33,7 +32,6 @@ class RgtViewModel extends ChangeNotifier {
   String? get playerIdError => _playerIdError;
   String? get passwordError => _passwordError;
 
-  // Update methods
   void updatePlayerId(String playerId) {
     _playerId = playerId;
     _playerIdError = null;
@@ -65,32 +63,32 @@ class RgtViewModel extends ChangeNotifier {
     return _password == _confirmPassword;
   }
 
-  // Sign up method
   Future<void> signUp(BuildContext context) async {
     _setLoadingState(true);
 
-    if (!_validateInputs()) {
+    if (!_validateInputs(context)) {
+      // context를 전달
       _setLoadingState(false);
       return;
     }
 
     try {
       final response = await _authRepository.register(_playerId, _password);
-      _handleResponse(context, response);
+      _handleResponse(context, response); // context를 전달
     } catch (e) {
-      _showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
+      _validator.showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
     } finally {
       _setLoadingState(false);
     }
   }
 
-  // Helper methods
   void _setLoadingState(bool isLoading) {
     _isLoading = isLoading;
     notifyListeners();
   }
 
-  bool _validateInputs() {
+  bool _validateInputs(BuildContext context) {
+    // context를 인자로 추가
     if (!_validator.isValidPlayerId(_playerId)) {
       _playerIdError = '아이디 형식이 맞지 않습니다.';
       _clearPasswordFields();
@@ -104,7 +102,7 @@ class RgtViewModel extends ChangeNotifier {
     }
 
     if (!passwordsMatch()) {
-      _showErrorDialog(null, '비밀번호 불일치', '다시 시도하세요');
+      _validator.showErrorDialog(context, '비밀번호 불일치', '다시 시도하세요');
       _clearPasswordFields();
       return false;
     }
@@ -113,16 +111,17 @@ class RgtViewModel extends ChangeNotifier {
   }
 
   void _handleResponse(BuildContext context, Map<String, dynamic> response) {
+    // context를 인자로 추가
     switch (response['status']) {
       case 'success':
         _navigateToLogin(context);
         break;
       case 'fail':
-        _showErrorDialog(context, '회원가입 실패', response['error']);
+        _validator.showErrorDialog(context, '회원가입 실패', response['error']);
         break;
       case 'error':
       default:
-        _showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
+        _validator.showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
     }
   }
 
@@ -141,27 +140,5 @@ class RgtViewModel extends ChangeNotifier {
     _obscureText = true;
     _obscureConfirmText = true;
     notifyListeners();
-  }
-
-  void _showErrorDialog(BuildContext? context, String title, String message) {
-    if (context != null) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(message),
-            actions: <Widget>[
-              TextButton(
-                child: Text('확인'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 }

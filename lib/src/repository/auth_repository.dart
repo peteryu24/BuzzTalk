@@ -19,17 +19,13 @@ class AuthRepository {
   }
 
   // 로그인
-  Future<bool> login(String playerId, String password) async {
+  Future<Map<String, dynamic>> login(String playerId, String password) async {
     final response = await httpRequest.post('/player/login', {
       'playerId': playerId,
       'password': password,
     });
 
-    if (response['status'] == 'success') {
-      return true;
-    } else {
-      return false;
-    }
+    return response;
   }
 
   // 비밀번호 변경
