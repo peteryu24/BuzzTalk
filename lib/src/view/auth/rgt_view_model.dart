@@ -1,15 +1,7 @@
-/*
-1순위: 아이디 형식 불일치
-2순위: 비밀번호 형식 불일치
-3순위: 비밀번호 & 비밀번호 검증 불일치
-
-영어 소문자와 숫자만 포함된 패턴, 최소 3자 이상, 최대 15자 이하
-최소 8자, 대문자, 소문자, 숫자, 특수문자를 각각 최소 하나씩 포함
-*/
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
-import 'package:alarm_app/util/auth_utils.dart';
 import 'package:alarm_app/src/view/auth/login_view.dart';
+import 'package:alarm_app/util/auth_utils.dart'; // AuthUtils 임포트
 
 class RgtViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -23,11 +15,10 @@ class RgtViewModel extends ChangeNotifier {
   String? _passwordError;
 
   final AuthRepository _authRepository;
+  final AuthUtils _validator = AuthUtils(); // AuthUtils 인스턴스 추가
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-
-  final _validator = AuthUtils();
 
   RgtViewModel(this._authRepository);
 
@@ -80,7 +71,7 @@ class RgtViewModel extends ChangeNotifier {
     if (!_validator.isValidPlayerId(_playerId)) {
       _isLoading = false;
       _playerIdError = '아이디 형식이 맞지 않습니다.';
-      _clearPasswordFields(); // 비밀번호 필드 초기화
+      _clearPasswordFields();
       notifyListeners();
       return;
     }
@@ -89,7 +80,7 @@ class RgtViewModel extends ChangeNotifier {
     if (!_validator.isValidPassword(_password)) {
       _isLoading = false;
       _passwordError = '비밀번호 형식이 맞지 않습니다.';
-      _clearPasswordFields(); // 비밀번호 필드 초기화
+      _clearPasswordFields();
       notifyListeners();
       return;
     }
@@ -97,21 +88,30 @@ class RgtViewModel extends ChangeNotifier {
     // 3순위: 비밀번호 일치 체크
     if (!passwordsMatch()) {
       _isLoading = false;
-      notifyListeners();
       _clearPasswordFields();
       _showErrorDialog(context, '비밀번호 불일치', '다시 시도하세요');
+      notifyListeners();
       return;
     }
 
     try {
-      await _authRepository.register(_playerId, _password);
-      // 회원가입 성공 시 로그인 화면으로 이동
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Login()),
-      );
+      final response = await _authRepository.register(_playerId, _password);
+
+      if (response['status'] == 'success') {
+        // 회원가입 성공 시 로그인 화면으로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        );
+      } else if (response['status'] == 'fail') {
+        // fail 상태일 때 에러 메시지 표시
+        _showErrorDialog(context, '회원가입 실패', response['error']);
+      } else if (response['status'] == 'error') {
+        // error 상태일 때 일반 에러 메시지 표시
+        _showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
+      }
     } catch (e) {
-      _showErrorDialog(context, '회원가입 실패', '다시 시도하세요');
+      _showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -119,13 +119,12 @@ class RgtViewModel extends ChangeNotifier {
   }
 
   void _clearPasswordFields() {
-    // 텍스트 필드를 비워서 초기화
-    passwordController.clear(); // Password 입력 필드 초기화
-    confirmPasswordController.clear(); // Confirm Password 입력 필드 초기화
+    passwordController.clear();
+    confirmPasswordController.clear();
     _password = '';
     _confirmPassword = '';
-    _obscureText = true; // 비밀번호 필드를 다시 숨김 상태로
-    _obscureConfirmText = true; // 비밀번호 확인 필드를 다시 숨김 상태로
+    _obscureText = true;
+    _obscureConfirmText = true;
     notifyListeners();
   }
 

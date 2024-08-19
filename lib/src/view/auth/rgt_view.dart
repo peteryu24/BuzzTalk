@@ -53,8 +53,7 @@ class SignUp extends StatelessWidget {
                         SizedBox(height: 30),
                         _buildLabel('Password'),
                         _buildPasswordField(
-                          controller:
-                              viewModel.passwordController, // Controller 사용
+                          controller: viewModel.passwordController,
                           icon: Icons.lock,
                           hintText: 'Password',
                           obscureText: viewModel.obscureText,
@@ -74,8 +73,7 @@ class SignUp extends StatelessWidget {
                           ),
                         SizedBox(height: 20),
                         _buildPasswordField(
-                          controller: viewModel
-                              .confirmPasswordController, // Controller 사용
+                          controller: viewModel.confirmPasswordController,
                           icon: Icons.lock,
                           hintText: 'Confirm password',
                           obscureText: viewModel.obscureConfirmText,
@@ -132,6 +130,10 @@ class SignUp extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (viewModel.isLoading)
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
                 ],
               );
             },
@@ -143,7 +145,7 @@ class SignUp extends StatelessWidget {
 
   Widget _buildLabel(String labelText) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, left: 16.0), // Padding 추가
+      padding: const EdgeInsets.only(bottom: 8.0, left: 16.0),
       child: Text(
         labelText,
         style: TextStyle(
@@ -199,7 +201,7 @@ class SignUp extends StatelessWidget {
   }
 
   Widget _buildPasswordField({
-    required TextEditingController controller, // Controller 매개변수 추가
+    required TextEditingController controller,
     required IconData icon,
     required String hintText,
     required bool obscureText,
@@ -223,7 +225,7 @@ class SignUp extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                 child: TextField(
-                  controller: controller, // Controller 할당
+                  controller: controller,
                   onChanged: onChanged,
                   obscureText: obscureText,
                   decoration: InputDecoration(

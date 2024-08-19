@@ -8,15 +8,14 @@ class AuthRepository {
   AuthRepository(this.httpRequest);
 
   // 회원가입
-  Future<void> register(String playerId, String password) async {
+  Future<Map<String, dynamic>> register(
+      String playerId, String password) async {
     final response = await httpRequest.post('/player/register', {
       'playerId': playerId,
       'password': password,
     });
 
-    if (response['status'] != 'success') {
-      throw Exception('Failed to register');
-    }
+    return response;
   }
 
   // 로그인
