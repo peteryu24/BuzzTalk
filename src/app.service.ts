@@ -188,12 +188,17 @@ export class AppService {
     return await this.roomRepository.getRoomsByIds(ids);
   }
   //
-  async getRoomList(
-    topicId: number | undefined,
-  ): Promise<any> {
-    const res: Room[] | undefined = await this.roomRepository.getRooms(topicId);
-    return res;
+  async getRoomList(topicIds: number[] | undefined): Promise<any> {
+    if (!topicIds || topicIds.length === 0) {
+      // topicId가 주어지지 않은 경우, 모든 Room 반환
+      return await this.roomRepository.find();
+    } else {
+      // 여러 개의 topicId에 해당하는 Room들을 찾기
+      const rooms = await this.roomRepository.getRoomsByTopics(topicIds);
+      return rooms;
+    }
   }
+  
   
 
   async createRoom(
@@ -244,6 +249,38 @@ export class AppService {
       console.error('서버 에러:', e);
       return 8; // 서버 에러
     }
+  }
+
+  handleError(error: any): { status: string, data: any, error: string } { 
+    if (error.name === 'QueryFailedError' || error.code === 'ER_DB_ERROR') {
+      // 데이터베이스 관련 에러 처리
+      return {
+        status: 'error',
+        data: null,
+        error: 'DB 에러가 발생했습니다.',
+      };
+    } else {
+      // 기타 서버 에러 처리
+      return {
+        status: 'error',
+        data: null,
+        error: '서버 에러가 발생했습니다.',
+      };
+    }
+  }
+  
+// 메시지 반환 함수
+  getMessage(statusCode: number): string {
+    const messages = {
+      0: '로그인 안됨',
+      2: '아이디 중복',
+      3: '아이디 형식 불일치',
+      4: '비밀번호 형식 불일치',
+      5: '비밀번호 틀림',
+      6: 'Id 또는 pw 입력값 누락',
+    };
+    return messages[statusCode] || '알 수 없는 오류';
+
   }
   
 }
