@@ -3,6 +3,7 @@ import { RoomRepository } from './repository/room.repository';
 import { TopicRepository } from './repository/topic.repository';
 import { Room } from './dto/room.entity';
 import { PlayerRepository } from './repository/player.repository';
+import Filter from 'bad-words';
 
 @Injectable()
 export class AppService {
@@ -220,8 +221,6 @@ export class AppService {
       .getMany();
   }
   
-  
-
   async createRoom(
     roomName: string,
     topicId: number,
@@ -236,6 +235,8 @@ export class AppService {
     if (roomName.length > 50) {
       return 5; // 방 제목 형식 불일치 (길이 초과)
     }
+  
+    // bad-words 필터 초기화
   
     const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!existingPlayer) {
@@ -271,6 +272,7 @@ export class AppService {
       return 8; // 서버 에러
     }
   }
+  
 
   handleError(error: any): { status: string, data: any, error: string } { 
     if (error.name === 'QueryFailedError' || error.code === 'ER_DB_ERROR') {

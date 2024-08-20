@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Request as Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Request as Req , Response as Res} from '@nestjs/common';
 import { AppService } from './app.service';
 import { Room } from './dto/room.entity';
 import { Logger } from '@nestjs/common';
@@ -71,6 +71,8 @@ export class AppController {
     // 6: Id 또는 pw 입력값 없이 들어왔을 경우
     // 8: 서버 에러
 
+
+  //if(req.session !== res.session) { error ;}
   @Post('/player/logout')
   async logout(@Req() req): Promise<any> {
     try{
@@ -88,9 +90,8 @@ export class AppController {
 
   // 여기 수정해야함
   @Patch('/player/change-password')
-  async changePassword(@Body() body, @Req() req): Promise<any> {
+  async changePassword(@Body() body, @Req() req , @Res() res): Promise<any> {
     try{
-
     if (!req.session.player){
       return {
         status: 'fail',
@@ -98,7 +99,9 @@ export class AppController {
         error: this.appService.getMessage(0),
       };
     }
-
+    //TODO: 아래코드는 줄일 수 있으면 줄이기
+    if(req.session !== res.session) { console.log('error') ;}
+    
     const playerId = req.session.player.playerId;
     const oldPassword: string = body.oldPassword;
     const newPassword: string = body.newPassword;
@@ -201,14 +204,15 @@ export class AppController {
 
 
   @Post('/room/create')
-  async createRoom(@Body() body): Promise<any> {
+  async createRoom(@Body() body ,@Req() req): Promise<any> {
     try{
+    
     const roomName: string = body.roomName;
     const topicId: number = body.topicId;
-    const playerId: string = body.playerId;
+    const playerId: string = req.session.player.playerId;
     const startTime: Date = new Date(body.startTime);
     const endTime: Date = new Date(body.endTime);
-
+    
     const statusCode = await this.appService.createRoom(
         roomName,
         topicId,
@@ -216,6 +220,7 @@ export class AppController {
         startTime,
         endTime,
       );
+      console.log(statusCode);
       if (statusCode === 1) {
         return {
           status: 'success',
