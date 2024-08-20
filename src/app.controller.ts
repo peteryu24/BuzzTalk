@@ -184,12 +184,18 @@ export class AppController {
 
   @Get('/room/list')
   async getRoomList(@Query('topicId') topicIds: string | undefined): Promise<any> {
-    // Query parameter는 string으로 오기 때문에, 이를 number[]로 변환
     const topicIdsArray = topicIds
-      ? topicIds.split(',').map(id => parseInt(id, 10)).filter(id => !isNaN(id))
-      : undefined;
+    ? topicIds.split(',').map(id => {
+        const parsedId = parseInt(id, 10);
+        if (isNaN(parsedId)) {
+          throw new Error(`Invalid topicId: ${id}`);
+        }
+        return parsedId;
+      })
+    : undefined;
 
-    return await this.appService.getRoomList(topicIdsArray);
+  // topicIdsArray가 배열인 경우에만 이 값을 그대로 전달합니다.
+  return await this.appService.getRoomList(topicIdsArray);
   }
 
 
