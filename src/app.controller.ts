@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Request as Req } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Room } from './dto/room.entity';
 import { Logger } from '@nestjs/common';
@@ -37,15 +37,15 @@ export class AppController {
 
   // 로그인 화면을 어떻게 할건지?
   @Post('/player/login')
-  async login(@Body() body , @Request() req ): Promise<any> {
+  async login(@Body() body , @Req() req ): Promise<any> {
     try{
-    console.log('현재 세션:', req.session);
     const playerId: string = body.playerId;
     const password: string = body.password;
     
     const statusCode = await this.appService.login(playerId, password);
     if (typeof statusCode === 'object' && statusCode !== null){
-      req.session.player = statusCode;
+      
+      req.session.player = statusCode; //세션에 저장
       console.log('session 목록:',req.session);
       
       return {
@@ -72,9 +72,8 @@ export class AppController {
     // 8: 서버 에러
 
   @Post('/player/logout')
-  async logout(@Request() req): Promise<any> {
+  async logout(@Req() req): Promise<any> {
     try{
-    console.log('현재 세션:', req.session);
     req.session.destroy(); // 세션 에서 지우는 메서드
     return {
       status: 'success',
@@ -87,11 +86,11 @@ export class AppController {
 
   }
 
-  // 비밀번호 변경
+  // 여기 수정해야함
   @Patch('/player/change-password')
-  async changePassword(@Body() body, @Request() req): Promise<any> {
+  async changePassword(@Body() body, @Req() req): Promise<any> {
     try{
-    console.log('현재 세션:', req.session);
+
     if (!req.session.player){
       return {
         status: 'fail',
@@ -99,7 +98,8 @@ export class AppController {
         error: this.appService.getMessage(0),
       };
     }
-    const playerId: string = body.playerId;
+
+    const playerId = req.session.player.playerId;
     const oldPassword: string = body.oldPassword;
     const newPassword: string = body.newPassword;
     const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
@@ -129,21 +129,24 @@ export class AppController {
      }
   }
 
-  // 회원 탈퇴
+  // 회원 탈퇴 // 여기 수정해야함
   @Delete('/player/delete')
-  async deletePlayer(@Body() body, @Request() req): Promise<any> {
+  async deletePlayer(@Body() body, @Req() req): Promise<any> {
     try{
-    console.log('현재 세션:', req.session);
-    if (!req.session.player){
-      return await { message: '로그인을 하셔야합니다.'};
-    }
-    const playerId: string = body.playerId;
-    const password: string = body.password;
+      if (!req.session.player){
+        return {
+          status: 'fail',
+          data: null,
+          error: this.appService.getMessage(0),
+        };
+      }
+    const playerId = req.session.player.playerId;
+    const password = req.session.player.password;
     const statusCode = await this.appService.deletePlayer(playerId,password);
     if (statusCode === 1) {
       return {
         status: 'success',
-        data: { message: '회원가입 성공' },
+        data: { message: '회원탈퇴 완료' },
         error: null,
       };
     } else {
