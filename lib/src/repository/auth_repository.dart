@@ -43,7 +43,7 @@ class AuthRepository {
 
   // 회원 탈퇴
   // TODO: DELETE 메소드 사용하기
-  Future<Map<String, dynamic>> deletePlayer(String playerId) async {
+  Future<Map<String, dynamic>> deletePlayer() async {
     final response = await httpRequest.post('/player/delete', {});
     return response;
   }
