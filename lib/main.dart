@@ -41,13 +41,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return MaterialApp.router(
       routerConfig: goRouter,
-=======
-    return MaterialApp(
-      home: HomeView(),
->>>>>>> feature/auth
     );
   }
 }
