@@ -38,6 +38,7 @@
     "@nestjs/websockets": "^10.3.10",
     "bad-words": "^4.0.0",
     "connect-redis": "^7.1.1",
+    "cors": "^2.8.5",
     "express-session": "^1.18.0",
     "ioredis": "^5.4.1",
     "passport": "^0.7.0",

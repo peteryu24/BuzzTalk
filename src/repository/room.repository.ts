@@ -24,9 +24,9 @@ export class RoomRepository extends Repository<Room> {
     if (!topicIds || topicIds.length === 0) {
       return await queryBuilder.getMany();
     }
-    
     return await queryBuilder
       .where('room.topic_id IN (:...topicIds)', { topicIds })
+      .andWhere('room.end_time > NOW()') //수정한거
       .getMany();
   }
   

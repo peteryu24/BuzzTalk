@@ -4,7 +4,7 @@ import session from 'express-session';
 import passport from 'passport';
 import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
-
+import cors from 'cors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -22,6 +22,12 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: { secure: false },
+    }),
+  );
+  app.use(
+    cors({
+      origin: 'http://localhost:3000', // 클라이언트의 도메인
+      credentials: true, // 쿠키를 포함시키기 위해 필요
     }),
   );
 

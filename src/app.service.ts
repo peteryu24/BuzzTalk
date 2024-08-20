@@ -237,7 +237,9 @@ export class AppService {
     }
   
     // bad-words 필터 초기화
-  
+
+    
+
     const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!existingPlayer) {
       return 3; // 존재하지 않는 플레이어의 경우

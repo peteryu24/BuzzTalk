@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Request as Req , Response as Res} from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Req} from '@nestjs/common';
 import { AppService } from './app.service';
 import { Room } from './dto/room.entity';
 import { Logger } from '@nestjs/common';
@@ -46,7 +46,7 @@ export class AppController {
     if (typeof statusCode === 'object' && statusCode !== null){
       
       req.session.player = statusCode; //세션에 저장
-      console.log('session 목록:',req.session);
+      console.log('session 목록:',req.session.player);
       
       return {
         status: 'success',
@@ -90,7 +90,7 @@ export class AppController {
 
   // 여기 수정해야함
   @Patch('/player/change-password')
-  async changePassword(@Body() body, @Req() req , @Res() res): Promise<any> {
+  async changePassword(@Body() body, @Req() req): Promise<any> {
     try{
     if (!req.session.player){
       return {
@@ -100,7 +100,6 @@ export class AppController {
       };
     }
     //TODO: 아래코드는 줄일 수 있으면 줄이기
-    if(req.session !== res.session) { console.log('error') ;}
     
     const playerId = req.session.player.playerId;
     const oldPassword: string = body.oldPassword;
@@ -205,6 +204,8 @@ export class AppController {
 
   @Post('/room/create')
   async createRoom(@Body() body ,@Req() req): Promise<any> {
+    console.log(req.session.player);
+    console.log(req.session);
     try{
     
     const roomName: string = body.roomName;
