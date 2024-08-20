@@ -187,16 +187,37 @@ export class AppService {
   async getRoomListByIds(ids: string[]): Promise<Room[]> {
     return await this.roomRepository.getRoomsByIds(ids);
   }
-  //
+  
   async getRoomList(topicIds: number[] | undefined): Promise<any> {
+    // 데이터베이스에서 Room 엔티티를 가져옵니다
+    const rooms = await this.getRoomsByTopics(topicIds);
+
+    // 응답 데이터를 필터링합니다
+    return rooms.map(room => ({
+      roomId: room.roomId,
+      roomName: room.roomName,
+      startTime: room.startTime?.toISOString(),
+      endTime: room.endTime?.toISOString(),
+      topicId: room.topicId,
+      playerId: room.playerId,
+      book: room.book,
+      updatedAt: room.updatedAt?.toISOString(),
+      // createdAt 필드는 제외됨
+    }));
+  }
+
+  private async getRoomsByTopics(topicIds: number[] | undefined): Promise<Room[]> {
+    const queryBuilder = this.roomRepository.createQueryBuilder('room');
+
+    // topicIds가 null이거나 빈 배열이면 모든 방을 반환
     if (!topicIds || topicIds.length === 0) {
-      // topicId가 주어지지 않은 경우, 모든 Room 반환
-      return await this.roomRepository.find();
-    } else {
-      // 여러 개의 topicId에 해당하는 Room들을 찾기
-      const rooms = await this.roomRepository.getRoomsByTopics(topicIds);
-      return rooms;
+      return await queryBuilder.getMany();
     }
+    
+    // topicIds에 해당하는 방만 반환
+    return await queryBuilder
+      .where('room.topic_id IN (:...topicIds)', { topicIds })
+      .getMany();
   }
   
   

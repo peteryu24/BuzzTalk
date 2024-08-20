@@ -183,9 +183,14 @@ export class AppController {
   }
 
   @Get('/room/list')
-  async getRoomList(@Query('topicId') topicIds: number[] | undefined): Promise<any> {
-  return await this.appService.getRoomList(topicIds);
-}
+  async getRoomList(@Query('topicId') topicIds: string | undefined): Promise<any> {
+    // Query parameter는 string으로 오기 때문에, 이를 number[]로 변환
+    const topicIdsArray = topicIds
+      ? topicIds.split(',').map(id => parseInt(id, 10)).filter(id => !isNaN(id))
+      : undefined;
+
+    return await this.appService.getRoomList(topicIdsArray);
+  }
 
 
 
