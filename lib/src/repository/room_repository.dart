@@ -27,6 +27,13 @@ class RoomRepository {
     return response;
   }
 
+  Future<List<Map<String, dynamic>>> getTopicList() async {
+    final response = await httpRequest.get('/topic/list');
+    return (response as List)
+        .map((topic) => topic as Map<String, dynamic>)
+        .toList();
+  }
+
   //수정
   Future<List<RoomModel>> getRoomListByIds(List<String> roomIds) async {
     final response = await httpRequest.post('/room/ids', {'roomIds': roomIds});

@@ -2,7 +2,7 @@ class RoomModel {
   final int? roomId;
   final String roomName;
   final DateTime? startTime;
-  final DateTime? endTime;
+  final DateTime endTime;
   final int topicId;
   final String? playerId;
   bool book;
@@ -12,7 +12,7 @@ class RoomModel {
     this.roomId,
     required this.roomName,
     this.startTime,
-    this.endTime,
+    required this.endTime,
     required this.topicId,
     this.playerId,
     this.book = false, // book의 기본값을 false로 설정
@@ -40,7 +40,7 @@ class RoomModel {
       'roomName': roomName,
       'startTime':
           startTime?.toIso8601String(), // Converting DateTime to String
-      'endTime': endTime?.toIso8601String(), // Converting DateTime to String
+      'endTime': endTime.toIso8601String(), // Converting DateTime to String
       'topicId': topicId,
       'playerId': playerId,
       'book': book,

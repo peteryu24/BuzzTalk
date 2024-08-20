@@ -12,7 +12,16 @@ class CreateRoomView extends StatefulWidget {
 class _CreateRoomViewState extends State<CreateRoomView> {
   final TextEditingController _roomNameController = TextEditingController();
   int? _topicId;
-  DateTime? _selectedTime;
+  DateTime? _startTime;
+  DateTime? _endTime;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CreateRoomViewModel>().fetchTopics();
+    });
+  }
 
   @override
   void dispose() {
@@ -26,91 +35,101 @@ class _CreateRoomViewState extends State<CreateRoomView> {
       appBar: AppBar(
         title: Text("방 만들기"),
         actions: [
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: () {
-              if (_roomNameController.text.isNotEmpty && _topicId != null) {
-                context.read<CreateRoomViewModel>().createRoom(
-                      roomName: _roomNameController.text,
-                      topicId: _topicId!,
-                      selectedTime: _selectedTime, // 선택적
-                    );
+          Consumer<CreateRoomViewModel>(
+            builder: (context, viewModel, child) {
+              return IconButton(
+                icon: Icon(Icons.check),
+                onPressed: viewModel.isLoading
+                    ? null
+                    : () {
+                        if (_roomNameController.text.isNotEmpty &&
+                            _topicId != null &&
+                            _endTime != null) {
+                          viewModel.createRoom(
+                            roomName: _roomNameController.text,
+                            topicId: _topicId!,
+                            startTime: _startTime,
+                            endTime: _endTime!,
+                          );
 
-                Navigator.pop(context, true);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("모든 필드를 입력해주세요.")),
-                );
-              }
+                          if (viewModel.errorMessage == null) {
+                            Navigator.pop(context, true);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(viewModel.errorMessage!)),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("모든 필드를 입력해주세요.")),
+                          );
+                        }
+                      },
+              );
             },
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _roomNameController,
-              decoration: InputDecoration(labelText: "방 이름"),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final selectedTopic = await _showTopicSelectionDialog(context);
-                if (selectedTopic != null) {
-                  setState(() {
-                    _topicId = int.parse(selectedTopic);
-                  });
-                }
-              },
-              child: Text(_topicId != null ? "토픽 $_topicId 선택됨" : "주제 선택"),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final selectedTime = await _selectDateTime(context);
-                if (selectedTime != null) {
-                  setState(() {
-                    _selectedTime = selectedTime;
-                  });
-                }
-              },
-              child: Text(_selectedTime != null
-                  ? _selectedTime!.toIso8601String()
-                  : "시간 선택"),
-            ),
-          ],
+        child: Consumer<CreateRoomViewModel>(
+          builder: (context, viewModel, child) {
+            return Column(
+              children: [
+                if (viewModel.isLoading) CircularProgressIndicator(),
+                TextField(
+                  controller: _roomNameController,
+                  decoration: InputDecoration(labelText: "방 이름"),
+                ),
+                SizedBox(height: 20),
+                DropdownButton<int>(
+                  hint: Text("주제를 선택하세요"),
+                  value: _topicId,
+                  onChanged: (value) {
+                    setState(() {
+                      _topicId = value;
+                    });
+                  },
+                  items: viewModel.topics.map((topic) {
+                    return DropdownMenuItem<int>(
+                      value: topic['id'],
+                      child: Text(topic['name']),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final selectedStartTime = await _selectDateTime(context);
+                    if (selectedStartTime != null) {
+                      setState(() {
+                        _startTime = selectedStartTime;
+                      });
+                    }
+                  },
+                  child: Text(_startTime != null
+                      ? "시작 시간: ${_startTime!.toIso8601String()}"
+                      : "시작 시간 선택"),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    final selectedEndTime = await _selectDateTime(context);
+                    if (selectedEndTime != null) {
+                      setState(() {
+                        _endTime = selectedEndTime;
+                      });
+                    }
+                  },
+                  child: Text(_endTime != null
+                      ? "종료 시간: ${_endTime!.toIso8601String()}"
+                      : "종료 시간 선택"),
+                ),
+              ],
+            );
+          },
         ),
       ),
-    );
-  }
-
-  Future<String?> _showTopicSelectionDialog(BuildContext context) {
-    return showDialog<String>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("주제를 선택하세요."),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop("1"); // 예: 토픽 1의 ID
-                },
-                child: Text("토픽1"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop("2"); // 예: 토픽 2의 ID
-                },
-                child: Text("토픽2"),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 

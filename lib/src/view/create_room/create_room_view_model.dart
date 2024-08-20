@@ -5,24 +5,65 @@ import 'package:alarm_app/src/repository/room_repository.dart';
 class CreateRoomViewModel extends ChangeNotifier {
   final RoomRepository _roomRepository;
 
+  bool _isLoading = false;
+  String? _errorMessage;
+  List<Map<String, dynamic>> _topics = [];
+
   CreateRoomViewModel(this._roomRepository);
+
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
+  List<Map<String, dynamic>> get topics => _topics;
+
+  Future<void> fetchTopics() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _topics = await _roomRepository.getTopicList();
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      _errorMessage = 'Failed to fetch topics: $e';
+      notifyListeners();
+    }
+  }
 
   Future<void> createRoom({
     required String roomName,
     required int topicId,
-    DateTime? selectedTime, // 선택적, 사용자가 입력하지 않으면 서버에서 처리
+    DateTime? startTime,
+    required DateTime endTime,
   }) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
     RoomModel roomModel = RoomModel(
       roomName: roomName,
       topicId: topicId,
-      startTime: selectedTime,
+      startTime: startTime,
+      endTime: endTime,
     );
 
     try {
-      await _roomRepository.createRoom(roomModel);
-      print("Room Created.");
+      final response = await _roomRepository.createRoom(roomModel);
+
+      _isLoading = false;
+      notifyListeners();
+
+      if (response['status'] == 'success') {
+        print("Room Created Successfully.");
+      } else {
+        _errorMessage = response['error'] ?? 'Room creation failed';
+        notifyListeners();
+      }
     } catch (e) {
-      print("Failed: $e");
+      _isLoading = false;
+      _errorMessage = 'An error occurred: $e';
+      notifyListeners();
     }
   }
 }
