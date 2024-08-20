@@ -162,6 +162,7 @@ export class AppController {
   }
   }
 
+
   @Get('/topic/list')
   async getTopicList(): Promise<any> {
     return await this.appService.getTopicList();
@@ -181,10 +182,10 @@ export class AppController {
     return await this.appService.getOrCreatePlayer(playerId,password);
   }
 
-  /*@Get('/room/list')
-async getRoomList(@Query('topicId') topicIds: number[] | undefined): Promise<any> {
+  @Get('/room/list')
+  async getRoomList(@Query('topicId') topicIds: number[] | undefined): Promise<any> {
   return await this.appService.getRoomList(topicIds);
-}*/
+}
 
 
 
