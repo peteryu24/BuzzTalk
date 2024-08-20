@@ -13,7 +13,7 @@ class Http {
   Http._internal(this.baseUrl);
 
   // GET 요청
-  Future<Map<String, dynamic>> get(String endpoint) async {
+  Future<dynamic> get(String endpoint) async {
     final response = await http.get(Uri.parse('$baseUrl$endpoint'));
     print(response.body);
     if (response.statusCode == 200) {
