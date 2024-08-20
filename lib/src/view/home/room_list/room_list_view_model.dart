@@ -41,8 +41,17 @@ class RoomListViewModel extends BaseViewModel {
   }
 
   Future<void> createRoom() async {
-    await roomRepository
-        .createRoom(RoomModel(roomName: 'roomName', topicId: 1));
+    DateTime endTime =
+        DateTime.now().add(Duration(hours: 1)); // 예: 현재 시간으로부터 1시간 후
+
+    await roomRepository.createRoom(
+      RoomModel(
+        roomName: 'roomName',
+        topicId: 1,
+        endTime: endTime,
+      ),
+    );
+
     roomListFetch(null);
     notifyListeners();
   }
