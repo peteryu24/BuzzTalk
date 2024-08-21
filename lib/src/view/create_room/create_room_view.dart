@@ -34,12 +34,12 @@ class _CreateRoomViewState extends State<CreateRoomView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("방 만들기"),
+        title: const Text("방 만들기"),
         actions: [
           Consumer<CreateRoomViewModel>(
             builder: (context, viewModel, child) {
               return IconButton(
-                icon: Icon(Icons.check),
+                icon: const Icon(Icons.check),
                 onPressed: viewModel.isLoading
                     ? null
                     : () {
@@ -62,7 +62,7 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                           }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("모든 필드를 입력해주세요.")),
+                            const SnackBar(content: Text("모든 필드를 입력해주세요.")),
                           );
                         }
                       },
@@ -77,14 +77,14 @@ class _CreateRoomViewState extends State<CreateRoomView> {
           builder: (context, viewModel, child) {
             return Column(
               children: [
-                if (viewModel.isLoading) CircularProgressIndicator(),
+                if (viewModel.isLoading) const CircularProgressIndicator(),
                 TextField(
                   controller: _roomNameController,
-                  decoration: InputDecoration(labelText: "방 이름"),
+                  decoration: const InputDecoration(labelText: "방 이름"),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 DropdownButton<int>(
-                  hint: Text("주제를 선택하세요"),
+                  hint: const Text("주제를 선택하세요"),
                   value: _topicId,
                   onChanged: (value) {
                     setState(() {
@@ -99,7 +99,7 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     final selectedStartTime = await _selectDateTime(context);
@@ -113,7 +113,7 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                       ? "시작 시간: ${_startTime!.toIso8601String()}"
                       : "시작 시간 선택"),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     final selectedEndTime = await _selectDateTime(context);

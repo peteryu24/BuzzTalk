@@ -1,7 +1,9 @@
+import 'package:alarm_app/src/model/auth_model.dart';
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/util/auth_utils.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LoginViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -67,8 +69,10 @@ class LoginViewModel extends ChangeNotifier {
       notifyListeners();
 
       if (response['status'] == 'success') {
-        // 로그인 성공 시 홈 화면으로 이동
-        context.go('/');
+        final authModel = AuthModel(playerId: _playerId, password: _password);
+        context.read<AuthModel>().update(authModel); // AuthModel 업데이트
+
+        context.go('/'); // 홈 화면으로 이동
       } else {
         _playerIdError = response['error'] ?? '로그인 실패';
         notifyListeners();
