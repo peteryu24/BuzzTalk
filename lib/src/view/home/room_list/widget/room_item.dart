@@ -37,7 +37,7 @@ class RoomItem extends StatelessWidget {
             children: [
               Text('주제: ${room.topicId}'),
               const SizedBox(height: 5),
-              Text('방이름: ${room.roomId}'),
+              Text('방이름: ${room.roomName}'),
               const SizedBox(height: 15),
               Text('시작: ${DateTimeHelper.formatDateTime(room.startTime!)}'),
               Text('종료: ${DateTimeHelper.formatDateTime(room.endTime!)}'),

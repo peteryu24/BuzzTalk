@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:alarm_app/src/view/create_room/create_room_view_model.dart';
 
@@ -53,7 +54,7 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                           );
 
                           if (viewModel.errorMessage == null) {
-                            Navigator.pop(context, true);
+                            context.push('/');
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(viewModel.errorMessage!)),
