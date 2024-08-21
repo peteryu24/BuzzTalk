@@ -31,27 +31,45 @@ class HomeView extends StatelessWidget {
                   viewModel.updateSelectedTopics(selectedTopicIds);
                 }
               },
-              icon: const Icon(Icons.filter_alt),
+              icon: const Icon(
+                Icons.filter_alt,
+                color: Color.fromARGB(255, 20, 42, 128),
+              ),
             )
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color.fromARGB(255, 20, 42, 128),
           onPressed: () {
             context.push('/create');
           },
-          child: const Icon(Icons.add),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: viewModel.currentIndex,
           onTap: viewModel.onTap,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: '마이'),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color: Color(0xFF3D4A7A),
+              ),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.settings,
+                  color: Color(0xFF3D4A7A),
+                ),
+                label: '마이'),
           ],
         ),
         body: [
           RoomListView(selectedTopicIds: viewModel.selectedTopicIds),
-          MyRoomView(),
+          const MyRoomView(),
         ].elementAt(viewModel.currentIndex),
       ),
     );

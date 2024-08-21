@@ -70,6 +70,7 @@ class ChatViewModel extends BaseViewModel {
     socketRepository.dispose();
     controller.dispose();
     scrollController.dispose(); // ScrollController 정리
+    print('socket 해제');
     super.dispose();
   }
 }

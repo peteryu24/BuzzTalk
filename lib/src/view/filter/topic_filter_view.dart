@@ -59,7 +59,7 @@ class _TopicFilterViewState extends State<TopicFilterView> {
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, //한 열에 얼마나 널을 것인지
+                  crossAxisCount: 3, //한 열에 얼마나 널을 것인지
                   childAspectRatio: 1, //child 가로 세로 비율
                   crossAxisSpacing: 10, //열 간의 간격
                   mainAxisSpacing: 10, //행 간의 간격

@@ -40,27 +40,32 @@ class RoomItem extends StatelessWidget {
               Text('방이름: ${room.roomId}'),
               const SizedBox(height: 15),
               Text('시작: ${DateTimeHelper.formatDateTime(room.startTime!)}'),
-              Text('종료: ${DateTimeHelper.formatDateTime(room.endTime!)}'),
+              Text('종료: ${DateTimeHelper.formatDateTime(room.endTime)}'),
             ],
           ),
           room.startTime!
-                  .isAfter(DateTime.now().toUtc().add(Duration(hours: 9)))
+                  .isAfter(DateTime.now().toUtc().add(const Duration(hours: 9)))
 
               ///현재 시간보다 빠름
               ? ElevatedButton(
                   onPressed: room.book ? onCancel : onReserve,
-                  child: room.book ? Text('취소') : Text('예약'),
+                  child: room.book ? const Text('취소') : const Text('예약'),
                 )
 
               ///현재 시간보다 느림
               : ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // 배경색
+                      backgroundColor: const Color(0xFF3D4A7A), // 배경색
                       foregroundColor: Colors.white),
                   onPressed: () {
                     context.push('/chat', extra: room);
                   },
-                  child: const Text('참여'),
+                  child: const Text(
+                    '참여',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 )
         ],
       ),

@@ -25,7 +25,7 @@ class ChatView extends StatelessWidget {
           title: Text(
             viewModel.roomModel.roomName,
             style: const TextStyle(
-              fontFamily: 'Airbnb Cereal App',
+              fontWeight: FontWeight.bold,
             ),
           ),
           leading: IconButton(
@@ -49,7 +49,12 @@ class ChatView extends StatelessWidget {
                   final isMine = messageData['isMine'] as bool;
 
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(
+                      right: 15,
+                      top: 8,
+                      bottom: 8,
+                      left: 15,
+                    ),
                     child: Align(
                       alignment: isMine
                           ? Alignment.centerRight // 내 메시지는 오른쪽
@@ -62,23 +67,25 @@ class ChatView extends StatelessWidget {
                           Text(
                             '${messageData['playerId']}', // playerId 표시
                             style: const TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'Airbnb Cereal App',
-                              color: Colors.black54,
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Container(
                             padding: const EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
-                              color: isMine ? Colors.blue : Colors.grey,
+                              color: isMine
+                                  ? const Color.fromARGB(255, 20, 42, 128)
+                                  : const Color(0xFFF2F7FB),
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             child: Text(
                               messageData['message']!,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Airbnb Cereal App',
+                              style: TextStyle(
+                                color: isMine ? Colors.white : Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -90,25 +97,35 @@ class ChatView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: viewModel.controller,
-                      decoration: InputDecoration(
-                        hintText: '메시지 입력',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                      child: TextField(
+                    controller: viewModel.controller,
+                    decoration: InputDecoration(
+                      hintText: '메시지 입력',
+                      border: InputBorder.none, // 기본 테두리를 없앰
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: const BorderSide(
+                            color: Colors.grey), // 활성화된 상태의 테두리 색상
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(
+                                255, 20, 42, 128)), // 포커스된 상태의 테두리 색상
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(
+                          Icons.send,
+                          color: Color.fromARGB(255, 20, 42, 128),
                         ),
+                        onPressed: viewModel.sendMessage,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: viewModel.sendMessage,
-                    child: const Text('Send'),
-                  ),
+                  )),
                 ],
               ),
             ),

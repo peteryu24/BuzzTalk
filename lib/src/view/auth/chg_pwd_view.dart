@@ -4,7 +4,7 @@ import 'package:alarm_app/src/view/auth/chg_pwd_view_model.dart';
 
 //dd
 class ChangePasswordView extends StatefulWidget {
-  const ChangePasswordView({Key? key}) : super(key: key);
+  const ChangePasswordView({super.key});
 
   @override
   _ChangePasswordViewState createState() => _ChangePasswordViewState();
@@ -28,7 +28,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Change Password"),
+        centerTitle: true,
+        title: const Text("비밀번호 변경"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -37,21 +38,75 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             TextField(
               controller: _oldPasswordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: "Current Password"),
+              decoration: InputDecoration(
+                labelText: "기존 비밀번호",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0), // 모서리 둥글기 설정
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: Colors.grey, // 기본 상태의 테두리 색상
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 20, 42, 128), // 포커스된 상태의 테두리 색상
+                    width: 2.0, // 테두리 두께
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _newPasswordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: "New Password"),
+              decoration: InputDecoration(
+                labelText: "새로운 비밀번호",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0), // 모서리 둥글기 설정
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: Colors.grey, // 기본 상태의 테두리 색상
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 20, 42, 128), // 포커스된 상태의 테두리 색상
+                    width: 2.0, // 테두리 두께
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _newPasswordCheckController,
               obscureText: true,
-              decoration: InputDecoration(labelText: "Confirm New Password"),
+              decoration: InputDecoration(
+                labelText: "비밀번호 확인",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0), // 모서리 둥글기 설정
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: Colors.grey, // 기본 상태의 테두리 색상
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 20, 42, 128), // 포커스된 상태의 테두리 색상
+                    width: 2.0, // 테두리 두께
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
                 try {
@@ -61,7 +116,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         newPasswordCheck: _newPasswordCheckController.text,
                       );
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Password changed successfully")),
+                    const SnackBar(
+                        content: Text("Password changed successfully")),
                   );
                   Navigator.pop(context); // 작업 후 이전 화면으로 돌아감
                 } catch (e) {
@@ -70,7 +126,24 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   );
                 }
               },
-              child: Text("Change Password"),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor:
+                    const Color.fromARGB(255, 20, 42, 128), // 텍스트 색상
+                minimumSize: const Size.fromHeight(48), // 버튼의 최소 높이 설정
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0), // 버튼 모서리 둥글게 설정
+                ),
+              ),
+              child: const SizedBox(
+                width: double.infinity, // 버튼의 너비를 최대화 (TextField 크기와 맞춤)
+                child: Center(
+                  child: Text(
+                    "비밀번호 변경",
+                    style: TextStyle(fontSize: 16), // 텍스트 크기
+                  ),
+                ),
+              ),
             ),
           ],
         ),

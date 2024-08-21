@@ -42,11 +42,11 @@ class _RoomListViewState extends State<RoomListView> {
         builder: (context, viewModel) => Scaffold(
               body: Column(
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        roomListViewModel.createRoom();
-                      },
-                      child: Text('create')),
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       roomListViewModel.createRoom();
+                  //     },
+                  //     child: Text('create')),
                   Expanded(
                     child: ListView.builder(
                       itemCount: viewModel.roomList.length,
