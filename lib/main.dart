@@ -1,3 +1,4 @@
+import 'package:alarm_app/src/model/auth_model.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/src/repository/http_request.dart';
 import 'package:alarm_app/src/repository/room_repository.dart';
@@ -17,7 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
-String ip = '192.168.50.34';
+String ip = '119.203.5.249';
 String serverUrl = 'http://$ip:3000';
 String serverWsUrl = 'http://$ip:3001/chat';
 
@@ -35,6 +36,7 @@ void main() async {
         Provider(create: (context) => LocalNotificationService()),
         Provider(create: (context) => RoomRepository(context.read<Http>())),
         Provider(create: (context) => TopicRepository(context.read<Http>())),
+        Provider(create: (_) => AuthModel(playerId: '', password: '')),
         ChangeNotifierProvider(
             create: (context) =>
                 CreateRoomViewModel(context.read<RoomRepository>())),
