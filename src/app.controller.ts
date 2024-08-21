@@ -75,6 +75,7 @@ export class AppController {
   //if(req.session !== res.session) { error ;}
   @Post('/player/logout')
   async logout(@Req() req): Promise<any> {
+    console.log(req.session.player);
     try{
     req.session.destroy(); // 세션 에서 지우는 메서드
     return {
@@ -85,12 +86,12 @@ export class AppController {
   }catch(e){
     return this.appService.handleError(e);
   }
-
   }
 
   // 여기 수정해야함
-  @Patch('/player/change-password')
+  @Post('/player/changePassword')
   async changePassword(@Body() body, @Req() req): Promise<any> {
+    console.log(req.session.player);
     try{
     if (!req.session.player){
       return {
@@ -99,16 +100,18 @@ export class AppController {
         error: this.appService.getMessage(0),
       };
     }
+    
     //TODO: 아래코드는 줄일 수 있으면 줄이기
     
     const playerId = req.session.player.playerId;
     const oldPassword: string = body.oldPassword;
     const newPassword: string = body.newPassword;
     const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
+    console.log(statusCode);
     if (statusCode === 1) {
       return {
         status: 'success',
-        data: { message: '회원가입 성공' },
+        data: { message: '변경 성공' },
         error: null,
       };
     } else {
@@ -132,7 +135,7 @@ export class AppController {
   }
 
   // 회원 탈퇴 // 여기 수정해야함
-  @Delete('/player/delete')
+  @Post('/player/delete')
   async deletePlayer(@Body() body, @Req() req): Promise<any> {
     try{
       if (!req.session.player){

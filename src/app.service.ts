@@ -3,7 +3,6 @@ import { RoomRepository } from './repository/room.repository';
 import { TopicRepository } from './repository/topic.repository';
 import { Room } from './dto/room.entity';
 import { PlayerRepository } from './repository/player.repository';
-import Filter from 'bad-words';
 
 @Injectable()
 export class AppService {
