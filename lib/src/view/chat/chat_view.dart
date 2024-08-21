@@ -17,25 +17,31 @@ class ChatView extends StatelessWidget {
       viewModel: ChatViewModel(
         socketRepository: context.read(),
         roomModel: roomModel,
-        authModel: AuthModel(playerId: '123', password: '123'),
+        authModel: context.read<AuthModel>(),
       ),
       builder: (BuildContext context, ChatViewModel viewModel) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(viewModel.roomModel.roomName),
+          title: Text(
+            viewModel.roomModel.roomName,
+            style: const TextStyle(
+              fontFamily: 'Airbnb Cereal App',
+            ),
+          ),
           leading: IconButton(
             onPressed: () {
               viewModel.exitRoom();
               context.pop();
             },
             icon: const Icon(Icons.arrow_back),
-          ), // ViewModel에서 roomId를 가져옴
+          ),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
               child: ListView.builder(
+                controller: viewModel.scrollController,
                 reverse: true,
                 itemCount: viewModel.messages.length,
                 itemBuilder: (context, index) {
@@ -54,26 +60,26 @@ class ChatView extends StatelessWidget {
                             : CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '게스트#${messageData['playerId']}', // playerId 표시
+                            '${messageData['playerId']}', // playerId 표시
                             style: const TextStyle(
                               fontSize: 12,
+                              fontFamily: 'Airbnb Cereal App',
                               color: Colors.black54,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Container(
                             padding: const EdgeInsets.all(10.0),
-                            margin: const EdgeInsets.symmetric(
-                              vertical: 5.0,
-                              horizontal: 10.0,
-                            ),
                             decoration: BoxDecoration(
                               color: isMine ? Colors.blue : Colors.grey,
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             child: Text(
                               messageData['message']!,
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Airbnb Cereal App',
+                              ),
                             ),
                           ),
                         ],
