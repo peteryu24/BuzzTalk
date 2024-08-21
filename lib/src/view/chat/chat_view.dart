@@ -28,7 +28,7 @@ class ChatView extends StatelessWidget {
               viewModel.exitRoom();
               context.pop();
             },
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
           ), // ViewModel에서 roomId를 가져옴
         ),
         body: Column(

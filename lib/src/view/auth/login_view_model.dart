@@ -67,7 +67,6 @@ class LoginViewModel extends ChangeNotifier {
       notifyListeners();
 
       if (response['status'] == 'success') {
-        // 로그인 성공 시 홈 화면으로 이동
         context.go('/');
       } else {
         _playerIdError = response['error'] ?? '로그인 실패';
