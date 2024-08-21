@@ -37,29 +37,6 @@ class _RoomListViewState extends State<RoomListView> {
     return BaseView(
         viewModel: roomListViewModel,
         builder: (context, viewModel) => Scaffold(
-<<<<<<< HEAD
-              body: Column(
-                children: [
-                  // ElevatedButton(
-                  //     onPressed: () {
-                  //       roomListViewModel.createRoom();
-                  //     },
-                  //     child: Text('create')),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: viewModel.roomList.length,
-                      itemBuilder: (context, index) {
-                        final room = viewModel.roomList[index];
-                        return RoomItem(
-                          room: room,
-                          onReserve: () => viewModel.bookScheduleChat(room),
-                          onCancel: () => viewModel.cancelScheduleChat(room),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-=======
               body: ListView.builder(
                 itemCount: viewModel.roomList.length,
                 itemBuilder: (context, index) {
@@ -70,7 +47,6 @@ class _RoomListViewState extends State<RoomListView> {
                     onCancel: () => viewModel.cancelScheduleChat(room),
                   );
                 },
->>>>>>> 058f6626528301ed21e99e2dd8987502801cb9b7
               ),
             ));
   }
