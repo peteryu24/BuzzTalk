@@ -28,7 +28,6 @@ class AuthRepository {
     return response;
   }
 
-//TODO: 서버 컨트롤러 수정
   // 비밀번호 변경
   Future<Map<String, dynamic>> changePassword(
       String oldPassword, String newPassword, String newPasswordCheck) async {
@@ -42,9 +41,14 @@ class AuthRepository {
   }
 
   // 회원 탈퇴
-  // TODO: DELETE 메소드 사용하기
   Future<Map<String, dynamic>> deletePlayer() async {
     final response = await httpRequest.post('/player/delete', {});
+    return response;
+  }
+
+  // 로그아웃
+  Future<Map<String, dynamic>> logout() async {
+    final response = await httpRequest.post('/player/logout', {});
     return response;
   }
 }
