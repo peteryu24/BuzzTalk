@@ -20,9 +20,6 @@ class _MyRoomViewState extends State<MyRoomView> {
       child: Consumer<MyRoomViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text("My Page"),
-            ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
