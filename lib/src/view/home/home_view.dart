@@ -42,7 +42,6 @@ class _HomeViewState extends State<HomeView> {
                       if (selectedTopicIds != null) {
                         // 필터 결과를 사용하여 상태 업데이트
                         viewModel.updateSelectedTopics(selectedTopicIds);
-
                         // 페이지를 완전히 다시 빌드하여 initState가 호출되도록 함
                         context.replace('/'); // 현재 경로를 다시 로드하여 페이지 새로 빌드
                       }
@@ -53,22 +52,37 @@ class _HomeViewState extends State<HomeView> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color.fromARGB(255, 20, 42, 128),
           onPressed: () {
             context.push('/create');
           },
-          child: const Icon(Icons.add),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: viewModel.currentIndex,
           onTap: viewModel.onTap,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: '마이'),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color: Color(0xFF3D4A7A),
+              ),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.settings,
+                  color: Color(0xFF3D4A7A),
+                ),
+                label: '마이'),
           ],
         ),
         body: [
           RoomListView(selectedTopicIds: widget.selectedTopicIds),
-          MyRoomView(),
+          const MyRoomView(),
         ].elementAt(viewModel.currentIndex),
       ),
     );

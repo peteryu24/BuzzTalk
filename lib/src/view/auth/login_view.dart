@@ -6,6 +6,8 @@ import 'package:alarm_app/src/view/auth/login_view_model.dart';
 import 'package:alarm_app/src/view/auth/rgt_view.dart';
 
 class Login extends StatelessWidget {
+  const Login({super.key});
+
   @override
   Widget build(BuildContext context) {
     final httpRequest = Http();
@@ -36,19 +38,20 @@ class Login extends StatelessWidget {
                                         viewModel.signIn(context); // context 전달
                                       },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF3D55F0),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 20, 42, 128),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  minimumSize: Size(273, 56),
+                                  minimumSize: const Size(273, 56),
                                 ),
                                 child: viewModel.isLoading
-                                    ? CircularProgressIndicator(
+                                    ? const CircularProgressIndicator(
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
                                                 Colors.white),
                                       )
-                                    : Row(
+                                    : const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -68,7 +71,7 @@ class Login extends StatelessWidget {
                                         ],
                                       ),
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -77,7 +80,7 @@ class Login extends StatelessWidget {
                                         builder: (context) => SignUp()),
                                   );
                                 },
-                                child: DonTHaveAnAccountSignUp(),
+                                child: const DonTHaveAnAccountSignUp(),
                               ),
                             ],
                           ),
@@ -94,21 +97,22 @@ class Login extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: Color(0xFFE4DEDE)),
+                                  border: Border.all(
+                                      color: const Color(0xFFE4DEDE)),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.person,
+                                      const Icon(Icons.person,
                                           color: Color(0xFF747688)),
-                                      SizedBox(width: 16),
+                                      const SizedBox(width: 16),
                                       Expanded(
                                         child: TextField(
                                           onChanged: (value) =>
                                               viewModel.updatePlayerId(value),
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             border: InputBorder.none,
                                             hintText: 'ID',
                                             hintStyle: TextStyle(
@@ -129,7 +133,7 @@ class Login extends StatelessWidget {
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Text(
                                     viewModel.playerIdError!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.red,
                                       fontSize: 12,
                                     ),
@@ -150,22 +154,23 @@ class Login extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: Color(0xFFE4DEDE)),
+                                  border: Border.all(
+                                      color: const Color(0xFFE4DEDE)),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16),
                                   child: Row(
                                     children: [
-                                      Icon(Icons.lock,
+                                      const Icon(Icons.lock,
                                           color: Color(0xFF747688)),
-                                      SizedBox(width: 16),
+                                      const SizedBox(width: 16),
                                       Expanded(
                                         child: TextField(
                                           obscureText: viewModel.isObscureText,
                                           onChanged: (value) =>
                                               viewModel.updatePassword(value),
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             border: InputBorder.none,
                                             hintText: 'PW',
                                             hintStyle: TextStyle(
@@ -184,7 +189,7 @@ class Login extends StatelessWidget {
                                           viewModel.isObscureText
                                               ? Icons.visibility_off
                                               : Icons.visibility,
-                                          color: Color(0xFF747688),
+                                          color: const Color(0xFF747688),
                                         ),
                                       ),
                                     ],
@@ -196,7 +201,7 @@ class Login extends StatelessWidget {
                                   padding: const EdgeInsets.only(top: 8.0),
                                   child: Text(
                                     viewModel.passwordError!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.red,
                                       fontSize: 12,
                                     ),
@@ -219,9 +224,11 @@ class Login extends StatelessWidget {
 }
 
 class DonTHaveAnAccountSignUp extends StatelessWidget {
+  const DonTHaveAnAccountSignUp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Text.rich(
+    return const Text.rich(
       TextSpan(
         children: [
           TextSpan(
@@ -237,7 +244,7 @@ class DonTHaveAnAccountSignUp extends StatelessWidget {
           TextSpan(
             text: 'Sign up',
             style: TextStyle(
-              color: Color(0xFF5668FF),
+              color: Color.fromARGB(255, 20, 42, 128),
               fontSize: 15,
               fontFamily: 'Airbnb Cereal App',
               fontWeight: FontWeight.w400,

@@ -18,8 +18,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+<<<<<<< HEAD
+String ip = '119.203.5.249';
+=======
 
 String ip = '';
+>>>>>>> 058f6626528301ed21e99e2dd8987502801cb9b7
 String serverUrl = 'http://$ip:3000';
 String serverWsUrl = 'http://$ip:3001/chat';
 
@@ -53,6 +57,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      theme: ThemeData(fontFamily: 'AirbnbCereal_W_Bk'),
       routerConfig: goRouter,
     );
   }
