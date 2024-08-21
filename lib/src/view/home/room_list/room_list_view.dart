@@ -28,11 +28,8 @@ class _RoomListViewState extends State<RoomListView> {
   @override
   void initState() {
     super.initState();
-
-    // roomListViewModel.createRoom();
-
-    roomListViewModel.roomListFetch(null);
-    print(DateTime.now());
+    roomListViewModel.roomListFetch(widget.selectedTopicIds);
+    print(widget.selectedTopicIds);
   }
 
   @override
@@ -40,6 +37,7 @@ class _RoomListViewState extends State<RoomListView> {
     return BaseView(
         viewModel: roomListViewModel,
         builder: (context, viewModel) => Scaffold(
+<<<<<<< HEAD
               body: Column(
                 children: [
                   // ElevatedButton(
@@ -61,6 +59,18 @@ class _RoomListViewState extends State<RoomListView> {
                     ),
                   ),
                 ],
+=======
+              body: ListView.builder(
+                itemCount: viewModel.roomList.length,
+                itemBuilder: (context, index) {
+                  final room = viewModel.roomList[index];
+                  return RoomItem(
+                    room: room,
+                    onReserve: () => viewModel.bookScheduleChat(room),
+                    onCancel: () => viewModel.cancelScheduleChat(room),
+                  );
+                },
+>>>>>>> 058f6626528301ed21e99e2dd8987502801cb9b7
               ),
             ));
   }
