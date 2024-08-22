@@ -113,6 +113,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         oldPassword: _oldPasswordController.text,
                         newPassword: _newPasswordController.text,
                         newPasswordCheck: _newPasswordCheckController.text,
+                        context: context, // 여기에 context를 추가
                       );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
