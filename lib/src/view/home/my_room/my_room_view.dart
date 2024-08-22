@@ -1,5 +1,6 @@
 import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/src/view/home/my_room/my_room_view_model.dart';
+import 'package:alarm_app/src/view/home/room_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,12 +12,23 @@ class MyRoomView extends StatefulWidget {
 }
 
 class _MyRoomViewState extends State<MyRoomView> {
+  late final MyRoomViewModel myRoomViewModel = MyRoomViewModel(
+    authRepository: context.read<AuthRepository>(),
+    roomRepository: context.read(),
+    localNotificationService: context.read(),
+    sharedPreferencesRepository: context.read(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    myRoomViewModel.roomListFetch(null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyRoomViewModel(
-        authRepository: context.read<AuthRepository>(),
-      ),
+      create: (context) => myRoomViewModel,
       child: Consumer<MyRoomViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -103,6 +115,29 @@ class _MyRoomViewState extends State<MyRoomView> {
                           ),
                         ),
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Divider(),
+
+                  /// 내가 예약한 목록 확인
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: viewModel.roomList.length,
+                      itemBuilder: (context, index) {
+                        final room =
+                            viewModel.roomList.reversed.toList()[index];
+
+                        return room.book
+                            ? RoomItem(
+                                room: room,
+                                onReserve: () =>
+                                    viewModel.bookScheduleChat(room),
+                                onCancel: () =>
+                                    viewModel.cancelScheduleChat(room),
+                              )
+                            : null;
+                      },
                     ),
                   ),
                 ],

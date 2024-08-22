@@ -15,29 +15,41 @@ class RoomListViewModel extends BaseViewModel {
   final SharedPreferencesRepository sharedPreferencesRepository;
 
   List<RoomModel> roomList = []; // 방 목록을 저장할 리스트
+  bool isLoading = false; // 로딩 상태 관리
 
   RoomListViewModel(
       {required this.roomRepository,
       required this.localNotificationService,
       required this.sharedPreferencesRepository});
 
-  // 방 목록을 서버에서 가져오는 메서드
-
   // 서버에서 방 목록을 가져오는 메서드
-  Future<void> roomListFetch(List<int?>? topicIDList) async {
-    //여기서 필터로 저정한 내용을 가져와야 함.
-    roomList = await roomRepository.getRoomList(topicIDList); // 서버에서 방 목록 가져오기
+  Future<void> roomListFetch(List<int?>? topicIDList,
+      {bool refresh = false}) async {
+    isLoading = true;
+    notifyListeners(); // 로딩 중 상태를 UI에 반영
 
-    // 방 목록을 가져온 후 각 방에 대한 예약 정보를 로컬에서 조회하여 설정
-    for (RoomModel room in roomList) {
-      bool isReserved = sharedPreferencesRepository.isReserved(room);
-      print('방 ${room.roomId} 예약 상태: $isReserved'); // 예약 여부 출력 (디버그용)
-      room.book = isReserved;
-
-      // 각 방의 예약 정보를 처리하거나 UI에 반영
+    if (refresh) {
+      // 새로고침인 경우 기존 데이터를 초기화
+      roomList = [];
     }
-    // 데이터 변경 후 UI 업데이트
-    notifyListeners();
+
+    try {
+      roomList =
+          await roomRepository.getRoomList(topicIDList); // 서버에서 방 목록 가져오기
+
+      // 방 목록을 가져온 후 각 방에 대한 예약 정보를 로컬에서 조회하여 설정
+      for (RoomModel room in roomList) {
+        bool isReserved = sharedPreferencesRepository.isReserved(room);
+        print('방 ${room.roomId} 예약 상태: $isReserved'); // 예약 여부 출력 (디버그용)
+        room.book = isReserved;
+      }
+    } catch (e) {
+      // 오류 처리
+      print("방 목록 가져오기 실패: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners(); // 데이터 로딩이 끝났음을 UI에 알림
+    }
   }
 
   void bookScheduleChat(RoomModel room) {
