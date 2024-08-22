@@ -1,14 +1,14 @@
-import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Req} from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Room } from './dto/room.entity';
 import { Logger } from '@nestjs/common';
+import { BuzzTalkResult } from './buzzTalkResult.utils'; // Import your utility class
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService
-  ) {}
+  private buzzTalkResult: BuzzTalkResult = new BuzzTalkResult(); // Create an instance of BuzzTalkResult
 
-  // 회원가입
+  constructor(private readonly appService: AppService) {}
+
   @Post('/player/register')
   async register(@Body() body): Promise<any> {
     Logger.log('Register endpoint hit'); 
@@ -16,261 +16,179 @@ export class AppController {
       const playerId: string = body.playerId;
       const password: string = body.password;
 
-
       const statusCode = await this.appService.register(playerId, password);
       
       if (statusCode === 1) {
-        return {
-          status: 'success',
-          data: { message: '회원가입 성공' },
-          error: null,
-        };
+        return this.buzzTalkResult.successResult({ message: '회원가입 성공' });
       } else {
-        return {
-          status: 'fail',
-          data: null,
-          error: this.appService.getMessage(statusCode),
-        };
+        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
       }
     } catch (e) {
-      console.log('error',e);
-      return this.appService.handleError(e);
+      return this.buzzTalkResult.handleError(e);
     }
-  } 
-
-  // 로그인 화면을 어떻게 할건지?
-  @Post('/player/login')
-  async login(@Body() body , @Req() req ): Promise<any> {
-    try{
-    const playerId: string = body.playerId;
-    const password: string = body.password;
-    
-    const statusCode = await this.appService.login(playerId, password);
-    if (typeof statusCode === 'object' && statusCode !== null){
-      
-      req.session.player = statusCode; //세션에 저장
-      console.log('session 목록:',req.session.player);
-      
-      return {
-        status: 'success',
-        data: { message: '로그인 성공' },
-        error: null,
-      };
-    } else {
-      return {
-        status: 'fail',
-        data: null,
-        error: this.appService.getMessage(statusCode),
-      };
-    }
-  } catch (error) {
-    return this.appService.handleError(error);
   }
-}
-    // 2: 없는 아이디
-    // 3: 아이디 형식 불일치
-    // 4: 비밀번호 형식 불일치
-    // 5: 비밀번호 틀림
-    // 6: Id 또는 pw 입력값 없이 들어왔을 경우
-    // 8: 서버 에러
 
+  @Post('/player/login')
+  async login(@Body() body, @Req() req): Promise<any> {
+    try {
+      const playerId: string = body.playerId;
+      const password: string = body.password;
+    
+      const statusCode = await this.appService.login(playerId, password);
+      
+      if (typeof statusCode === 'object' && statusCode !== null) {
+        req.session.player = statusCode; // Save to session
+        console.log('session 목록:', req.session.player);
+        
+        return this.buzzTalkResult.successResult({ message: '로그인 성공' });
+      } else {
+        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+      }
+    } catch (error) {
+      return this.buzzTalkResult.handleError(error);
+    }
+  }
 
-  //if(req.session !== res.session) { error ;}
   @Post('/player/logout')
   async logout(@Req() req): Promise<any> {
-    console.log(req.session.player);
-    if(!req.session)
-    {
-      return {
-        status: 'fail',
-        data: null,
-        error: this.appService.getMessage(8),
-      };
+    if (!req.session) {
+      return this.buzzTalkResult.resultError(this.appService.getMessage(8));
     }
     
-    try{
-    req.session.destroy(); // 세션 에서 지우는 메서드
-    return {
-      status: 'success',
-      data:{message:'로그아웃 성공'},
-      error: null
-    };
-  }catch(e){
-    return this.appService.handleError(e);
-  }
+    try {
+      req.session.destroy(); // Remove from session
+      return this.buzzTalkResult.successResult({ message: '로그아웃 성공' });
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
+    }
   }
 
-  // 여기 수정해야함
   @Post('/player/changePassword')
   async changePassword(@Body() body, @Req() req): Promise<any> {
-    console.log(req.session.player);
-    try{
-    if (!req.session.player){
-      return {
-        status: 'fail',
-        data: null,
-        error: this.appService.getMessage(0),
-      };
-    }
-    
-    //TODO: 아래코드는 줄일 수 있으면 줄이기
-    
-    const playerId = req.session.player.playerId;
-    const oldPassword: string = body.oldPassword;
-    const newPassword: string = body.newPassword;
+    try {
+      if (!req.session.player) {
+        return this.buzzTalkResult.resultError(this.appService.getMessage(0));
+      }
+      
+      const playerId = req.session.player.playerId;
+      const oldPassword: string = body.oldPassword;
+      const newPassword: string = body.newPassword;
 
-    const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
-    console.log(statusCode);
-    if (statusCode === 1) {
-      return {
-        status: 'success',
-        data: { message: '변경 성공' },
-        error: null,
-      };
-    } else {
-      return {
-        status: 'fail',
-        data: null,
-        error: this.appService.getMessage(statusCode),
-      };
+      const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
+      
+      if (statusCode === 1) {
+        return this.buzzTalkResult.successResult({ message: '변경 성공' });
+      } else {
+        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+      }
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
     }
-    // 1: 성공
-    // 2: 비밀번호 미변경 (이전 비밀번호와 일치)
-    // 3: 새로운 비밀번호 형식 불일치
-    // 4: 기존 비밀번호가 틀림
-    // 6: 입력값 없을 경우
-    // 7: DB 에러
-    // 8: 서버 에러
-    }catch(e)
-     {
-         return this.appService.handleError(e);
-     }
   }
 
-  // 회원 탈퇴 // 여기 수정해야함
   @Post('/player/delete')
   async deletePlayer(@Body() body, @Req() req): Promise<any> {
-    try{
-      if (!req.session.player){
-        return {
-          status: 'fail',
-          data: null,
-          error: this.appService.getMessage(0),
-        };
+    try {
+      if (!req.session.player) {
+        return this.buzzTalkResult.resultError(this.appService.getMessage(0));
       }
-    const playerId = req.session.player.playerId;
-    const password = req.session.player.password;
-    const statusCode = await this.appService.deletePlayer(playerId,password);
-    if (statusCode === 1) {
-      return {
-        status: 'success',
-        data: { message: '회원탈퇴 완료' },
-        error: null,
-      };
-    } else {
-      return {
-        status: 'fail',
-        data: null,
-        error: this.appService.getMessage(statusCode),
-      };
-    }
-  }catch(e)
-  {
-    return this.appService.handleError(e);
-  }
-  }
 
+      const playerId = req.session.player.playerId;
+      const password = req.session.player.password;
+      const statusCode = await this.appService.deletePlayer(playerId, password);
+      
+      if (statusCode === 1) {
+        return this.buzzTalkResult.successResult({ message: '회원탈퇴 완료' });
+      } else {
+        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+      }
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
+    }
+  }
 
   @Get('/topic/list')
   async getTopicList(): Promise<any> {
-    return await this.appService.getTopicList();
+    try {
+      const topics = await this.appService.getTopicList();
+      return this.buzzTalkResult.successResult(topics);
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
+    }
   }
 
   @Get('/topic/room-count')
   async getRoomCountByTopic(): Promise<any> {
-    return await this.appService.getRoomCountByTopic();
+    try {
+      const roomCount = await this.appService.getRoomCountByTopic();
+      return this.buzzTalkResult.successResult(roomCount);
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
+    }
   }
 
-  //삭제예정
   @Post('/player')
   async getOrCreatePlayer(@Body() body): Promise<any> {
-    const playerId: string = body.playerId;
-    const password: string = body.password;
-
-    return await this.appService.getPlayer(playerId,password);
+    try {
+      const playerId: string = body.playerId;
+      const password: string = body.password;
+      
+      const player = await this.appService.getPlayer(playerId, password);
+      return this.buzzTalkResult.successResult(player);
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
+    }
   }
 
   @Post('/list')
   async getRoomList(@Body() body): Promise<any> {
-    const limit: number = body.limit;
-    const cursorId: number | undefined = body.cursorId;
-    const topicIds: number[] | undefined = body.topicIds; // topicIds를 배열로 받음
+    try {
+      const limit: number = body.limit;
+      const cursorId: number | undefined = body.cursorId;
+      const topicIds: number[] | undefined = body.topicIds; // topicIds를 배열로 받음
 
-    const statusCode = await this.appService.getRoomList(topicIds, cursorId, limit);
-    console.log(statusCode);
-    if (typeof statusCode === 'object' && statusCode !== null){
-      
-      return {
-        status: 'success',
-        data: statusCode,
-        error: null,
-      };
+      const rooms = await this.appService.getRoomList(topicIds, cursorId, limit);
+      return this.buzzTalkResult.successResult(rooms);
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
     }
   }
 
-
-
   @Post('/room/create')
-  async createRoom(@Body() body ,@Req() req): Promise<any> {
-    console.log(req.session.player);
-    console.log(req.session);
-    try{
-    
-    const roomName: string = body.roomName;
-    const topicId: number = body.topicId;
-    const playerId: string = req.session.player.playerId;
-    const startTime: Date = new Date(body.startTime);
-    const endTime: Date = new Date(body.endTime);
+  async createRoom(@Body() body, @Req() req): Promise<any> {
+    try {
+      const roomName: string = body.roomName;
+      const topicId: number = body.topicId;
+      const playerId: string = req.session.player.playerId;
+      const startTime: Date = new Date(body.startTime);
+      const endTime: Date = new Date(body.endTime);
 
-    const statusCode = await this.appService.createRoom(
+      const statusCode = await this.appService.createRoom(
         roomName,
         topicId,
         playerId,
         startTime,
         endTime,
       );
-      console.log(statusCode);
+      
       if (statusCode === 1) {
-        return {
-          status: 'success',
-          data: { message: '회원가입 성공' },
-          error: null,
-        };
+        return this.buzzTalkResult.successResult({ message: '방 생성 성공' });
       } else {
-        return {
-          status: 'fail',
-          data: null,
-          error: this.appService.getMessage(statusCode),
-        };
+        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
       }
-    // 1: 성공
-    // 2: 방 제목 중복
-    // 3: 존재하지 않는 플레이어
-    // 4: 존재하지 않는 토픽
-    // 5: 길이 초과
-    // 6: 클라이언트측 입력값 누락
-    // 7: DB 에러
-    // 8: 서버 에러
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
+    }
   }
-  catch(e)
-  {
-    return this.appService.handleError(e);
-  }
-}
 
-  @Get('/room/ids')
-  async getRooms(@Body() body: { roomIds: string[] }): Promise<Room[]> {
-    const roomIds = body.roomIds;
-    return await this.appService.getRoomListByIds(roomIds);
+  @Post('/room/ids')
+  async getRooms(@Body() body: { roomIds: string[] }): Promise<any> {
+    try {
+      const roomIds = body.roomIds;
+      const rooms = await this.appService.getRoomListByIds(roomIds);
+      return this.buzzTalkResult.successResult(rooms);
+    } catch (e) {
+      return this.buzzTalkResult.handleError(e);
+    }
   }
 }
