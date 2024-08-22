@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Req} from '@nestjs/common';
 import { AppService } from './app.service';
 import { Room } from './dto/room.entity';
 import { Logger } from '@nestjs/common';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService
+  ) {}
 
   // 회원가입
   @Post('/player/register')
@@ -14,6 +15,8 @@ export class AppController {
     try {
       const playerId: string = body.playerId;
       const password: string = body.password;
+
+
       const statusCode = await this.appService.register(playerId, password);
       
       if (statusCode === 1) {
@@ -37,16 +40,16 @@ export class AppController {
 
   // 로그인 화면을 어떻게 할건지?
   @Post('/player/login')
-  async login(@Body() body , @Request() req ): Promise<any> {
+  async login(@Body() body , @Req() req ): Promise<any> {
     try{
-    console.log('현재 세션:', req.session);
     const playerId: string = body.playerId;
     const password: string = body.password;
     
     const statusCode = await this.appService.login(playerId, password);
     if (typeof statusCode === 'object' && statusCode !== null){
-      req.session.player = statusCode;
-      console.log('session 목록:',req.session);
+      
+      req.session.player = statusCode; //세션에 저장
+      console.log('session 목록:',req.session.player);
       
       return {
         status: 'success',
@@ -71,27 +74,37 @@ export class AppController {
     // 6: Id 또는 pw 입력값 없이 들어왔을 경우
     // 8: 서버 에러
 
+
+  //if(req.session !== res.session) { error ;}
   @Post('/player/logout')
-  async logout(@Request() req): Promise<any> {
+  async logout(@Req() req): Promise<any> {
+    console.log(req.session.player);
+    if(!req.session)
+    {
+      return {
+        status: 'fail',
+        data: null,
+        error: this.appService.getMessage(8),
+      };
+    }
+    
     try{
-    console.log('현재 세션:', req.session);
     req.session.destroy(); // 세션 에서 지우는 메서드
     return {
       status: 'success',
-      data:{message:'로그 아웃'},
+      data:{message:'로그아웃 성공'},
       error: null
     };
   }catch(e){
     return this.appService.handleError(e);
   }
-
   }
 
-  // 비밀번호 변경
-  @Patch('/player/change-password')
-  async changePassword(@Body() body, @Request() req): Promise<any> {
+  // 여기 수정해야함
+  @Post('/player/changePassword')
+  async changePassword(@Body() body, @Req() req): Promise<any> {
+    console.log(req.session.player);
     try{
-    console.log('현재 세션:', req.session);
     if (!req.session.player){
       return {
         status: 'fail',
@@ -99,14 +112,19 @@ export class AppController {
         error: this.appService.getMessage(0),
       };
     }
-    const playerId: string = body.playerId;
+    
+    //TODO: 아래코드는 줄일 수 있으면 줄이기
+    
+    const playerId = req.session.player.playerId;
     const oldPassword: string = body.oldPassword;
     const newPassword: string = body.newPassword;
+
     const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
+    console.log(statusCode);
     if (statusCode === 1) {
       return {
         status: 'success',
-        data: { message: '회원가입 성공' },
+        data: { message: '변경 성공' },
         error: null,
       };
     } else {
@@ -129,21 +147,24 @@ export class AppController {
      }
   }
 
-  // 회원 탈퇴
-  @Delete('/player/delete')
-  async deletePlayer(@Body() body, @Request() req): Promise<any> {
+  // 회원 탈퇴 // 여기 수정해야함
+  @Post('/player/delete')
+  async deletePlayer(@Body() body, @Req() req): Promise<any> {
     try{
-    console.log('현재 세션:', req.session);
-    if (!req.session.player){
-      return await { message: '로그인을 하셔야합니다.'};
-    }
-    const playerId: string = body.playerId;
-    const password: string = body.password;
+      if (!req.session.player){
+        return {
+          status: 'fail',
+          data: null,
+          error: this.appService.getMessage(0),
+        };
+      }
+    const playerId = req.session.player.playerId;
+    const password = req.session.player.password;
     const statusCode = await this.appService.deletePlayer(playerId,password);
     if (statusCode === 1) {
       return {
         status: 'success',
-        data: { message: '회원가입 성공' },
+        data: { message: '회원탈퇴 완료' },
         error: null,
       };
     } else {
@@ -158,6 +179,7 @@ export class AppController {
     return this.appService.handleError(e);
   }
   }
+
 
   @Get('/topic/list')
   async getTopicList(): Promise<any> {
@@ -175,22 +197,35 @@ export class AppController {
     const playerId: string = body.playerId;
     const password: string = body.password;
 
-    return await this.appService.getOrCreatePlayer(playerId,password);
+    return await this.appService.getPlayer(playerId,password);
   }
 
-  /*@Get('/room/list')
-async getRoomList(@Query('topicId') topicIds: number[] | undefined): Promise<any> {
-  return await this.appService.getRoomList(topicIds);
-}*/
+  @Get('/room/list')
+  async getRoomList(@Query('topicId') topicIds: string | undefined): Promise<any> {
+    const topicIdsArray = topicIds
+    ? topicIds.split(',').map(id => {
+        const parsedId = parseInt(id, 10);
+        if (isNaN(parsedId)) {
+          throw new Error(`Invalid topicId: ${id}`);
+        }
+        return parsedId;
+      })
+    : undefined;
+  // topicIdsArray가 배열인 경우에만 이 값을 그대로 전달합니다.
+  return await this.appService.getRoomList(topicIdsArray);
+  }
 
 
 
   @Post('/room/create')
-  async createRoom(@Body() body): Promise<any> {
+  async createRoom(@Body() body ,@Req() req): Promise<any> {
+    console.log(req.session.player);
+    console.log(req.session);
     try{
+    
     const roomName: string = body.roomName;
     const topicId: number = body.topicId;
-    const playerId: string = body.playerId;
+    const playerId: string = req.session.player.playerId;
     const startTime: Date = new Date(body.startTime);
     const endTime: Date = new Date(body.endTime);
 
@@ -201,6 +236,7 @@ async getRoomList(@Query('topicId') topicIds: number[] | undefined): Promise<any
         startTime,
         endTime,
       );
+      console.log(statusCode);
       if (statusCode === 1) {
         return {
           status: 'success',

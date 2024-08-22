@@ -167,7 +167,7 @@ export class AppService {
   //까지가 player항목=======================================================================//
 
 
-  async getOrCreatePlayer(playerId: string,password:string): Promise<any> {
+  async getPlayer(playerId: string,password:string): Promise<any> {
     let player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player) {
       player = await this.playerRepository.createPlayer(playerId,password);
@@ -187,20 +187,40 @@ export class AppService {
   async getRoomListByIds(ids: string[]): Promise<Room[]> {
     return await this.roomRepository.getRoomsByIds(ids);
   }
-  //
+  
   async getRoomList(topicIds: number[] | undefined): Promise<any> {
+    // 데이터베이스에서 Room 엔티티를 가져옵니다
+    this.roomRepository.deleteRooms();
+    const rooms = await this.getRoomsByTopics(topicIds);
+
+    // 응답 데이터를 필터링합니다
+    return rooms.map(room => ({
+      roomId: room.roomId,
+      roomName: room.roomName,
+      startTime: room.startTime?.toISOString(),
+      endTime: room.endTime?.toISOString(),
+      topicId: room.topicId,
+      playerId: room.playerId,
+      book: room.book,
+      updatedAt: room.updatedAt?.toISOString(),
+      // createdAt 필드는 제외됨
+    }));
+  }
+
+  private async getRoomsByTopics(topicIds: number[] | undefined): Promise<Room[]> {
+    const queryBuilder = this.roomRepository.createQueryBuilder('room');
+
+    // topicIds가 null이거나 빈 배열이면 모든 방을 반환
     if (!topicIds || topicIds.length === 0) {
-      // topicId가 주어지지 않은 경우, 모든 Room 반환
-      return await this.roomRepository.find();
-    } else {
-      // 여러 개의 topicId에 해당하는 Room들을 찾기
-      const rooms = await this.roomRepository.getRoomsByTopics(topicIds);
-      return rooms;
+      return await queryBuilder.getMany();
     }
+    
+    // topicIds에 해당하는 방만 반환
+    return await queryBuilder
+      .where('room.topic_id IN (:...topicIds)', { topicIds })
+      .getMany();
   }
   
-  
-
   async createRoom(
     roomName: string,
     topicId: number,
@@ -216,6 +236,10 @@ export class AppService {
       return 5; // 방 제목 형식 불일치 (길이 초과)
     }
   
+    // bad-words 필터 초기화
+
+    
+
     const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!existingPlayer) {
       return 3; // 존재하지 않는 플레이어의 경우
@@ -250,6 +274,7 @@ export class AppService {
       return 8; // 서버 에러
     }
   }
+  
 
   handleError(error: any): { status: string, data: any, error: string } { 
     if (error.name === 'QueryFailedError' || error.code === 'ER_DB_ERROR') {
@@ -278,6 +303,9 @@ export class AppService {
       4: '비밀번호 형식 불일치',
       5: '비밀번호 틀림',
       6: 'Id 또는 pw 입력값 누락',
+      7: 'DB 에러',
+      8: '서버 에러',
+      11: '비속어가 포함된 데이터는 사용하실 수 없습니다.'
     };
     return messages[statusCode] || '알 수 없는 오류';
 

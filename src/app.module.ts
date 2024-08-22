@@ -12,7 +12,6 @@ import { Topic } from './dto/topic.entity';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { PlayerRepository } from './repository/player.repository';
 import { Player } from './dto/player.entity';
-
 config();
 @Module({
   imports: [
