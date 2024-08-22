@@ -58,70 +58,78 @@ class _TopicFilterViewState extends State<TopicFilterView> {
         body: Row(
           children: [
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, //한 열에 얼마나 널을 것인지
-                  childAspectRatio: 1, //child 가로 세로 비율
-                  crossAxisSpacing: 10, //열 간의 간격
-                  mainAxisSpacing: 10, //행 간의 간격
-                ),
-                itemCount: viewModel.topics.length,
-                itemBuilder: (context, index) {
-                  final topic = viewModel.topics[index];
-                  final isSelected =
-                      viewModel.selectedTopicIds.contains(topic.topicId);
-                  final topicRoomCount =
-                      viewModel.topicRoomCounts[topic.topicId] ?? 0;
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4, //한 열에 얼마나 널을 것인지
+                    childAspectRatio: 1, //child 가로 세로 비율
+                    crossAxisSpacing: 10, //열 간의 간격
+                    mainAxisSpacing: 10, //행 간의 간격
+                  ),
+                  itemCount: viewModel.topics.length,
+                  itemBuilder: (context, index) {
+                    final topic = viewModel.topics[index];
+                    final isSelected =
+                        viewModel.selectedTopicIds.contains(topic.topicId);
+                    final topicRoomCount =
+                        viewModel.topicRoomCounts[topic.topicId] ?? 0;
 
-                  return GestureDetector(
-                    onTap: () => viewModel
-                        .onTopicTap(topic.topicId), // 토픽 1 선택 시 ID 1 전달
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
-                            color: isSelected // 선택된 상태 확인
-                                ? Colors.purple
-                                : Colors.transparent,
-                          ),
-                          width: 80,
-                          height: 80,
-                          child: Center(
-                            child: Text(
-                              topic.topicName, //topicName
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 54,
-                          left: 65,
-                          child: Container(
-                            width: 15,
-                            height: 25,
+                    return GestureDetector(
+                      onTap: () => viewModel
+                          .onTopicTap(topic.topicId), // 토픽 1 선택 시 ID 1 전달
+                      child: Stack(
+                        children: [
+                          Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: Colors.black,
+                                color: Colors.grey,
                               ),
+                              color: isSelected // 선택된 상태 확인
+                                  ? Color.fromARGB(255, 20, 42, 128)
+                                  : Colors.transparent,
                             ),
+                            width: 80,
+                            height: 80,
                             child: Center(
                               child: Text(
-                                '$topicRoomCount', //토픽의 개수
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 13),
+                                topic.topicName,
+                                style: TextStyle(
+                                  color: isSelected // 선택된 상태 확인
+                                      ? Colors.white
+                                      : Colors.black,
+                                ), //topicName
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          Positioned(
+                            top: 54,
+                            left: 65,
+                            child: Container(
+                              width: 15,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '$topicRoomCount', //토픽의 개수
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
