@@ -193,6 +193,7 @@ export class AppService {
     cursorId: number | undefined,
     limit: number,
   ): Promise<any> {
+    this.roomRepository.deleteRooms();
     const res: Room[] | undefined = await this.roomRepository.getRooms(
       topicIds,
       cursorId,
