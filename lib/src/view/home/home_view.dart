@@ -17,13 +17,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print(widget.selectedTopicIds);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BaseView(
       viewModel: HomeViewModel(),

@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final goRouter = GoRouter(
-  ///로그인 로직 나중에 추가, 로그인이 되어있으면 /로 아니면 로그인 페이지로
+  navigatorKey: rootNavigatorKey, // navigatorKey 설정
   initialLocation: '/login',
   routes: [
     GoRoute(

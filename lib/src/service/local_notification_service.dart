@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:alarm_app/util/helper/route.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -38,6 +40,7 @@ class LocalNotificationService {
         onDidReceiveNotificationResponse:
             (NotificationResponse notificationResponse) {
       print("Notification clicked ${notificationResponse.payload}");
+      // GoRouter.of(rootNavigatorKey.currentContext!).go('/chat');
     }
         // onDidReceiveBackgroundNotificationResponse:
 

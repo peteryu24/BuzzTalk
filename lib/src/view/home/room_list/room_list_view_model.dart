@@ -40,29 +40,13 @@ class RoomListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> createRoom() async {
-    DateTime endTime =
-        DateTime.now().add(Duration(hours: 1)); // 예: 현재 시간으로부터 1시간 후
-
-    await roomRepository.createRoom(
-      RoomModel(
-        roomName: 'roomName',
-        topicId: 1,
-        endTime: endTime,
-      ),
-    );
-
-    roomListFetch(null);
-    notifyListeners();
-  }
-
   void bookScheduleChat(RoomModel room) {
     localNotificationService.scheduleNotification(
-      id: room.roomId!,
-      title: room.roomName,
-      body: '채팅이 시작되었습니다.',
-      scheduledDateTime: room.startTime!,
-    );
+        id: room.roomId!,
+        title: room.roomName,
+        body: '채팅이 시작되었습니다.',
+        scheduledDateTime: room.startTime!,
+        payload: room.roomId.toString());
 
     sharedPreferencesRepository.saveReservation(room);
     notifyListeners();

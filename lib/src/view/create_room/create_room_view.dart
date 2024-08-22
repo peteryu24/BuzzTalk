@@ -51,15 +51,8 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                             topicId: _topicId!,
                             startTime: _startTime,
                             endTime: _endTime!,
+                            context: context, // BuildContext 전달
                           );
-
-                          if (viewModel.errorMessage == null) {
-                            context.replace('/');
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(viewModel.errorMessage!)),
-                            );
-                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("모든 필드를 입력해주세요.")),

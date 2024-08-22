@@ -29,7 +29,7 @@ class _RoomListViewState extends State<RoomListView> {
   void initState() {
     super.initState();
     roomListViewModel.roomListFetch(widget.selectedTopicIds);
-    print(widget.selectedTopicIds);
+    print('룸리스트뷰 재갱신');
   }
 
   @override
