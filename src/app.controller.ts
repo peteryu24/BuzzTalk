@@ -5,7 +5,8 @@ import { Logger } from '@nestjs/common';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService
+  ) {}
 
   // 회원가입
   @Post('/player/register')
@@ -14,6 +15,8 @@ export class AppController {
     try {
       const playerId: string = body.playerId;
       const password: string = body.password;
+
+
       const statusCode = await this.appService.register(playerId, password);
       
       if (statusCode === 1) {
@@ -76,11 +79,20 @@ export class AppController {
   @Post('/player/logout')
   async logout(@Req() req): Promise<any> {
     console.log(req.session.player);
+    if(!req.session)
+    {
+      return {
+        status: 'fail',
+        data: null,
+        error: this.appService.getMessage(8),
+      };
+    }
+    
     try{
     req.session.destroy(); // 세션 에서 지우는 메서드
     return {
       status: 'success',
-      data:{message:'로그 아웃'},
+      data:{message:'로그아웃 성공'},
       error: null
     };
   }catch(e){
@@ -106,6 +118,7 @@ export class AppController {
     const playerId = req.session.player.playerId;
     const oldPassword: string = body.oldPassword;
     const newPassword: string = body.newPassword;
+
     const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
     console.log(statusCode);
     if (statusCode === 1) {
@@ -184,7 +197,7 @@ export class AppController {
     const playerId: string = body.playerId;
     const password: string = body.password;
 
-    return await this.appService.getOrCreatePlayer(playerId,password);
+    return await this.appService.getPlayer(playerId,password);
   }
 
   @Get('/room/list')
@@ -198,7 +211,6 @@ export class AppController {
         return parsedId;
       })
     : undefined;
-
   // topicIdsArray가 배열인 경우에만 이 값을 그대로 전달합니다.
   return await this.appService.getRoomList(topicIdsArray);
   }
@@ -216,7 +228,7 @@ export class AppController {
     const playerId: string = req.session.player.playerId;
     const startTime: Date = new Date(body.startTime);
     const endTime: Date = new Date(body.endTime);
-    
+
     const statusCode = await this.appService.createRoom(
         roomName,
         topicId,

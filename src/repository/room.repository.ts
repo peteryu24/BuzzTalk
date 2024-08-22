@@ -29,8 +29,15 @@ export class RoomRepository extends Repository<Room> {
       .andWhere('room.end_time > NOW()') //수정한거
       .getMany();
   }
-  
-  
+
+  async deleteRooms(): Promise<void> {
+    this.query(`
+      DELETE FROM room
+      WHERE end_time < NOW();
+    `);
+    console.log('Expired rooms deleted.');
+  }
+
  //여러개의 룸id를 한 번에 찾고싶을때 ...ids로 쓴다고 함.
   async getRoomsByIds(ids: string[]): Promise<Room[]> {
     return await this.createQueryBuilder('room')

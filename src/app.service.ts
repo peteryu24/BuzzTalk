@@ -167,7 +167,7 @@ export class AppService {
   //까지가 player항목=======================================================================//
 
 
-  async getOrCreatePlayer(playerId: string,password:string): Promise<any> {
+  async getPlayer(playerId: string,password:string): Promise<any> {
     let player = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!player) {
       player = await this.playerRepository.createPlayer(playerId,password);
@@ -190,6 +190,7 @@ export class AppService {
   
   async getRoomList(topicIds: number[] | undefined): Promise<any> {
     // 데이터베이스에서 Room 엔티티를 가져옵니다
+    this.roomRepository.deleteRooms();
     const rooms = await this.getRoomsByTopics(topicIds);
 
     // 응답 데이터를 필터링합니다
@@ -302,6 +303,9 @@ export class AppService {
       4: '비밀번호 형식 불일치',
       5: '비밀번호 틀림',
       6: 'Id 또는 pw 입력값 누락',
+      7: 'DB 에러',
+      8: '서버 에러',
+      11: '비속어가 포함된 데이터는 사용하실 수 없습니다.'
     };
     return messages[statusCode] || '알 수 없는 오류';
 

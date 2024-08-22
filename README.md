@@ -38,7 +38,7 @@ $ npm install
 $ npm run seed
 ```
 
-run `src/database/seeds/topic.sedder.ts`
+run `src/database/seeds/topic.seeder.ts`
 
 
 ## Running the app

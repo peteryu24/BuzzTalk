@@ -8,7 +8,7 @@
   "scripts": {
     "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run",
     "seed:create": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:create",
-    "seed": "ts-node src/seeder.ts",
+    "seed": "ts-node ./src/database/seeds/topic.seeder.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env TZ=UTC nest start",
@@ -36,7 +36,6 @@
     "@nestjs/platform-socket.io": "^10.3.10",
     "@nestjs/typeorm": "^10.0.2",
     "@nestjs/websockets": "^10.3.10",
-    "bad-words": "^4.0.0",
     "connect-redis": "^7.1.1",
     "cors": "^2.8.5",
     "express-session": "^1.18.0",
