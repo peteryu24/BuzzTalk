@@ -15,12 +15,12 @@ class TopicFilterViewModel extends BaseViewModel {
 
   //topic과 방 개수 로드
   Future<void> loadTopics() async {
-    //topic 불러오기
-    topics = await topicRepository.getTopicList();
-
-    //방 개수 불러오기
-    topicRoomCounts = await topicRepository.getRoomCountByTopic();
-
+    try {
+      topics = await topicRepository.getTopicList();
+      topicRoomCounts = await topicRepository.getRoomCountByTopic();
+    } catch (e) {
+      print('Failed to load topics or room counts: $e');
+    }
     notifyListeners();
   }
 

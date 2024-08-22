@@ -24,12 +24,11 @@ class CreateRoomViewModel extends ChangeNotifier {
     try {
       _topics = await _roomRepository.getTopicList();
       _isLoading = false;
-      notifyListeners();
     } catch (e) {
       _isLoading = false;
       _errorMessage = 'Failed to fetch topics: $e';
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> createRoom({
@@ -37,7 +36,7 @@ class CreateRoomViewModel extends ChangeNotifier {
     required int topicId,
     DateTime? startTime,
     required DateTime endTime,
-    required BuildContext context, // 추가된 BuildContext
+    required BuildContext context,
   }) async {
     _isLoading = true;
     _errorMessage = null;
@@ -56,13 +55,11 @@ class CreateRoomViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
 
-      if (response['status'] == 'success') {
+      if (response['result'] == true) {
         print("Room Created Successfully.");
-
-        // 방 생성이 성공한 후 홈 화면으로 이동
         context.replace('/'); // 홈 화면으로 이동
       } else {
-        _errorMessage = response['error'] ?? 'Room creation failed';
+        _errorMessage = response['msg'] ?? 'Room creation failed';
         notifyListeners();
 
         // 에러가 있을 경우 스낵바로 사용자에게 알림
