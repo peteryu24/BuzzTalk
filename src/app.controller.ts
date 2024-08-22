@@ -200,19 +200,22 @@ export class AppController {
     return await this.appService.getPlayer(playerId,password);
   }
 
-  @Get('/room/list')
-  async getRoomList(@Query('topicId') topicIds: string | undefined): Promise<any> {
-    const topicIdsArray = topicIds
-    ? topicIds.split(',').map(id => {
-        const parsedId = parseInt(id, 10);
-        if (isNaN(parsedId)) {
-          throw new Error(`Invalid topicId: ${id}`);
-        }
-        return parsedId;
-      })
-    : undefined;
-  // topicIdsArray가 배열인 경우에만 이 값을 그대로 전달합니다.
-  return await this.appService.getRoomList(topicIdsArray);
+  @Post('/list')
+  async getRoomList(@Body() body): Promise<any> {
+    const limit: number = body.limit;
+    const cursorId: number | undefined = body.cursorId;
+    const topicIds: number[] | undefined = body.topicIds; // topicIds를 배열로 받음
+
+    const statusCode = await this.appService.getRoomList(topicIds, cursorId, limit);
+    console.log(statusCode);
+    if (typeof statusCode === 'object' && statusCode !== null){
+      
+      return {
+        status: 'success',
+        data: statusCode,
+        error: null,
+      };
+    }
   }
 
 

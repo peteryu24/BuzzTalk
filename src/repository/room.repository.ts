@@ -16,20 +16,6 @@ export class RoomRepository extends Repository<Room> {
     return await this.findOneBy({ roomName });
   }
 
-  //SELECT * FROM room WHERE room.topic_id IN (topicIds)랑 똑같다고 함.. createQueryBuilder에 대해 알아볼것
-  async getRoomsByTopics(topicIds: number[] | null): Promise<Room[]> {
-    const queryBuilder = this.createQueryBuilder('room');
-  
-    // null이면 다 반환
-    if (!topicIds || topicIds.length === 0) {
-      return await queryBuilder.getMany();
-    }
-    return await queryBuilder
-      .where('room.topic_id IN (:...topicIds)', { topicIds })
-      .andWhere('room.end_time > NOW()') //수정한거
-      .getMany();
-  }
-
   async deleteRooms(): Promise<void> {
     this.query(`
       DELETE FROM room
@@ -47,17 +33,27 @@ export class RoomRepository extends Repository<Room> {
   }
 
   async getRooms(
-    topicId: number | undefined,
+    topicIds: number[] | undefined,
+    cursorId: number | undefined,
+    limit: number,
   ): Promise<Room[]> {
-    let query = `SELECT * FROM room WHERE end_time > NOW()`;
-  
-    if (topicId !== undefined) {
-      query += ` AND topic_id = ${topicId}`;
+    const queryBuilder = this.createQueryBuilder('room')
+      .where('room.end_time > NOW()'); // 만료되지 않은 방만 선택
+
+    // topicIds가 존재하고 배열에 값이 있으면 해당 topicId를 기준으로 필터링
+    if (topicIds && topicIds.length > 0) {
+      queryBuilder.andWhere('room.topic_id IN (:...topicIds)', { topicIds });
     }
-  
-    query += ` ORDER BY created_at DESC`;
-  
-    return await this.query(query);
+
+    // cursorId가 존재하면 해당 id보다 작은 id를 가진 레코드만 선택
+    if (cursorId) {
+      queryBuilder.andWhere('room.room_id < :cursorId', { cursorId });
+    }
+
+    // 생성일 기준으로 내림차순 정렬하고 리미트 만큼 반환
+    queryBuilder.orderBy('room.created_at', 'DESC').limit(limit);
+
+    return await queryBuilder.getMany();
   }
 
 } 

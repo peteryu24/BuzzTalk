@@ -188,37 +188,46 @@ export class AppService {
     return await this.roomRepository.getRoomsByIds(ids);
   }
   
-  async getRoomList(topicIds: number[] | undefined): Promise<any> {
-    // 데이터베이스에서 Room 엔티티를 가져옵니다
-    this.roomRepository.deleteRooms();
-    const rooms = await this.getRoomsByTopics(topicIds);
+  async getRoomList(
+    topicIds: number[] | undefined,
+    cursorId: number | undefined,
+    limit: number,
+  ): Promise<any> {
+    const res: Room[] | undefined = await this.roomRepository.getRooms(
+      topicIds,
+      cursorId,
+      limit,
+    );
 
-    // 응답 데이터를 필터링합니다
-    return rooms.map(room => ({
+    if (!res) {
+      return {
+        rooms: [],
+        cursorId: undefined,
+      };
+    }
+
+    // rooms 데이터를 필요한 형식으로 변환합니다.
+    const rooms = res.map(room => ({
       roomId: room.roomId,
       roomName: room.roomName,
-      startTime: room.startTime?.toISOString(),
-      endTime: room.endTime?.toISOString(),
+      startTime: room.startTime?.toISOString(),  // ISO 형식으로 변환
+      endTime: room.endTime?.toISOString(),      // ISO 형식으로 변환
       topicId: room.topicId,
       playerId: room.playerId,
       book: room.book,
-      updatedAt: room.updatedAt?.toISOString(),
-      // createdAt 필드는 제외됨
+      updatedAt: room.updatedAt?.toISOString(),  // ISO 형식으로 변환
+      // createdAt 필드는 제외됩니다.
     }));
-  }
 
-  private async getRoomsByTopics(topicIds: number[] | undefined): Promise<Room[]> {
-    const queryBuilder = this.roomRepository.createQueryBuilder('room');
-
-    // topicIds가 null이거나 빈 배열이면 모든 방을 반환
-    if (!topicIds || topicIds.length === 0) {
-      return await queryBuilder.getMany();
+    let nextCursorId: string | undefined = undefined;
+    if (res.length === limit) {
+      nextCursorId = res[res.length - 1].roomId.toString();
     }
-    
-    // topicIds에 해당하는 방만 반환
-    return await queryBuilder
-      .where('room.topic_id IN (:...topicIds)', { topicIds })
-      .getMany();
+
+    return {
+      rooms: rooms,       // 변환된 rooms 배열을 반환
+      cursorId: nextCursorId,
+    };
   }
   
   async createRoom(
@@ -235,10 +244,7 @@ export class AppService {
     if (roomName.length > 50) {
       return 5; // 방 제목 형식 불일치 (길이 초과)
     }
-  
-    // bad-words 필터 초기화
 
-    
 
     const existingPlayer = await this.playerRepository.getPlayerIdByPlayer(playerId);
     if (!existingPlayer) {
