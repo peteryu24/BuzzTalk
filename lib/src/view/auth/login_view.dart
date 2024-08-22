@@ -26,50 +26,66 @@ class Login extends StatelessWidget {
                   Expanded(
                     child: Stack(
                       children: [
+                        // BuzzTalk 텍스트 배치
+                        const Positioned(
+                          left: 28, // 왼쪽 정렬 위치를 TextField와 맞춤
+                          top: 150, // 아래로 더 내림
+                          child: Text(
+                            'BuzzTalk',
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                         Positioned(
-                          left: 50,
+                          left: 28, // TextField와 동일한 left 위치
                           top: 500,
                           child: Column(
                             children: [
-                              ElevatedButton(
-                                onPressed: viewModel.isLoading
-                                    ? null
-                                    : () {
-                                        viewModel.signIn(context); // context 전달
-                                      },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 20, 42, 128),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                              SizedBox(
+                                width: 317,
+                                height: 60, // TextField와 동일한 width
+                                child: ElevatedButton(
+                                  onPressed: viewModel.isLoading
+                                      ? null
+                                      : () {
+                                          viewModel
+                                              .signIn(context); // context 전달
+                                        },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 20, 42, 128),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
-                                  minimumSize: const Size(273, 56),
-                                ),
-                                child: viewModel.isLoading
-                                    ? const CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
-                                      )
-                                    : const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'SIGN IN',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontFamily: 'Airbnb Cereal App',
-                                              fontWeight: FontWeight.w400,
-                                              letterSpacing: 1,
+                                  child: viewModel.isLoading
+                                      ? const CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
+                                        )
+                                      : const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '로그인',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontFamily: 'Airbnb Cereal App',
+                                                fontWeight: FontWeight.w400,
+                                                letterSpacing: 1,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Icon(Icons.arrow_forward,
-                                              color: Colors.white),
-                                        ],
-                                      ),
+                                            SizedBox(width: 10),
+                                            Icon(Icons.arrow_forward,
+                                                color: Colors.white),
+                                          ],
+                                        ),
+                                ),
                               ),
                               const SizedBox(height: 20),
                               GestureDetector(
@@ -77,7 +93,7 @@ class Login extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SignUp()),
+                                        builder: (context) => const SignUp()),
                                   );
                                 },
                                 child: const DonTHaveAnAccountSignUp(),
@@ -114,7 +130,7 @@ class Login extends StatelessWidget {
                                               viewModel.updatePlayerId(value),
                                           decoration: const InputDecoration(
                                             border: InputBorder.none,
-                                            hintText: 'ID',
+                                            hintText: '아이디',
                                             hintStyle: TextStyle(
                                               color: Color(0xFF747688),
                                               fontSize: 14,
@@ -172,7 +188,7 @@ class Login extends StatelessWidget {
                                               viewModel.updatePassword(value),
                                           decoration: const InputDecoration(
                                             border: InputBorder.none,
-                                            hintText: 'PW',
+                                            hintText: '비밀번호',
                                             hintStyle: TextStyle(
                                               color: Color(0xFF747688),
                                               fontSize: 14,
@@ -232,7 +248,17 @@ class DonTHaveAnAccountSignUp extends StatelessWidget {
       TextSpan(
         children: [
           TextSpan(
-            text: 'Don’t have an account?  ',
+            text: '계정',
+            style: TextStyle(
+              color: Color(0xFF110C26),
+              fontSize: 15,
+              fontFamily: 'Airbnb Cereal App',
+              fontWeight: FontWeight.bold,
+              height: 1.5,
+            ),
+          ),
+          TextSpan(
+            text: '이 없으신가요?  ',
             style: TextStyle(
               color: Color(0xFF110C26),
               fontSize: 15,
@@ -242,7 +268,7 @@ class DonTHaveAnAccountSignUp extends StatelessWidget {
             ),
           ),
           TextSpan(
-            text: 'Sign up',
+            text: '회원가입',
             style: TextStyle(
               color: Color.fromARGB(255, 20, 42, 128),
               fontSize: 15,

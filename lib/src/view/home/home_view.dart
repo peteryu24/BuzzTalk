@@ -22,8 +22,10 @@ class _HomeViewState extends State<HomeView> {
       viewModel: HomeViewModel(),
       builder: (BuildContext context, HomeViewModel viewModel) => Scaffold(
         appBar: AppBar(
-          title: Text(viewModel.currentIndex == 0 ? '방 목록' : "마이"),
-          leading: Container(),
+          title: Text(
+            viewModel.currentIndex == 0 ? '방 목록' : "마이",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           actions: [
             viewModel.currentIndex == 0
                 ? IconButton(

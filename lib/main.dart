@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'AirbnbCereal_W_Bk'),
       routerConfig: goRouter,
     );

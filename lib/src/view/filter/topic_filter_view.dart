@@ -18,7 +18,6 @@ class _TopicFilterViewState extends State<TopicFilterView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     topicFilterViewModel.loadTopics();
   }
@@ -34,38 +33,24 @@ class _TopicFilterViewState extends State<TopicFilterView> {
           title: const Text('주제별 필터'),
           leading: IconButton(
             onPressed: () {
-              //필터 창 닫기
-              // context.go('/');
               context.replace('/');
             },
             icon: const Icon(
               Icons.close,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                context.replace('/',
-                    extra: viewModel.selectedTopicIds); // go_router에서 값을 반환
-                print('선택 topic id: ${viewModel.selectedTopicIds}');
-              },
-              icon: const Icon(
-                Icons.check,
-              ),
-            ),
-          ],
         ),
-        body: Row(
+        body: Column(
           children: [
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4, //한 열에 얼마나 널을 것인지
-                    childAspectRatio: 1, //child 가로 세로 비율
-                    crossAxisSpacing: 10, //열 간의 간격
-                    mainAxisSpacing: 10, //행 간의 간격
+                    crossAxisCount: 4,
+                    childAspectRatio: 1,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
                   ),
                   itemCount: viewModel.topics.length,
                   itemBuilder: (context, index) {
@@ -76,8 +61,7 @@ class _TopicFilterViewState extends State<TopicFilterView> {
                         viewModel.topicRoomCounts[topic.topicId] ?? 0;
 
                     return GestureDetector(
-                      onTap: () => viewModel
-                          .onTopicTap(topic.topicId), // 토픽 1 선택 시 ID 1 전달
+                      onTap: () => viewModel.onTopicTap(topic.topicId),
                       child: Stack(
                         children: [
                           Container(
@@ -86,8 +70,8 @@ class _TopicFilterViewState extends State<TopicFilterView> {
                               border: Border.all(
                                 color: Colors.grey,
                               ),
-                              color: isSelected // 선택된 상태 확인
-                                  ? Color.fromARGB(255, 20, 42, 128)
+                              color: isSelected
+                                  ? const Color.fromARGB(255, 20, 42, 128)
                                   : Colors.transparent,
                             ),
                             width: 80,
@@ -96,10 +80,9 @@ class _TopicFilterViewState extends State<TopicFilterView> {
                               child: Text(
                                 topic.topicName,
                                 style: TextStyle(
-                                  color: isSelected // 선택된 상태 확인
-                                      ? Colors.white
-                                      : Colors.black,
-                                ), //topicName
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
+                                ),
                               ),
                             ),
                           ),
@@ -118,7 +101,7 @@ class _TopicFilterViewState extends State<TopicFilterView> {
                               ),
                               child: Center(
                                 child: Text(
-                                  '$topicRoomCount', //토픽의 개수
+                                  '$topicRoomCount',
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 13),
                                 ),
@@ -129,6 +112,30 @@ class _TopicFilterViewState extends State<TopicFilterView> {
                       ),
                     );
                   },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      const Color.fromARGB(255, 20, 42, 128), // 배경색
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12), // 둥근 모서리
+                  ),
+                  minimumSize: const Size(double.infinity, 56), // 버튼 크기
+                ),
+                onPressed: () {
+                  context.replace('/', extra: viewModel.selectedTopicIds);
+                  print('선택 topic id: ${viewModel.selectedTopicIds}');
+                },
+                child: const Text(
+                  '선택 완료',
+                  style: TextStyle(
+                    color: Colors.white, // 텍스트 색상
+                    fontWeight: FontWeight.bold, // 텍스트 두께
+                  ),
                 ),
               ),
             ),

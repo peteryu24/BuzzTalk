@@ -5,6 +5,8 @@ import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/src/repository/http_request.dart';
 
 class SignUp extends StatelessWidget {
+  const SignUp({super.key});
+
   @override
   Widget build(BuildContext context) {
     final httpRequest = Http();
@@ -16,7 +18,7 @@ class SignUp extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -31,31 +33,34 @@ class SignUp extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Sign up',
-                    style: TextStyle(
-                      color: Color(0xFF110C26),
-                      fontSize: 24,
-                      fontFamily: 'Airbnb Cereal App',
-                      fontWeight: FontWeight.w400,
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      '회원가입',
+                      style: TextStyle(
+                        color: Color(0xFF110C26),
+                        fontSize: 24,
+                        fontFamily: 'Airbnb Cereal App',
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Expanded(
                     child: ListView(
                       children: [
-                        _buildLabel('ID'),
+                        _buildLabel('아이디'),
                         _buildInputField(
                           icon: Icons.person,
-                          hintText: 'Username',
+                          hintText: '아이디',
                           onChanged: viewModel.updatePlayerId,
                         ),
-                        SizedBox(height: 30),
-                        _buildLabel('Password'),
+                        const SizedBox(height: 30),
+                        _buildLabel('비밀번호'),
                         _buildPasswordField(
                           controller: viewModel.passwordController,
                           icon: Icons.lock,
-                          hintText: 'Password',
+                          hintText: '비밀번호',
                           obscureText: viewModel.obscureText,
                           onChanged: viewModel.updatePassword,
                           onToggle: viewModel.toggleObscureText,
@@ -65,25 +70,25 @@ class SignUp extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               viewModel.passwordError!,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 12,
                               ),
                             ),
                           ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         _buildPasswordField(
                           controller: viewModel.confirmPasswordController,
                           icon: Icons.lock,
-                          hintText: 'Confirm password',
+                          hintText: '비밀번호 확인',
                           obscureText: viewModel.obscureConfirmText,
                           onChanged: viewModel.updateConfirmPassword,
                           onToggle: viewModel.toggleObscureConfirmText,
                         ),
-                        SizedBox(height: 60),
+                        const SizedBox(height: 60),
                         _buildButton(
-                          text: 'SIGN UP',
-                          color: Color(0xFF3D55F0),
+                          text: '회원가입 완료',
+                          color: const Color.fromARGB(255, 20, 42, 128),
                           textColor: Colors.white,
                           icon: Icons.arrow_forward,
                           onPressed: viewModel.isLoading
@@ -92,27 +97,52 @@ class SignUp extends StatelessWidget {
                                   viewModel.signUp(context);
                                 },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Center(
                           child: GestureDetector(
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: Text.rich(
+                            child: const Text.rich(
                               TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'Already have an account?  ',
-                                    style: TextStyle(
-                                      color: Color(0xFF110C26),
-                                      fontSize: 15,
-                                      fontFamily: 'Airbnb Cereal App',
-                                      fontWeight: FontWeight.w400,
-                                      height: 1.5,
-                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: '이미 ',
+                                        style: TextStyle(
+                                          color: Color(0xFF110C26),
+                                          fontSize: 15,
+                                          fontFamily: 'Airbnb Cereal App',
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '계정',
+                                        style: TextStyle(
+                                          color: Color(0xFF110C26),
+                                          fontSize: 15,
+                                          fontFamily: 'Airbnb Cereal App',
+                                          fontWeight:
+                                              FontWeight.bold, // Bold 체 적용
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: '이 있으신가요?    ',
+                                        style: TextStyle(
+                                          color: Color(0xFF110C26),
+                                          fontSize: 15,
+                                          fontFamily: 'Airbnb Cereal App',
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   TextSpan(
-                                    text: 'Sign in',
+                                    text: '로그인 하기',
                                     style: TextStyle(
                                       color: Color(0xFF5668FF),
                                       fontSize: 15,
@@ -131,7 +161,7 @@ class SignUp extends StatelessWidget {
                     ),
                   ),
                   if (viewModel.isLoading)
-                    Center(
+                    const Center(
                       child: CircularProgressIndicator(),
                     ),
                 ],
@@ -145,10 +175,10 @@ class SignUp extends StatelessWidget {
 
   Widget _buildLabel(String labelText) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, left: 16.0),
+      padding: const EdgeInsets.only(bottom: 8.0, left: 23.0),
       child: Text(
         labelText,
-        style: TextStyle(
+        style: const TextStyle(
           color: Color(0xFF110C26),
           fontSize: 16,
           fontWeight: FontWeight.w500,
@@ -170,21 +200,21 @@ class SignUp extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Color(0xFFE4DEDE)),
+          border: Border.all(color: const Color(0xFFE4DEDE)),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Icon(icon, color: Color(0xFF747688)),
-              SizedBox(width: 16),
+              Icon(icon, color: const Color(0xFF747688)),
+              const SizedBox(width: 16),
               Expanded(
                 child: TextField(
                   onChanged: onChanged,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: hintText,
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       color: Color(0xFF747688),
                       fontSize: 14,
                       fontFamily: 'Airbnb Cereal App',
@@ -215,14 +245,14 @@ class SignUp extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Color(0xFFE4DEDE)),
+          border: Border.all(color: const Color(0xFFE4DEDE)),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Icon(icon, color: Color(0xFF747688)),
-              SizedBox(width: 16),
+              Icon(icon, color: const Color(0xFF747688)),
+              const SizedBox(width: 16),
               Expanded(
                 child: TextField(
                   controller: controller,
@@ -231,7 +261,7 @@ class SignUp extends StatelessWidget {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: hintText,
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       color: Color(0xFF747688),
                       fontSize: 14,
                       fontFamily: 'Airbnb Cereal App',
@@ -244,7 +274,7 @@ class SignUp extends StatelessWidget {
                 onTap: onToggle,
                 child: Icon(
                   obscureText ? Icons.visibility_off : Icons.visibility,
-                  color: Color(0xFF747688),
+                  color: const Color(0xFF747688),
                 ),
               ),
             ],
@@ -269,7 +299,7 @@ class SignUp extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          fixedSize: Size(280, 56),
+          fixedSize: const Size(315, 56),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -281,10 +311,9 @@ class SignUp extends StatelessWidget {
                 fontSize: 16,
                 fontFamily: 'Airbnb Cereal App',
                 fontWeight: FontWeight.w400,
-                letterSpacing: 1,
               ),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Icon(icon, color: textColor),
           ],
         ),

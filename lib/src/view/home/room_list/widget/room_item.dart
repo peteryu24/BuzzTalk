@@ -6,8 +6,8 @@ import 'package:alarm_app/src/theme/palette.dart';
 import 'package:alarm_app/util/helper/date_time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
-import 'package:alarm_app/src/model/room_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 class RoomItem extends StatelessWidget {
   final RoomModel room;
@@ -51,16 +51,34 @@ class RoomItem extends StatelessWidget {
           room.startTime!
                   .isAfter(DateTime.now().toUtc().add(const Duration(hours: 9)))
 
-              ///현재 시간보다 빠름
+              /// 현재 시간보다 빠름
               ? ElevatedButton(
-                  onPressed: room.book ? onCancel : onReserve,
-                  child: room.book ? const Text('취소') : const Text('예약'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        const Color.fromARGB(255, 20, 42, 128), // 배경색
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (room.book) {
+                      onCancel(); // 예약 취소 동작
+                      showFlushbar(context, '방 예약을 취소했습니다.');
+                    } else {
+                      onReserve(); // 예약 동작
+                      showFlushbar(context, '방 예약이 완료됐습니다.');
+                    }
+                  },
+                  child: room.book
+                      ? const Text('취소')
+                      : const Text(
+                          '예약',
+                        ),
                 )
 
-              ///현재 시간보다 느림
+              /// 현재 시간보다 느림
               : ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF3D4A7A), // 배경색
+                      backgroundColor:
+                          const Color.fromARGB(255, 20, 42, 128), // 배경색
                       foregroundColor: Colors.white),
                   onPressed: () {
                     context.push('/chat', extra: room);
@@ -86,5 +104,15 @@ class RoomItem extends StatelessWidget {
     } catch (e) {
       return 'Unknown Topic'; // 일치하는 topicId가 없을 경우 기본값 반환
     }
+  }
+
+  void showFlushbar(BuildContext context, String message) {
+    Flushbar(
+      message: message,
+      duration: const Duration(seconds: 2),
+      backgroundColor: const Color.fromARGB(255, 20, 42, 128),
+      margin: const EdgeInsets.all(8.0),
+      borderRadius: BorderRadius.circular(8.0),
+    ).show(context);
   }
 }
