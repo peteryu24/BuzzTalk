@@ -21,7 +21,7 @@ class RoomRepository {
       'cursorId': cursorId, // 커서 ID 추가
     };
 
-    final response = await httpRequest.post('/list', body);
+    final response = await httpRequest.post('/room/getList', body);
     if (response['status'] == 'success') {
       final rooms = response['data']['rooms'] as List;
       return rooms
@@ -47,7 +47,8 @@ class RoomRepository {
 
   //수정
   Future<List<RoomModel>> getRoomListByIds(List<String> roomIds) async {
-    final response = await httpRequest.post('/room/ids', {'roomIds': roomIds});
+    final response =
+        await httpRequest.post('/room/getListByIds', {'roomIds': roomIds});
     return (response as List).map((json) => RoomModel.fromJson(json)).toList();
   }
 }
