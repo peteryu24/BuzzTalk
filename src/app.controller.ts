@@ -117,7 +117,7 @@ export class AppController {
     }
   }
 
-  @Get('/topic/room-count')
+  @Get('/topic/roomCount')
   async getRoomCountByTopic(): Promise<any> {
     try {
       const roomCount = await this.appService.getRoomCountByTopic();
@@ -127,7 +127,7 @@ export class AppController {
     }
   }
 
-  @Post('/player')
+  @Post('/player/getInfo')
   async getOrCreatePlayer(@Body() body): Promise<any> {
     try {
       const playerId: string = body.playerId;
@@ -140,7 +140,7 @@ export class AppController {
     }
   }
 
-  @Post('/list')
+  @Post('/room/getList')
   async getRoomList(@Body() body): Promise<any> {
     try {
       const limit: number = body.limit;
@@ -181,7 +181,7 @@ export class AppController {
     }
   }
 
-  @Post('/room/ids')
+  @Post('/room/getListByIds')
   async getRooms(@Body() body: { roomIds: string[] }): Promise<any> {
     try {
       const roomIds = body.roomIds;
