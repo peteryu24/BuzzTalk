@@ -1,10 +1,10 @@
 flutter_native_splash:
-  color: "#FFFFFF" # 스플래시 화면의 배경색을 설정합니다.
-  image: assets/images/BuzzTalk.png # 스플래시 화면에 사용할 이미지 경로를 설정합니다.
-  android: true # Android 플랫폼에 대해 스플래시 화면을 생성합니다.
-  ios: true # iOS 플랫폼에 대해 스플래시 화면을 생성합니다.
-  web: true # 웹 플랫폼에 대해 스플래시 화면을 생성합니다.
-  android_gravity: center # 안드로이드에서 이미지 정렬을 설정합니다.
-  ios_content_mode: scaleAspectFill # iOS에서 이미지 정렬을 설정합니다.
-  fullscreen: true # 전체 화면으로 스플래시 화면을 표시합니다.
+  color: "#FFFFFF" # 스플래시 화면의 배경색
+  image: assets/images/BuzzTalk.png # 스플래시 화면에 사용할 이미지 경로
+  android: true # Android 플랫폼에 대해 스플래시 화면 생성
+  ios: true # iOS 플랫폼에 대해 스플래시 화면 생성
+  web: true # 웹 플랫폼에 대해 스플래시 화면 생성
+  android_gravity: center # 안드로이드에서 이미지 정렬을 가운데로 설정
+  ios_content_mode: center # iOS에서 이미지 정렬을 가운데로 설정
+
 
