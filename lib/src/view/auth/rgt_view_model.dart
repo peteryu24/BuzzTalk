@@ -77,6 +77,7 @@ class RgtViewModel extends ChangeNotifier {
       await _authRepository.register(_playerId, _password);
       _handleResponse(context);
     } catch (e) {
+      _clearPasswordFields(); // 실패 시 비밀번호 관련 필드를 초기화
       if (e is Exception) {
         _errorPopUtil.showErrorDialog(context, int.parse(e.toString()));
       } else {

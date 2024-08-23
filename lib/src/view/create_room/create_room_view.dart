@@ -43,6 +43,17 @@ class _CreateRoomViewState extends State<CreateRoomView> {
               return Column(
                 children: [
                   if (viewModel.isLoading) const CircularProgressIndicator(),
+                  if (viewModel.errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        viewModel.errorMessage!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   TextField(
                     controller: _roomNameController,
                     decoration: InputDecoration(
@@ -174,6 +185,7 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                         );
                         return;
                       }
+
                       final roomName = _roomNameController.text;
                       final topicId = _topicId!;
                       final endTime = _endTime!;

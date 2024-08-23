@@ -23,6 +23,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     super.dispose();
   }
 
+  void _clearTextFields() {
+    _oldPasswordController.clear();
+    _newPasswordController.clear();
+    _newPasswordCheckController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +65,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       newPassword: _newPasswordController.text,
                       newPasswordCheck: _newPasswordCheckController.text,
                       context: context,
+                      onClearTextFields: _clearTextFields, // 콜백 전달
                     );
               },
               style: ElevatedButton.styleFrom(

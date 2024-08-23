@@ -13,6 +13,9 @@ class LoginViewModel extends ChangeNotifier {
   String? _playerIdError;
   String? _passwordError;
 
+  final TextEditingController passwordController =
+      TextEditingController(); // 비밀번호 컨트롤러 추가
+
   final AuthRepository _authRepository;
   final AuthUtils _validator = AuthUtils();
   final ErrorPopUtils _errorPopUtil = ErrorPopUtils();
@@ -73,6 +76,12 @@ class LoginViewModel extends ChangeNotifier {
 
       // 에러 코드가 int로 직접 던져졌다고 가정
       int errorCode = e is int ? e : 20; // 기본값 20
+
+      if (errorCode == 6) {
+        // 비밀번호 틀림 오류 코드 처리
+        passwordController.clear(); // 비밀번호 텍스트 상자 비우기
+        _password = '';
+      }
 
       _errorPopUtil.showErrorDialog(context, errorCode);
       notifyListeners();

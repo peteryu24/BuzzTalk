@@ -27,8 +27,8 @@ class Login extends StatelessWidget {
                     child: Stack(
                       children: [
                         const Positioned(
-                          left: 28, // 왼쪽 정렬 위치를 TextField와 맞춤
-                          top: 150, // 아래로 더 내림
+                          left: 28,
+                          top: 150,
                           child: Text(
                             'BuzzTalk',
                             style: TextStyle(
@@ -38,19 +38,18 @@ class Login extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          left: 28, // TextField와 동일한 left 위치
+                          left: 28,
                           top: 500,
                           child: Column(
                             children: [
                               SizedBox(
                                 width: 317,
-                                height: 60, // TextField와 동일한 width
+                                height: 60,
                                 child: ElevatedButton(
                                   onPressed: viewModel.isLoading
                                       ? null
                                       : () {
-                                          viewModel
-                                              .signIn(context); // context 전달
+                                          viewModel.signIn(context);
                                         },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
@@ -116,6 +115,7 @@ class Login extends StatelessWidget {
                               _buildTextField(
                                 label: '비밀번호',
                                 icon: Icons.lock,
+                                controller: viewModel.passwordController,
                                 obscureText: viewModel.isObscureText,
                                 onChanged: viewModel.updatePassword,
                                 onToggleVisibility: viewModel.toggleObscureText,
@@ -140,6 +140,7 @@ class Login extends StatelessWidget {
     required String label,
     required IconData icon,
     required Function(String) onChanged,
+    TextEditingController? controller,
     bool obscureText = false,
     VoidCallback? onToggleVisibility,
     String? errorText,
@@ -163,6 +164,7 @@ class Login extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: TextField(
+                    controller: controller,
                     onChanged: onChanged,
                     obscureText: obscureText,
                     decoration: InputDecoration(
@@ -206,46 +208,39 @@ class Login extends StatelessWidget {
 }
 
 class DonTHaveAnAccountSignUp extends StatelessWidget {
-  const DonTHaveAnAccountSignUp({super.key});
+  const DonTHaveAnAccountSignUp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(
-            text: '계정',
-            style: TextStyle(
-              color: Color(0xFF110C26),
-              fontSize: 15,
-              fontFamily: 'Airbnb Cereal App',
-              fontWeight: FontWeight.bold,
-              height: 1.5,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SignUp()),
+        );
+      },
+      child: const Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: '계정이 없으신가요? ',
+              style: TextStyle(
+                color: Color(0xFF110C26),
+                fontSize: 15,
+                fontFamily: 'Airbnb Cereal App',
+              ),
             ),
-          ),
-          TextSpan(
-            text: '이 없으신가요?  ',
-            style: TextStyle(
-              color: Color(0xFF110C26),
-              fontSize: 15,
-              fontFamily: 'Airbnb Cereal App',
-              fontWeight: FontWeight.w400,
-              height: 1.5,
+            TextSpan(
+              text: '회원가입',
+              style: TextStyle(
+                color: Color.fromARGB(255, 20, 42, 128),
+                fontSize: 15,
+                fontFamily: 'Airbnb Cereal App',
+              ),
             ),
-          ),
-          TextSpan(
-            text: '회원가입',
-            style: TextStyle(
-              color: Color.fromARGB(255, 20, 42, 128),
-              fontSize: 15,
-              fontFamily: 'Airbnb Cereal App',
-              fontWeight: FontWeight.w400,
-              height: 1.5,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-      textAlign: TextAlign.center,
     );
   }
 }

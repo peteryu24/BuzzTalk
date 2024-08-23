@@ -44,6 +44,24 @@ class CreateRoomViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
+    // 현재 시간
+    final now = DateTime.now();
+
+    // 유효성 검사
+    if (startTime != null && startTime.isBefore(now)) {
+      _isLoading = false;
+      _errorMessage = '시작 시간은 현재 시간보다 미래여야 합니다.';
+      notifyListeners();
+      return;
+    }
+
+    if (endTime.isBefore(startTime ?? now)) {
+      _isLoading = false;
+      _errorMessage = '종료 시간은 시작 시간보다 이후여야 합니다.';
+      notifyListeners();
+      return;
+    }
+
     RoomModel roomModel = RoomModel(
       roomName: roomName,
       topicId: topicId,
