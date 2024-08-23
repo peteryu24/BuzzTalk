@@ -18,10 +18,10 @@ export class AppController {
 
       const statusCode = await this.appService.register(playerId, password);
       
-      if (statusCode === 1) {
+      if (statusCode === 0) {
         return this.buzzTalkResult.successResult({ message: '회원가입 성공' });
       } else {
-        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+        return this.buzzTalkResult.resultError(statusCode);
       }
     } catch (e) {
       return this.buzzTalkResult.handleError(e);
@@ -35,14 +35,13 @@ export class AppController {
       const password: string = body.password;
     
       const statusCode = await this.appService.login(playerId, password);
-      
       if (typeof statusCode === 'object' && statusCode !== null) {
         req.session.player = statusCode; // Save to session
         console.log('session 목록:', req.session.player);
         
         return this.buzzTalkResult.successResult({ message: '로그인 성공' });
       } else {
-        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+        return this.buzzTalkResult.resultError(statusCode);
       }
     } catch (error) {
       return this.buzzTalkResult.handleError(error);
@@ -52,7 +51,7 @@ export class AppController {
   @Post('/player/logout')
   async logout(@Req() req): Promise<any> {
     if (!req.session) {
-      return this.buzzTalkResult.resultError(this.appService.getMessage(8));
+      return this.buzzTalkResult.resultError(8);
     }
     
     try {
@@ -67,7 +66,7 @@ export class AppController {
   async changePassword(@Body() body, @Req() req): Promise<any> {
     try {
       if (!req.session.player) {
-        return this.buzzTalkResult.resultError(this.appService.getMessage(0));
+        return this.buzzTalkResult.resultError(8);
       }
       
       const playerId = req.session.player.playerId;
@@ -76,10 +75,10 @@ export class AppController {
 
       const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
       
-      if (statusCode === 1) {
+      if (statusCode === 0) {
         return this.buzzTalkResult.successResult({ message: '변경 성공' });
       } else {
-        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+        return this.buzzTalkResult.resultError(statusCode);
       }
     } catch (e) {
       return this.buzzTalkResult.handleError(e);
@@ -90,17 +89,17 @@ export class AppController {
   async deletePlayer(@Body() body, @Req() req): Promise<any> {
     try {
       if (!req.session.player) {
-        return this.buzzTalkResult.resultError(this.appService.getMessage(0));
+        return this.buzzTalkResult.resultError(8);
       }
 
       const playerId = req.session.player.playerId;
       const password = req.session.player.password;
       const statusCode = await this.appService.deletePlayer(playerId, password);
       
-      if (statusCode === 1) {
+      if (statusCode === 0) {
         return this.buzzTalkResult.successResult({ message: '회원탈퇴 완료' });
       } else {
-        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+        return this.buzzTalkResult.resultError(statusCode);
       }
     } catch (e) {
       return this.buzzTalkResult.handleError(e);
@@ -171,10 +170,10 @@ export class AppController {
         endTime,
       );
       
-      if (statusCode === 1) {
+      if (statusCode === 0) {
         return this.buzzTalkResult.successResult({ message: '방 생성 성공' });
       } else {
-        return this.buzzTalkResult.resultError(this.appService.getMessage(statusCode));
+        return this.buzzTalkResult.resultError(statusCode);
       }
     } catch (e) {
       return this.buzzTalkResult.handleError(e);

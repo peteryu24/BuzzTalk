@@ -21,7 +21,6 @@ export class RoomRepository extends Repository<Room> {
       DELETE FROM room
       WHERE end_time < NOW();
     `);
-    console.log('Expired rooms deleted.');
   }
 
  //여러개의 룸id를 한 번에 찾고싶을때 ...ids로 쓴다고 함.
