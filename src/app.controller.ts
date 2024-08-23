@@ -37,11 +37,12 @@ export class AppController {
       const password: string = body.password;
     
       const statusCode = await this.appService.login(playerId, password);
+      console.log(statusCode);
       if (typeof statusCode === 'object' && statusCode !== null) {
         req.session.player = statusCode; // Save to session
         console.log('session 목록:', req.session.player);
         
-        return this.buzzTalkResult.success({ message: '로그인 성공' });
+        return this.buzzTalkResult.success({ message: 0 });
       } 
 
       // 로그인 실패
@@ -55,12 +56,12 @@ export class AppController {
   @Post('/player/logout')
   async logout(@Req() req): Promise<any> {
     if (!req.session) {
-      return this.buzzTalkResult.resultError(8);
+      return this.buzzTalkResult.resultError(5);
     }
     
     try {
       req.session.destroy(); // Remove from session
-      return this.buzzTalkResult.success({ message: '로그아웃 성공' });
+      return this.buzzTalkResult.success({ message: 0 });
     } catch (e) {
       return this.buzzTalkResult.handleError(e);
     }
@@ -70,17 +71,18 @@ export class AppController {
   async changePassword(@Body() body, @Req() req): Promise<any> {
     try {
       if (!req.session.player) {
-        return this.buzzTalkResult.resultError(8);
+        return this.buzzTalkResult.resultError(5);
       }
       
       const playerId = req.session.player.playerId;
       const oldPassword: string = body.oldPassword;
       const newPassword: string = body.newPassword;
 
+      console.log('hello!');
       const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
-      
+      console.log(statusCode);
       if (statusCode === 0) {
-        return this.buzzTalkResult.success({ message: '변경 성공' });
+        return this.buzzTalkResult.success({ message: 0 });
       } 
 
       // 비밀번호 변경 실패
@@ -95,7 +97,7 @@ export class AppController {
   async deletePlayer(@Body() body, @Req() req): Promise<any> {
     try {
       if (!req.session.player) {
-        return this.buzzTalkResult.resultError(8);
+        return this.buzzTalkResult.resultError(5);
       }
 
       const playerId = req.session.player.playerId;
@@ -103,7 +105,7 @@ export class AppController {
       const statusCode = await this.appService.deletePlayer(playerId, password);
       
       if (statusCode === 0) {
-        return this.buzzTalkResult.success({ message: '회원탈퇴 완료' });
+        return this.buzzTalkResult.success({ message: 0 });
       } 
 
       // 회원 탈퇴 실패
@@ -215,7 +217,7 @@ async getRoomList(@Body() body): Promise<any> {
       );
       
       if (statusCode === 0) {
-        return this.buzzTalkResult.success({ message: '방 생성 성공' });
+        return this.buzzTalkResult.success({ message: 0 });
       } else {
         return this.buzzTalkResult.resultError(statusCode);
       }
