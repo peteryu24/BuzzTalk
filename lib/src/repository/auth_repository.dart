@@ -1,4 +1,3 @@
-import 'package:alarm_app/src/model/auth_model.dart'; // 모델 클래스 임포트
 import 'package:alarm_app/src/repository/http_request.dart';
 
 class AuthRepository {
@@ -6,29 +5,25 @@ class AuthRepository {
 
   AuthRepository(this.httpRequest);
 
-  Future<AuthModel> register(String playerId, String password) async {
+  Future<void> register(String playerId, String password) async {
     final response = await httpRequest.post('/player/register', {
       'playerId': playerId,
       'password': password,
     });
 
-    if (response['result'] == true) {
-      return AuthModel.fromJson(response['data']); // 성공적인 경우 AuthModel 반환
-    } else {
-      throw Exception(response['errNum'] ?? 20); // 에러 코드 반환
+    if (response['result'] != true) {
+      throw response['errNum'] ?? 20; // 에러 코드 반환
     }
   }
 
-  Future<AuthModel> login(String playerId, String password) async {
+  Future<void> login(String playerId, String password) async {
     final response = await httpRequest.post('/player/login', {
       'playerId': playerId,
       'password': password,
     });
 
-    if (response['result'] == true) {
-      return AuthModel.fromJson(response['data']); // 성공적인 경우 AuthModel 반환
-    } else {
-      throw Exception(response['errNum'] ?? 20); // 에러 코드 반환
+    if (response['result'] != true) {
+      throw response['errNum'] ?? 20; // 에러 코드 반환
     }
   }
 
@@ -41,7 +36,7 @@ class AuthRepository {
     });
 
     if (response['result'] != true) {
-      throw Exception(response['errNum'] ?? 20); // 에러 코드 반환
+      throw response['errNum'] ?? 20; // 에러 코드 반환
     }
   }
 
@@ -49,7 +44,7 @@ class AuthRepository {
     final response = await httpRequest.post('/player/delete', {});
 
     if (response['result'] != true) {
-      throw Exception(response['errNum'] ?? 20); // 에러 코드 반환
+      throw response['errNum'] ?? 20; // 에러 코드 반환
     }
   }
 
@@ -57,7 +52,7 @@ class AuthRepository {
     final response = await httpRequest.post('/player/logout', {});
 
     if (response['result'] != true) {
-      throw Exception(response['errNum'] ?? 20); // 에러 코드 반환
+      throw response['errNum'] ?? 20; // 에러 코드 반환
     }
   }
 }

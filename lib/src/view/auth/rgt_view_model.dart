@@ -3,7 +3,6 @@ import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/util/auth_utils.dart';
 import 'package:alarm_app/util/error_pop_util.dart';
 import 'package:alarm_app/src/view/auth/login_view.dart';
-import 'package:alarm_app/src/model/auth_model.dart'; // AuthModel 임포트
 
 class RgtViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -75,8 +74,8 @@ class RgtViewModel extends ChangeNotifier {
     }
 
     try {
-      final authModel = await _authRepository.register(_playerId, _password);
-      _handleResponse(context, authModel);
+      await _authRepository.register(_playerId, _password);
+      _handleResponse(context);
     } catch (e) {
       if (e is Exception) {
         _errorPopUtil.showErrorDialog(context, int.parse(e.toString()));
@@ -115,7 +114,7 @@ class RgtViewModel extends ChangeNotifier {
     return true;
   }
 
-  void _handleResponse(BuildContext context, AuthModel authModel) {
+  void _handleResponse(BuildContext context) {
     // 회원가입 성공 시 로그인 화면으로 이동
     _navigateToLogin(context);
   }

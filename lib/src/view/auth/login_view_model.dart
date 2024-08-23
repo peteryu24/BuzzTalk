@@ -4,7 +4,6 @@ import 'package:alarm_app/util/auth_utils.dart';
 import 'package:alarm_app/util/error_pop_util.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:alarm_app/src/model/auth_model.dart';
 
 class LoginViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -65,19 +64,16 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     try {
-      final AuthModel authModel =
-          await _authRepository.login(_playerId, _password);
+      await _authRepository.login(_playerId, _password);
       _isLoading = false;
       notifyListeners();
-
-      // AuthModel 업데이트
-      context.read<AuthModel>().update(authModel);
-
-      // 로그인 성공 후 홈 화면으로 이동
       context.go('/');
     } catch (e) {
       _isLoading = false;
-      final errorCode = int.tryParse(e.toString()) ?? 20; // 예외를 숫자 코드로 변환
+
+      // 에러 코드가 int로 직접 던져졌다고 가정
+      int errorCode = e is int ? e : 20; // 기본값 20
+
       _errorPopUtil.showErrorDialog(context, errorCode);
       notifyListeners();
     }

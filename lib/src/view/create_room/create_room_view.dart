@@ -106,7 +106,7 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
                       final selectedStartTime = await _selectDateTime(context);
@@ -160,24 +160,31 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 370),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      if (_roomNameController.text.isNotEmpty &&
-                          _topicId != null &&
-                          _endTime != null) {
-                        context.read<CreateRoomViewModel>().createRoom(
-                              roomName: _roomNameController.text,
-                              topicId: _topicId!,
-                              startTime: _startTime,
-                              endTime: _endTime!,
-                              context: context,
-                            );
-                      } else {
+                      if (_roomNameController.text.isEmpty ||
+                          _topicId == null ||
+                          _endTime == null) {
+                        // Input validation
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("모든 필드를 입력해주세요.")),
+                          const SnackBar(
+                            content: Text("모든 필드를 입력해 주세요."),
+                          ),
                         );
+                        return;
                       }
+                      final roomName = _roomNameController.text;
+                      final topicId = _topicId!;
+                      final endTime = _endTime!;
+
+                      context.read<CreateRoomViewModel>().createRoom(
+                            roomName: roomName,
+                            topicId: topicId,
+                            startTime: _startTime,
+                            endTime: endTime,
+                            context: context,
+                          );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 20, 42, 128),

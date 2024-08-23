@@ -8,8 +8,6 @@ class RoomRepository {
 
   RoomRepository(this.httpRequest);
 
-  //topicId를 입력할 경우 topicId에 해당하는 room 전부 가져옴, default는 방 전부를 가져옴
-
   Future<List<RoomModel>> getRoomList({
     List<int>? topicIds,
     int? limit,
@@ -49,7 +47,6 @@ class RoomRepository {
     }
   }
 
-  //수정
   Future<List<RoomModel>> getRoomListByIds(List<String> roomIds) async {
     final response =
         await httpRequest.post('/room/getListByIds', {'roomIds': roomIds});
