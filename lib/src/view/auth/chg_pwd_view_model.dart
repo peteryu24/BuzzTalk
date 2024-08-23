@@ -13,9 +13,11 @@ class ChangePasswordViewModel extends ChangeNotifier {
     required String newPassword,
     required String newPasswordCheck,
     required BuildContext context,
+    required VoidCallback onClearTextFields, // 추가된 콜백
   }) async {
     if (newPassword != newPasswordCheck) {
       _errorPopUtil.showErrorDialog(context, 8); // Password mismatch error code
+      onClearTextFields(); // 텍스트 필드 초기화 호출
       return;
     }
 
@@ -32,6 +34,7 @@ class ChangePasswordViewModel extends ChangeNotifier {
       Navigator.pop(context);
     } catch (e) {
       int errorCode = e is int ? e : 20; // 기본값 20
+      onClearTextFields(); // 텍스트 필드 초기화 호출
       _errorPopUtil.showErrorDialog(context, errorCode);
       notifyListeners();
     }
