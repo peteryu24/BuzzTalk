@@ -1,3 +1,23 @@
+/*
+0: 성공적인 결과 (회원가입, 로그인, 비밀번호 변경, 방 생성 등 성공).
+1: 이미 존재하는 아이디인 경우 (아이디 중복).
+2: 아이디 형식이 올바르지 않은 경우 (validatePlayerId 메서드 통과 실패).
+3: 비밀번호 형식이 올바르지 않은 경우 (validatePassword 메서드 통과 실패).
+4: playerId 또는 password가 입력되지 않은 경우.
+5: 존재하지 않는 데이터 (아이디, 플레이어, 토픽)
+6: 비밀번호가 틀린 경우.
+8: 새로운 비밀번호가 이전 비밀번호와 동일한 경우.
+10: 존재하지 않는 아이디이거나 기존 비밀번호가 틀린 경우 (비밀번호 변경 시).
+12: 방 제목이 중복된 경우.
+13: 필수 입력값이 누락된 경우 (roomName, topicId, playerId, startTime, endTime 중 하나).
+14: 방 제목 길이가 50자를 초과한 경우.
+15: 존재하지 않는 주제인 경우.
+19: 데이터베이스(DB) 에러 (데이터 저장 실패).
+20: 예외가 발생한 경우 (catch 블록에서 리턴). 
+999: 방 갯수 조회 실패
+*/
+
+
 import { Injectable } from '@nestjs/common';
 import { RoomRepository } from './repository/room.repository';
 import { TopicRepository } from './repository/topic.repository';
@@ -165,29 +185,56 @@ export class AppService {
     return 20;
   }
 }
-  //까지가 player항목=======================================================================//
 
+  async getPlayer(playerId: string, password: string): Promise<any> {
+    try {
+      let player = await this.playerRepository.getPlayerIdByPlayer(playerId);
+      
+      if (!player) { 
+          return 5;
+      }
 
-  async getPlayer(playerId: string,password:string): Promise<any> {
-    let player = await this.playerRepository.getPlayerIdByPlayer(playerId);
-    if (!player) {
-      player = await this.playerRepository.createPlayer(playerId,password);
+      return player;
+    } catch (e) {
+      console.log('service error');
+      return 20;
     }
-    return player;
   }
+  
 
   async getTopicList(): Promise<any> {
-    return await this.topicRepository.getTopicList();
+    const topics = await this.topicRepository.getTopicList();
+    
+    if (topics && topics.length > 0) {
+      return topics;  // 토픽이 있을 때 
+    } else {
+      return 5;  // 토픽이 없을 때 
+    }
   }
+  
 
   async getRoomCountByTopic(): Promise<any> {
-    return await this.topicRepository.getTopicListWithCount();
+    const roomCount = await this.topicRepository.getTopicListWithCount();
+    
+    if (roomCount === null || roomCount === undefined || roomCount.length === 0) {
+      return 999; 
+    }
+    
+    return roomCount;
   }
+  
 
   //현재 방의 리스트 순서대로 출력, 만약 방 id를 오름차순으로 넣는다면 받을때는 내림차순으로 방을 보여주는게 맞을듯?
-  async getRoomListByIds(ids: string[]): Promise<Room[]> {
-    return await this.roomRepository.getRoomsByIds(ids);
+  async getRoomListByIds(ids: string[]): Promise<any> {
+    const rooms = await this.roomRepository.getRoomsByIds(ids);
+  
+    if (!rooms || rooms.length === 0) {
+      return 5; // 방 리스트를 가져오지 못한 경우 5 반환
+    }
+  
+    return rooms;
   }
+  
   
   async getRoomList(
     topicIds: number[] | undefined,
@@ -202,10 +249,7 @@ export class AppService {
     );
 
     if (!res) {
-      return {
-        rooms: [],
-        cursorId: undefined,
-      };
+      return 5;
     }
 
     // rooms 데이터를 필요한 형식으로 변환합니다.

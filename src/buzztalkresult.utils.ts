@@ -2,19 +2,19 @@ export class BuzzTalkResult {
   response: { [key: string]: any } = {};
 
   //이거 msg int형으로 전부 수정
-  resultError(msg: number): { [key: string]: any } {
-    return this.result(false, msg, null);
+  resultError(errNum: number): { [key: string]: any } {
+    return this.result(false, errNum, null);
   }
 
-  successResult(data: any): { [key: string]: any } {
+  success(data: any): { [key: string]: any } {
     return this.result(true, null, data);
   }
 
-  result(chk: boolean, msg: number | null, data: any): { [key: string]: any } {
+  result(chk: boolean, errNum: number | null, data: any): { [key: string]: any } {
     const map: { [key: string]: any } = {};
 
     map['result'] = chk;
-    map['msg'] = msg;
+    map['errNum'] = errNum;
     map['data'] = data;
 
     return map;
