@@ -8,7 +8,7 @@
   "scripts": {
     "seed:run": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run",
     "seed:create": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:create",
-    "seed": "ts-node ./src/database/seeds/topic.seeder.ts",
+    "seed": "ts-node ./src/seeds/createTopics.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "cross-env TZ=UTC nest start",
