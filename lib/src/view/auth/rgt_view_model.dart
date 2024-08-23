@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
-import 'package:alarm_app/src/view/auth/login_view.dart';
 import 'package:alarm_app/util/auth_utils.dart';
 import 'package:alarm_app/util/error_pop_util.dart';
+import 'package:alarm_app/src/view/auth/login_view.dart';
+import 'package:alarm_app/src/model/auth_model.dart'; // AuthModel 임포트
 
 class RgtViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -74,10 +75,14 @@ class RgtViewModel extends ChangeNotifier {
     }
 
     try {
-      final response = await _authRepository.register(_playerId, _password);
-      _handleResponse(context, response);
+      final authModel = await _authRepository.register(_playerId, _password);
+      _handleResponse(context, authModel);
     } catch (e) {
-      _errorPopUtil.showErrorDialog(context, '회원가입 실패', '잠시 후 다시 시도해주세요.');
+      if (e is Exception) {
+        _errorPopUtil.showErrorDialog(context, int.parse(e.toString()));
+      } else {
+        _errorPopUtil.showErrorDialog(context, 20); // 예외 코드
+      }
     } finally {
       _setLoadingState(false);
     }
@@ -102,7 +107,7 @@ class RgtViewModel extends ChangeNotifier {
     }
 
     if (!passwordsMatch()) {
-      _errorPopUtil.showErrorDialog(context, '비밀번호 불일치', '다시 시도하세요');
+      _errorPopUtil.showErrorDialog(context, 4); // 비밀번호 불일치 코드
       _clearPasswordFields();
       return false;
     }
@@ -110,18 +115,15 @@ class RgtViewModel extends ChangeNotifier {
     return true;
   }
 
-  void _handleResponse(BuildContext context, Map<String, dynamic> response) {
-    if (response['result'] == true) {
-      _navigateToLogin(context);
-    } else {
-      _errorPopUtil.showErrorDialog(context, '회원가입 실패', response['msg']);
-    }
+  void _handleResponse(BuildContext context, AuthModel authModel) {
+    // 회원가입 성공 시 로그인 화면으로 이동
+    _navigateToLogin(context);
   }
 
   void _navigateToLogin(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login()),
+      MaterialPageRoute(builder: (context) => const Login()),
     );
   }
 

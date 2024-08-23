@@ -1,10 +1,10 @@
-import 'package:alarm_app/src/model/auth_model.dart';
 import 'package:flutter/material.dart';
 import 'package:alarm_app/src/repository/auth_repository.dart';
 import 'package:alarm_app/util/auth_utils.dart';
 import 'package:alarm_app/util/error_pop_util.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:alarm_app/src/model/auth_model.dart';
 
 class LoginViewModel extends ChangeNotifier {
   String _playerId = '';
@@ -65,23 +65,20 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     try {
-      final response = await _authRepository.login(_playerId, _password);
-
+      final AuthModel authModel =
+          await _authRepository.login(_playerId, _password);
       _isLoading = false;
       notifyListeners();
 
-      if (response['result'] == true) {
-        final authModel = AuthModel(playerId: _playerId, password: _password);
-        context.read<AuthModel>().update(authModel); // AuthModel 업데이트
+      // AuthModel 업데이트
+      context.read<AuthModel>().update(authModel);
 
-        context.go('/'); // 홈 화면으로 이동
-      } else {
-        _playerIdError = response['msg'] ?? '로그인 실패';
-        notifyListeners();
-      }
+      // 로그인 성공 후 홈 화면으로 이동
+      context.go('/');
     } catch (e) {
       _isLoading = false;
-      _errorPopUtil.showErrorDialog(context, '오류', '오류가 발생했습니다.');
+      final errorCode = int.tryParse(e.toString()) ?? 20; // 예외를 숫자 코드로 변환
+      _errorPopUtil.showErrorDialog(context, errorCode);
       notifyListeners();
     }
   }

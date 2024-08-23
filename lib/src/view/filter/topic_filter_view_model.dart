@@ -6,25 +6,33 @@ import 'package:flutter/cupertino.dart';
 
 class TopicFilterViewModel extends BaseViewModel {
   final TopicRepository topicRepository;
-  final ErrorPopUtils _errorPopUtil = ErrorPopUtils(); // ErrorPopUtils 추가
+  final ErrorPopUtils _errorPopUtil = ErrorPopUtils();
 
-  TopicFilterViewModel({required this.topicRepository}) {
-    loadTopics;
-  }
+  TopicFilterViewModel({required this.topicRepository});
 
   List<TopicModel> topics = [];
   List<int> selectedTopicIds = [];
-  Map<int, int> topicRoomCounts = {}; // 각 주제별 방 개수
+  Map<int, int> topicRoomCounts = {};
 
-  // Topic과 방 개수 로드
   Future<void> loadTopics(BuildContext context) async {
-    // BuildContext 추가
     try {
-      topics = await topicRepository.getTopicList();
-      topicRoomCounts = await topicRepository.getRoomCountByTopic();
+      var topicsResponse = await topicRepository.getTopicList();
+      if (topicsResponse is List<TopicModel>) {
+        topics = topicsResponse;
+      } else {
+        _errorPopUtil.showErrorDialog(context, 0);
+        return;
+      }
+
+      var roomCountsResponse = await topicRepository.getRoomCountByTopic();
+      if (roomCountsResponse is Map<int, int>) {
+        topicRoomCounts = roomCountsResponse;
+      } else {
+        _errorPopUtil.showErrorDialog(context, 0);
+        return;
+      }
     } catch (e) {
-      _errorPopUtil.showErrorDialog(
-          context, '로드 실패', '주제 목록이나 방 개수를 불러오는데 실패했습니다.');
+      _errorPopUtil.showErrorDialog(context, 20);
       print('Failed to load topics or room counts: $e');
     }
     notifyListeners();

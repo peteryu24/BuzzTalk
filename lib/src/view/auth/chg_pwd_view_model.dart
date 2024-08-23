@@ -12,11 +12,11 @@ class ChangePasswordViewModel extends ChangeNotifier {
     required String oldPassword,
     required String newPassword,
     required String newPasswordCheck,
-    required BuildContext context, // 추가된 BuildContext
+    required BuildContext context,
   }) async {
     if (newPassword != newPasswordCheck) {
-      _errorPopUtil.showErrorDialog(
-          context, "비밀번호 변경 실패", "새 비밀번호가 일치하지 않습니다.");
+      // 비밀번호 불일치 오류 처리
+      _errorPopUtil.showErrorDialog(context, 3); // 비밀번호 불일치 오류 코드
       return;
     }
 
@@ -25,18 +25,19 @@ class ChangePasswordViewModel extends ChangeNotifier {
           oldPassword, newPassword, newPasswordCheck);
 
       if (response['result'] == true) {
-        // 성공 시 추가 작업
-        print("Password changed successfully");
+        // 비밀번호 변경 성공
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("비밀번호가 성공적으로 변경되었습니다.")),
+        );
+        Navigator.pop(context);
       } else {
-        // 실패 시 서버에서 제공된 오류 메시지를 팝업으로 표시
-        _errorPopUtil.showErrorDialog(
-            context, "비밀번호 변경 실패", response['msg'] ?? "비밀번호 변경에 실패했습니다.");
+        // 서버에서 반환된 오류 코드 처리
+        final errorCode = response['errNum'] as int? ?? 20; // 기본값 20: 예외 발생
+        _errorPopUtil.showErrorDialog(context, errorCode);
       }
     } catch (e) {
-      // 실패 시 팝업으로 에러 메시지 표시
-      _errorPopUtil.showErrorDialog(
-          context, "비밀번호 변경 실패", "오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-      print("Failed to change password: $e");
+      // 예외 발생 시 오류 다이얼로그 표시
+      _errorPopUtil.showErrorDialog(context, 20); // 기본 예외 오류 코드
     }
   }
 }

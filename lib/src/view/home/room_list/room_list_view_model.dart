@@ -49,6 +49,7 @@ class RoomListViewModel extends BaseViewModel {
         cursorId: cursorId,
       );
 
+      // 응답 데이터 처리
       if (newRooms.isEmpty) {
         hasMoreData = false; // 더 이상 가져올 데이터가 없으면 false
       } else {
@@ -64,8 +65,7 @@ class RoomListViewModel extends BaseViewModel {
       }
     } catch (e) {
       // 오류 처리
-      _errorPopUtil.showErrorDialog(
-          context, '방 목록 로드 실패', '방 목록을 불러오는데 실패했습니다.');
+      _errorPopUtil.showErrorDialog(context, 20);
       print("방 목록 가져오기 실패: $e");
     } finally {
       isLoading = false;
@@ -73,6 +73,7 @@ class RoomListViewModel extends BaseViewModel {
     }
   }
 
+  // 예약 기능
   void bookScheduleChat(RoomModel room) {
     localNotificationService.scheduleNotification(
         id: room.roomId!,
@@ -85,6 +86,7 @@ class RoomListViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  // 예약 취소 기능
   void cancelScheduleChat(RoomModel room) {
     localNotificationService.cancelNotification(room.roomId!);
     sharedPreferencesRepository.removeReservation(room);

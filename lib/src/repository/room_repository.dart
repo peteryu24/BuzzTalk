@@ -29,7 +29,7 @@ class RoomRepository {
               RoomModel.fromJson(roomJson as Map<String, dynamic>))
           .toList();
     } else {
-      throw Exception('Failed to load room list: ${response['msg']}');
+      throw Exception('Failed to load room list: ${response['errNum']}');
     }
   }
 
@@ -45,7 +45,7 @@ class RoomRepository {
           .map((topic) => topic as Map<String, dynamic>)
           .toList();
     } else {
-      throw Exception('Failed to load topics: ${response['msg']}');
+      throw Exception('Failed to load topics: ${response['errNum']}');
     }
   }
 

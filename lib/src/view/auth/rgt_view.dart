@@ -124,8 +124,7 @@ class SignUp extends StatelessWidget {
                                           color: Color(0xFF110C26),
                                           fontSize: 15,
                                           fontFamily: 'Airbnb Cereal App',
-                                          fontWeight:
-                                              FontWeight.bold, // Bold 체 적용
+                                          fontWeight: FontWeight.bold,
                                           height: 1.5,
                                         ),
                                       ),

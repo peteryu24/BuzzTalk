@@ -23,7 +23,6 @@ class TopicRepository {
     }
   }
 
-  // 주제별 방의 개수 가져오기
 // 주제별 방의 개수 가져오기
   Future<Map<int, int>> getRoomCountByTopic() async {
     final response = await httpRequest.get('/topic/roomCount');

@@ -1,8 +1,8 @@
-import 'package:alarm_app/src/repository/auth_repository.dart';
-import 'package:alarm_app/src/repository/http_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:alarm_app/src/view/auth/login_view_model.dart';
+import 'package:alarm_app/src/repository/auth_repository.dart';
+import 'package:alarm_app/src/repository/http_request.dart';
 import 'package:alarm_app/src/view/auth/rgt_view.dart';
 
 class Login extends StatelessWidget {
@@ -26,7 +26,6 @@ class Login extends StatelessWidget {
                   Expanded(
                     child: Stack(
                       children: [
-                        // BuzzTalk 텍스트 배치
                         const Positioned(
                           left: 28, // 왼쪽 정렬 위치를 TextField와 맞춤
                           top: 150, // 아래로 더 내림
@@ -107,122 +106,21 @@ class Login extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 317,
-                                height: 56,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                      color: const Color(0xFFE4DEDE)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.person,
-                                          color: Color(0xFF747688)),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: TextField(
-                                          onChanged: (value) =>
-                                              viewModel.updatePlayerId(value),
-                                          decoration: const InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: '아이디',
-                                            hintStyle: TextStyle(
-                                              color: Color(0xFF747688),
-                                              fontSize: 14,
-                                              fontFamily: 'Airbnb Cereal App',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              _buildTextField(
+                                label: '아이디',
+                                icon: Icons.person,
+                                onChanged: viewModel.updatePlayerId,
+                                errorText: viewModel.playerIdError,
                               ),
-                              if (viewModel.playerIdError != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    viewModel.playerIdError!,
-                                    style: const TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          left: 28,
-                          top: 344,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 317,
-                                height: 56,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                      color: const Color(0xFFE4DEDE)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.lock,
-                                          color: Color(0xFF747688)),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: TextField(
-                                          obscureText: viewModel.isObscureText,
-                                          onChanged: (value) =>
-                                              viewModel.updatePassword(value),
-                                          decoration: const InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: '비밀번호',
-                                            hintStyle: TextStyle(
-                                              color: Color(0xFF747688),
-                                              fontSize: 14,
-                                              fontFamily: 'Airbnb Cereal App',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () =>
-                                            viewModel.toggleObscureText(),
-                                        child: Icon(
-                                          viewModel.isObscureText
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                          color: const Color(0xFF747688),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                label: '비밀번호',
+                                icon: Icons.lock,
+                                obscureText: viewModel.isObscureText,
+                                onChanged: viewModel.updatePassword,
+                                onToggleVisibility: viewModel.toggleObscureText,
+                                errorText: viewModel.passwordError,
                               ),
-                              if (viewModel.passwordError != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    viewModel.passwordError!,
-                                    style: const TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
                             ],
                           ),
                         ),
@@ -235,6 +133,74 @@ class Login extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required IconData icon,
+    required Function(String) onChanged,
+    bool obscureText = false,
+    VoidCallback? onToggleVisibility,
+    String? errorText,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 317,
+          height: 56,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFFE4DEDE)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Icon(icon, color: const Color(0xFF747688)),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    onChanged: onChanged,
+                    obscureText: obscureText,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: label,
+                      hintStyle: const TextStyle(
+                        color: Color(0xFF747688),
+                        fontSize: 14,
+                        fontFamily: 'Airbnb Cereal App',
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                if (onToggleVisibility != null)
+                  GestureDetector(
+                    onTap: onToggleVisibility,
+                    child: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: const Color(0xFF747688),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              errorText,
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

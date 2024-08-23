@@ -19,7 +19,7 @@ class _CreateRoomViewState extends State<CreateRoomView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CreateRoomViewModel>().fetchTopics(context);
+      context.read<CreateRoomViewModel>().fetchTopics();
     });
   }
 
@@ -48,43 +48,40 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                     decoration: InputDecoration(
                       labelText: "방 이름",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0), // 모서리 둥글게
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: const BorderSide(
-                          color: Colors.grey, // 기본 테두리 색상
+                          color: Colors.grey,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: const BorderSide(
-                          color:
-                              Color.fromARGB(255, 20, 42, 128), // 포커스 시 테두리 색상
+                          color: Color.fromARGB(255, 20, 42, 128),
                         ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 12.0,
                         horizontal: 16.0,
-                      ), // 텍스트 내부 여백
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
                   DecoratedBox(
                     decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.grey, width: 1.0), // 테두리 색상과 두께 설정
-                      borderRadius: BorderRadius.circular(8.0), // 테두리 둥글게 설정
+                      border: Border.all(color: Colors.grey, width: 1.0),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0), // 내부 여백 추가
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<int>(
                           hint: const Text(
                             "주제를 선택하세요",
                             style: TextStyle(
-                              fontWeight: FontWeight.bold, // 힌트 텍스트 bold체
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           value: _topicId,
@@ -95,17 +92,16 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                           },
                           items: viewModel.topics.map((topic) {
                             return DropdownMenuItem<int>(
-                              value:
-                                  topic['topicId'], // JSON의 'topicId'를 사용해야 함
+                              value: topic['topicId'],
                               child: Text(
-                                topic['topicName'], // JSON의 'topicName'을 사용해야 함
+                                topic['topicName'],
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold, // 드롭다운 텍스트 bold체
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             );
                           }).toList(),
-                          isExpanded: true, // 드롭다운이 가득 차도록 설정
+                          isExpanded: true,
                         ),
                       ),
                     ),
@@ -121,20 +117,19 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color.fromARGB(255, 20, 42, 128), // 버튼 배경색
+                      backgroundColor: const Color.fromARGB(255, 20, 42, 128),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12), // 둥근 모서리
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      minimumSize: const Size(double.infinity, 56), // 버튼 크기 조정
+                      minimumSize: const Size(double.infinity, 56),
                     ),
                     child: Text(
                       _startTime != null
                           ? "시작 시간: ${_startTime!.toIso8601String()}"
                           : "시작 시간 선택",
                       style: const TextStyle(
-                        color: Colors.white, // 텍스트 색상
-                        fontWeight: FontWeight.bold, // 텍스트 두께
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -149,20 +144,19 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color.fromARGB(255, 20, 42, 128), // 버튼 배경색
+                      backgroundColor: const Color.fromARGB(255, 20, 42, 128),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12), // 둥근 모서리
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      minimumSize: const Size(double.infinity, 56), // 버튼 크기 조정
+                      minimumSize: const Size(double.infinity, 56),
                     ),
                     child: Text(
                       _endTime != null
                           ? "종료 시간: ${_endTime!.toIso8601String()}"
                           : "종료 시간 선택",
                       style: const TextStyle(
-                        color: Colors.white, // 텍스트 색상
-                        fontWeight: FontWeight.bold, // 텍스트 두께
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -186,18 +180,17 @@ class _CreateRoomViewState extends State<CreateRoomView> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color.fromARGB(255, 20, 42, 128), // 버튼 배경색
+                      backgroundColor: const Color.fromARGB(255, 20, 42, 128),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12), // 둥근 모서리
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      minimumSize: const Size(double.infinity, 56), // 버튼 크기 조정
+                      minimumSize: const Size(double.infinity, 56),
                     ),
                     child: const Text(
                       "방 생성하기",
                       style: TextStyle(
-                        color: Colors.white, // 텍스트 색상
-                        fontWeight: FontWeight.bold, // 텍스트 두께
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -220,15 +213,14 @@ class _CreateRoomViewState extends State<CreateRoomView> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Color.fromARGB(255, 20, 42, 128), // 선택된 날짜 색상
-              onPrimary: Colors.white, // 선택된 날짜 텍스트 색상
-              onSurface: Colors.black, // 일반 텍스트 색상
+              primary: Color.fromARGB(255, 20, 42, 128),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
-            dialogBackgroundColor: Colors.white, // 다이얼로그 배경색
+            dialogBackgroundColor: Colors.white,
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor:
-                    const Color.fromARGB(255, 20, 42, 128), // "취소" 및 "확인" 버튼 색상
+                foregroundColor: const Color.fromARGB(255, 20, 42, 128),
               ),
             ),
           ),
@@ -241,25 +233,6 @@ class _CreateRoomViewState extends State<CreateRoomView> {
       final selectedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-              colorScheme: const ColorScheme.light(
-                primary: Color.fromARGB(255, 20, 42, 128), // 선택된 시간 색상
-                onPrimary: Colors.white, // 선택된 시간 텍스트 색상
-                onSurface: Colors.black, // 일반 텍스트 색상
-              ),
-              dialogBackgroundColor: Colors.white, // 다이얼로그 배경색
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: const Color.fromARGB(
-                      255, 20, 42, 128), // "취소" 및 "확인" 버튼 색상
-                ),
-              ),
-            ),
-            child: child!,
-          );
-        },
       );
 
       if (selectedTime != null) {
@@ -272,7 +245,6 @@ class _CreateRoomViewState extends State<CreateRoomView> {
         );
       }
     }
-
     return null;
   }
 }

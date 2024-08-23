@@ -34,98 +34,32 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            _buildTextField(
+              label: "기존 비밀번호",
               controller: _oldPasswordController,
               obscureText: true,
-              decoration: InputDecoration(
-                labelText: "기존 비밀번호",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0), // 모서리 둥글기 설정
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                    color: Colors.grey, // 기본 상태의 테두리 색상
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 20, 42, 128), // 포커스된 상태의 테두리 색상
-                    width: 2.0, // 테두리 두께
-                  ),
-                ),
-              ),
             ),
             const SizedBox(height: 16),
-            TextField(
+            _buildTextField(
+              label: "새로운 비밀번호",
               controller: _newPasswordController,
               obscureText: true,
-              decoration: InputDecoration(
-                labelText: "새로운 비밀번호",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0), // 모서리 둥글기 설정
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                    color: Colors.grey, // 기본 상태의 테두리 색상
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 20, 42, 128), // 포커스된 상태의 테두리 색상
-                    width: 2.0, // 테두리 두께
-                  ),
-                ),
-              ),
             ),
             const SizedBox(height: 16),
-            TextField(
+            _buildTextField(
+              label: "비밀번호 확인",
               controller: _newPasswordCheckController,
               obscureText: true,
-              decoration: InputDecoration(
-                labelText: "비밀번호 확인",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0), // 모서리 둥글기 설정
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                    color: Colors.grey, // 기본 상태의 테두리 색상
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 20, 42, 128), // 포커스된 상태의 테두리 색상
-                    width: 2.0, // 테두리 두께
-                  ),
-                ),
-              ),
             ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                try {
-                  await context.read<ChangePasswordViewModel>().changePassword(
-                        oldPassword: _oldPasswordController.text,
-                        newPassword: _newPasswordController.text,
-                        newPasswordCheck: _newPasswordCheckController.text,
-                        context: context, // 여기에 context를 추가
-                      );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("비밀번호가 성공적으로 변경되었습니다."),
-                    ),
-                  );
-                  Navigator.pop(context); // 작업 후 이전 화면으로 돌아감
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("비밀번호 변경에 실패했습니다: $e")),
-                  );
-                }
+                await context.read<ChangePasswordViewModel>().changePassword(
+                      oldPassword: _oldPasswordController.text,
+                      newPassword: _newPasswordController.text,
+                      newPasswordCheck: _newPasswordCheckController.text,
+                      context: context,
+                    );
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
@@ -146,6 +80,34 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    bool obscureText = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 20, 42, 128),
+            width: 2.0,
+          ),
         ),
       ),
     );
