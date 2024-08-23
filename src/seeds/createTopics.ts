@@ -1,5 +1,5 @@
-import dataSource from 'data-source'; // 수정된 경로를 입력
-import { Topic } from '../dto/topic.entity'; // 올바른 경로로 수정
+import dataSource from '../../data-source';
+import { Topic } from '../dto/topic.entity';
 import { config } from 'dotenv';
 
 config();
@@ -7,7 +7,11 @@ config();
 async function seed() {
   try {
     await dataSource.initialize();
+
+    // 모든 테이블 데이터 삭제
+    await dataSource.query('TRUNCATE TABLE topic RESTART IDENTITY CASCADE');
     
+    // 새로운 데이터 삽입
     const topics = [
       { topicName: '토픽1' },
       { topicName: '토픽2' },
@@ -19,14 +23,14 @@ async function seed() {
     for (const topicData of topics) {
       const topic = new Topic();
       topic.topicName = topicData.topicName;
-      await dataSource.getRepository(Topic).save(topic); // getRepository()를 사용하여 Topic 저장
+      await dataSource.getRepository(Topic).save(topic);
     }
 
     console.log('Topics seeded successfully');
   } catch (error) {
     console.error('Error seeding topics:', error);
   } finally {
-    await dataSource.destroy(); // 데이터베이스 연결 종료
+    await dataSource.destroy();
   }
 }
 
