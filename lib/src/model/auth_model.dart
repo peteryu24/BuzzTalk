@@ -21,7 +21,7 @@ class AuthModel {
     };
   }
 
-  // AuthModel의 필드를 업데이트하는 메서드
+  // AuthModel 업데이트
   void update(AuthModel newAuthData) {
     playerId = newAuthData.playerId;
     password = newAuthData.password;

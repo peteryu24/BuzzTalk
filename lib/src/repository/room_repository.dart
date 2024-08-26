@@ -15,8 +15,8 @@ class RoomRepository {
   }) async {
     final body = {
       'topicIds': topicIds,
-      'limit': limit ?? 5, // limit을 설정 (기본값 5)
-      'cursorId': cursorId, // 커서 ID 추가
+      'limit': limit ?? 5,
+      'cursorId': cursorId,
     };
 
     final response = await httpRequest.post('/room/getList', body);
@@ -45,11 +45,5 @@ class RoomRepository {
     } else {
       throw Exception('Failed to load topics: ${response['errNum']}');
     }
-  }
-
-  Future<List<RoomModel>> getRoomListByIds(List<String> roomIds) async {
-    final response =
-        await httpRequest.post('/room/getListByIds', {'roomIds': roomIds});
-    return (response as List).map((json) => RoomModel.fromJson(json)).toList();
   }
 }

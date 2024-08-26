@@ -8,7 +8,6 @@ class TopicRepository {
 
   TopicRepository(this.httpRequest);
 
-// 주제 목록 가져오기
   Future<List<TopicModel>> getTopicList() async {
     final response = await httpRequest.get('/topic/list');
 
@@ -23,7 +22,6 @@ class TopicRepository {
     }
   }
 
-// 주제별 방의 개수 가져오기
   Future<Map<int, int>> getRoomCountByTopic() async {
     final response = await httpRequest.get('/topic/roomCount');
 

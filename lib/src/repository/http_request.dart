@@ -12,35 +12,28 @@ class Http {
 
   Http._internal(this.baseUrl);
 
-  // 쿠키를 저장합니다.
+  // 쿠키 저장
   Future<void> _saveCookie(String cookie) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('connect.sid', cookie); // connect.sid로 저장
+    await prefs.setString('connect.sid', cookie);
   }
 
-  // 쿠키를 로드합니다.
+  // 쿠키 로드
   Future<String?> _loadCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('connect.sid'); // connect.sid로 로드
+    return prefs.getString('connect.sid');
   }
 
-  // GET 요청
   Future<dynamic> get(String endpoint) async {
     final cookie = await _loadCookie();
     final response = await http.get(
       Uri.parse('$baseUrl$endpoint'),
-      headers: cookie != null
-          ? {'Cookie': 'connect.sid=$cookie'}
-          : {}, // connect.sid 사용
+      headers: cookie != null ? {'Cookie': 'connect.sid=$cookie'} : {},
     );
 
-    print(response.headers);
-
     if (response.statusCode == 200) {
-      // 쿠키가 응답에 포함되어 있을 경우 저장
       final setCookieHeader = response.headers['set-cookie'];
       if (setCookieHeader != null) {
-        // 쿠키를 추출하여 저장합니다.
         final cookieValue = _extractCookieValue(setCookieHeader);
         if (cookieValue != null) {
           await _saveCookie(cookieValue);
@@ -61,16 +54,13 @@ class Http {
       Uri.parse('$baseUrl$endpoint'),
       headers: {
         'Content-Type': 'application/json',
-        if (cookie != null) 'Cookie': 'connect.sid=$cookie', // connect.sid 사용
+        if (cookie != null) 'Cookie': 'connect.sid=$cookie',
       },
       body: jsonEncode(data),
     );
-    print(response.headers);
     if (response.statusCode == 201 || response.statusCode == 200) {
-      // 쿠키가 응답에 포함되어 있을 경우 저장
       final setCookieHeader = response.headers['set-cookie'];
       if (setCookieHeader != null) {
-        // 쿠키를 추출하여 저장합니다.
         final cookieValue = _extractCookieValue(setCookieHeader);
         if (cookieValue != null) {
           await _saveCookie(cookieValue);
@@ -79,7 +69,6 @@ class Http {
 
       return jsonDecode(response.body);
     } else {
-      // 서버 오류 메시지를 처리
       Map<String, dynamic> errorResponse;
       try {
         errorResponse = jsonDecode(response.body);
@@ -91,11 +80,10 @@ class Http {
     }
   }
 
-  // 응답 헤더에서 쿠키 값을 추출합니다.
   String? _extractCookieValue(String setCookieHeader) {
     final cookieParts = setCookieHeader.split(';');
     if (cookieParts.isNotEmpty) {
-      return cookieParts[0].split('=')[1]; // 쿠키 값만 추출
+      return cookieParts[0].split('=')[1];
     }
     return null;
   }
