@@ -31,7 +31,6 @@ export class AppService {
     private topicRepository: TopicRepository,
     private playerRepository: PlayerRepository,
   ) {}
-  //아래 2개는 playerId, password 검증 로직을 하는 로직. typescript도 정규표현식 사용 가능
   private validatePlayerId(playerId: string): boolean {
     const idRegex = /^[a-z0-9]{3,15}$/;
     return idRegex.test(playerId);
@@ -54,8 +53,6 @@ export class AppService {
     );
   }
   
-
-  //새로만든거
    // 회원가입
    async register(playerId: string, password: string): Promise<number> {
     if (!playerId || !password) {
@@ -223,19 +220,6 @@ export class AppService {
     return roomCount;
   }
   
-
-  //현재 방의 리스트 순서대로 출력, 만약 방 id를 오름차순으로 넣는다면 받을때는 내림차순으로 방을 보여주는게 맞을듯?
-  async getRoomListByIds(ids: string[]): Promise<any> {
-    const rooms = await this.roomRepository.getRoomsByIds(ids);
-  
-    if (!rooms || rooms.length === 0) {
-      return 5; // 방 리스트를 가져오지 못한 경우 5 반환
-    }
-  
-    return rooms;
-  }
-  
-  
   async getRoomList(
     topicIds: number[] | undefined,
     cursorId: number | undefined,
@@ -252,17 +236,15 @@ export class AppService {
       return 5;
     }
 
-    // rooms 데이터를 필요한 형식으로 변환합니다.
     const rooms = res.map(room => ({
       roomId: room.roomId,
       roomName: room.roomName,
-      startTime: room.startTime?.toISOString(),  // ISO 형식으로 변환
-      endTime: room.endTime?.toISOString(),      // ISO 형식으로 변환
+      startTime: room.startTime?.toISOString(),
+      endTime: room.endTime?.toISOString(),
       topicId: room.topicId,
       playerId: room.playerId,
       book: room.book,
-      updatedAt: room.updatedAt?.toISOString(),  // ISO 형식으로 변환
-      // createdAt 필드는 제외됩니다.
+      updatedAt: room.updatedAt?.toISOString(),
     }));
 
     let nextCursorId: string | undefined = undefined;

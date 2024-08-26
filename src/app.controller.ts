@@ -1,17 +1,16 @@
 import { Body, Controller, Get, Post, Patch, Delete, Query, UseGuards, Req } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Logger } from '@nestjs/common';
-import { BuzzTalkResult } from './buzzTalkResult.utils'; // Import your utility class
+import { BuzzTalkResult } from './buzzTalkResult.utils';
 
 @Controller()
 export class AppController {
-  private buzzTalkResult: BuzzTalkResult = new BuzzTalkResult(); // Create an instance of BuzzTalkResult
+  private buzzTalkResult: BuzzTalkResult = new BuzzTalkResult();
 
   constructor(private readonly appService: AppService) {}
 
   @Post('/player/register')
   async register(@Body() body): Promise<any> {
-    Logger.log('Register endpoint hit'); 
     try {
       const playerId: string = body.playerId;
       const password: string = body.password;
@@ -37,10 +36,8 @@ export class AppController {
       const password: string = body.password;
     
       const statusCode = await this.appService.login(playerId, password);
-      console.log(statusCode);
       if (typeof statusCode === 'object' && statusCode !== null) {
-        req.session.player = statusCode; // Save to session
-        console.log('session 목록:', req.session.player);
+        req.session.player = statusCode;
         
         return this.buzzTalkResult.success({ message: 0 });
       } 
@@ -60,7 +57,7 @@ export class AppController {
     }
     
     try {
-      req.session.destroy(); // Remove from session
+      req.session.destroy();
       return this.buzzTalkResult.success({ message: 0 });
     } catch (e) {
       return this.buzzTalkResult.handleError(e);
@@ -78,9 +75,7 @@ export class AppController {
       const oldPassword: string = body.oldPassword;
       const newPassword: string = body.newPassword;
 
-      console.log('hello!');
       const statusCode = await this.appService.changePassword(playerId, oldPassword, newPassword);
-      console.log(statusCode);
       if (statusCode === 0) {
         return this.buzzTalkResult.success({ message: 0 });
       } 
@@ -130,7 +125,7 @@ export class AppController {
     
   
     } catch (e) {
-      return this.buzzTalkResult.handleError(e); // 예외 처리
+      return this.buzzTalkResult.handleError(e);
     }
   }
   
@@ -153,27 +148,6 @@ async getRoomCountByTopic(): Promise<any> {
     return this.buzzTalkResult.handleError(e); 
   }
 }
-
-
-@Post('/player/getInfo')
-async getPlayer(@Body() body): Promise<any> {
-  try {
-    const playerId: string = body.playerId;
-    const password: string = body.password;
-    
-    const result = await this.appService.getPlayer(playerId, password);
-
-    if (typeof result !== 'number') { // result가 숫자 형식이 아니면 성공
-      return this.buzzTalkResult.success(result);
-    }
-    // 실패 
-    return this.buzzTalkResult.resultError(result);
-
-  } catch (e) {
-    return this.buzzTalkResult.handleError(e);
-  }
-}
-
 
 @Post('/room/getList')
 async getRoomList(@Body() body): Promise<any> {
@@ -225,24 +199,4 @@ async getRoomList(@Body() body): Promise<any> {
       return this.buzzTalkResult.handleError(e);
     }
   } 
-
-  @Post('/room/getListByIds')
-async getListByIds(@Body() body: { roomIds: string[] }): Promise<any> {
-  try {
-    const roomIds = body.roomIds;
-    const rooms = await this.appService.getRoomListByIds(roomIds);
-
-    // 성공
-    if (rooms !== 5) {
-      return this.buzzTalkResult.success(rooms);
-    }
-
-    // 실패
-    return this.buzzTalkResult.resultError(rooms); 
-    
-  } catch (e) {
-    return this.buzzTalkResult.handleError(e);
-  }
-}
-
 }

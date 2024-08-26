@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryColumn,
 } from 'typeorm';
-import { Room } from './room.entity'; // Room 엔티티를 import
+import { Room } from './room.entity';
 
 @Entity('player')
 export class Player extends BaseEntity {

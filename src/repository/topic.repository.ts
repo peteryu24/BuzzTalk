@@ -4,7 +4,7 @@ import { Topic } from '../dto/topic.entity';
 
 @Injectable()
 export class TopicRepository extends Repository<Topic> {
-  //여기서 데이터 받아와서 객체 초기화 하고 사용
+  
   constructor(datasource: DataSource) {
     super(Topic, datasource.createEntityManager());
   }

@@ -8,13 +8,12 @@ import cors from 'cors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const RedisStore = require("connect-redis").default; //new아니라 최신버전에서는 이런식으로 
+  const RedisStore = require("connect-redis").default; //commonjs라 이런식으로밖에 할 수 없음
   const redisClient = new Redis({
     host: 'localhost',
     port: 6379,
   });
 
-  // 세션 미들웨어 설정
   app.use(
     session({
       store: new RedisStore({ client: redisClient }),
