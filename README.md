@@ -40,7 +40,6 @@ $ npm run seed
 
 run `src/database/seeds/topic.seeder.ts`
 
-
 ## Running the app
 
 ```bash
@@ -49,5 +48,12 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
+```
+
+## dependencies
+
+```bash
+$ npm install express-session ioredis connect-redis
+$ npm install @types/express-session @types/connect-redis --save-dev
 ```
 
