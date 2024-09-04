@@ -13,7 +13,7 @@ BuzzTalk
 ![슬라이드4](https://github.com/user-attachments/assets/880b70ea-2657-49ca-a67d-011d8926cad1)
 ![슬라이드5](https://github.com/user-attachments/assets/d35ae38c-b9aa-4263-9c64-12ceb0cffad3)
 ![슬라이드6](https://github.com/user-attachments/assets/2c12aee5-e67f-4ac3-bf0e-4523f177e6e8)
-![슬라이드7](https://github.com/user-attachments/assets/9bbd3c71-5a03-4dfb-9568-4eb922b6d504)
+![슬라이드7](https://github.com/user-attachments/assets/9bbd3c71-5a03-4dfb-9568-4eb922b6d504)  
 ![슬라이드8](https://github.com/user-attachments/assets/23683f36-b078-4f49-a62f-863d350973ba)
 ![슬라이드9](https://github.com/user-attachments/assets/c757062b-d0bb-4abc-b573-e1f0a7a04f61)
 ![슬라이드10](https://github.com/user-attachments/assets/af13959b-b1e7-4eaf-bdd2-8425f891ec18)
