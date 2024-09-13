@@ -4,7 +4,7 @@ BuzzTalk
 ├─ main (presentation)
 ├─ BackEnd  
 └─ FrontEnd  
-```
+``` 
 
 ## Presentation 🙌
 ![슬라이드1](https://github.com/user-attachments/assets/2d47247f-7f4b-4fda-860d-c5a11877a490) 
