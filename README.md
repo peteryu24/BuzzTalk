@@ -2,7 +2,7 @@
 ```
 BuzzTalk 
 ├─ main (presentation)
-├─ BackEnd  
+├─ BackEnd   
 └─ FrontEnd  
 ``` 
 [API response structuring](https://dudefromkorea.tistory.com/119)
