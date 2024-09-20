@@ -5,7 +5,7 @@ BuzzTalk
 ├─ BackEnd   
 └─ FrontEnd  
 ``` 
-[API response structure](https://dudefromkorea.tistory.com/119)
+[API response structure](https://dudefromkorea.tistory.com/126)
 
 ## Presentation 🙌 
 ![슬라이드1](https://github.com/user-attachments/assets/2d47247f-7f4b-4fda-860d-c5a11877a490) 
