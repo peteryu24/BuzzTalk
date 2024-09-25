@@ -9,7 +9,7 @@ BuzzTalk
 
 ## Presentation 🙌 
 ![슬라이드1](https://github.com/user-attachments/assets/2d47247f-7f4b-4fda-860d-c5a11877a490) 
-![슬라이드2](https://github.com/user-attachments/assets/886927e0-3040-4196-ae7b-f93957aa518d) 
+![슬라이드2](https://github.com/user-attachments/assets/886927e0-3040-4196-ae7b-f93957aa518d)  
 ![슬라이드3](https://github.com/user-attachments/assets/b30ac32e-709b-4735-a000-cebd04428bf6) 
 ![슬라이드4](https://github.com/user-attachments/assets/880b70ea-2657-49ca-a67d-011d8926cad1)
 ![슬라이드5](https://github.com/user-attachments/assets/d35ae38c-b9aa-4263-9c64-12ceb0cffad3)
