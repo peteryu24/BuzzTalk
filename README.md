@@ -4,7 +4,7 @@ BuzzTalk
 ├─ main (presentation)
 ├─ BackEnd   
 └─ FrontEnd  
-``` 
+```  
 [API response structure](https://dudefromkorea.tistory.com/126) 
 
 ## Presentation 🙌  
